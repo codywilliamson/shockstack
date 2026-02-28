@@ -47,6 +47,7 @@ shockstack/
 │   │   ├── ShockStack.Core/     # entities, interfaces, DTOs
 │   │   ├── ShockStack.Infrastructure/ # EF Core, repositories
 │   │   └── ShockStack.Tests/    # xUnit tests
+│   │   └── ShockStack.AppHost/  # .NET Aspire orchestration
 │   ├── ShockStack.sln
 │   └── Dockerfile
 │
@@ -172,6 +173,11 @@ shockstack/
 - Unit tests for Core logic and controllers
 - Integration tests via `WebApplicationFactory<Program>`
 - Coverlet for code coverage
+
+**ShockStack.AppHost** — .NET Aspire orchestration:
+- Wires up Postgres, .NET API, and Astro frontend for local dev
+- Service discovery, health dashboard, distributed tracing
+- Single `dotnet run` starts entire stack with OpenTelemetry
 
 ### Key Patterns
 
