@@ -53,5 +53,6 @@
       "style-dictionary",
       "workerd"
     ]
-  }
+  },
+  "version": "1.0.0"
 }
