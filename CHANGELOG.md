@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/codywilliamson/shockstack/compare/v1.3.0...v1.4.0) (2026-03-01)
+
+### Features
+
+- add interactive theme showcase page ([ca1da48](https://github.com/codywilliamson/shockstack/commit/ca1da48debf723b2513b15135f3833ff9d7d3124))
+- **theme:** add six built-in palettes and header theme picker ([037381c](https://github.com/codywilliamson/shockstack/commit/037381c196b73d40e146debc410db11092407a50))
+
 # [1.3.0](https://github.com/codywilliamson/shockstack/compare/v1.2.0...v1.3.0) (2026-03-01)
 
 ### Features
