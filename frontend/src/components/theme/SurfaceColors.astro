@@ -1,0 +1,87 @@
+---
+import ColorSwatch from "./ColorSwatch.vue";
+
+const surfaceColors = [
+  {
+    name: "BG Primary",
+    cssVar: "--color-bg-primary",
+    tw: "bg-bg-primary",
+    variant: "bg" as const,
+  },
+  {
+    name: "BG Secondary",
+    cssVar: "--color-bg-secondary",
+    tw: "bg-bg-secondary",
+    variant: "bg" as const,
+  },
+  {
+    name: "BG Tertiary",
+    cssVar: "--color-bg-tertiary",
+    tw: "bg-bg-tertiary",
+    variant: "bg" as const,
+  },
+  {
+    name: "FG Primary",
+    cssVar: "--color-fg-primary",
+    tw: "text-fg-primary",
+    variant: "fg" as const,
+  },
+  {
+    name: "FG Secondary",
+    cssVar: "--color-fg-secondary",
+    tw: "text-fg-secondary",
+    variant: "fg" as const,
+  },
+  {
+    name: "FG Muted",
+    cssVar: "--color-fg-muted",
+    tw: "text-fg-muted",
+    variant: "fg" as const,
+  },
+  {
+    name: "Border Default",
+    cssVar: "--color-border-default",
+    tw: "border-border-default",
+    variant: "border" as const,
+  },
+  {
+    name: "Border Muted",
+    cssVar: "--color-border-muted",
+    tw: "border-border-muted",
+    variant: "border" as const,
+  },
+  {
+    name: "Selection",
+    cssVar: "--color-selection",
+    tw: "bg-selection",
+    variant: "bg" as const,
+  },
+];
+---
+
+<section class="reveal bg-bg-secondary/50 px-4 py-16">
+  <div class="mx-auto max-w-6xl">
+    <div class="section-header">
+      <h2 class="section-title">Surface Colors</h2>
+      <p class="section-desc">
+        Backgrounds, foregrounds, borders, and selection colors that define the
+        UI chrome.
+      </p>
+    </div>
+    <div
+      class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+    >
+      {
+        surfaceColors.map((c) => (
+          <ColorSwatch
+            client:visible
+            name={c.name}
+            cssVar={c.cssVar}
+            tailwindClass={c.tw}
+            variant={c.variant}
+          />
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,29 @@
+---
+const shadows = [
+  { name: "sm", var: "--ss-shadow-sm" },
+  { name: "md", var: "--ss-shadow-md" },
+  { name: "lg", var: "--ss-shadow-lg" },
+  { name: "xl", var: "--ss-shadow-xl" },
+];
+---
+
+<section class="reveal bg-bg-secondary/50 px-4 py-16">
+  <div class="mx-auto max-w-6xl">
+    <div class="section-header">
+      <h2 class="section-title">Shadows</h2>
+      <p class="section-desc">Elevation levels from subtle to dramatic.</p>
+    </div>
+    <div class="grid grid-cols-2 gap-6 md:grid-cols-4">
+      {
+        shadows.map((s) => (
+          <div
+            class="border-border-default bg-bg-primary flex h-28 items-center justify-center rounded-xl border"
+            style={`box-shadow: var(${s.var})`}
+          >
+            <code class="text-fg-muted font-mono text-sm">shadow-{s.name}</code>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

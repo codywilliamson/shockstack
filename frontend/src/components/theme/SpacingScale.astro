@@ -1,0 +1,49 @@
+---
+const spacingScale = [
+  { name: "spacing-1", var: "--ss-spacing-1", value: "0.25rem" },
+  { name: "spacing-2", var: "--ss-spacing-2", value: "0.5rem" },
+  { name: "spacing-3", var: "--ss-spacing-3", value: "0.75rem" },
+  { name: "spacing-4", var: "--ss-spacing-4", value: "1rem" },
+  { name: "spacing-5", var: "--ss-spacing-5", value: "1.25rem" },
+  { name: "spacing-6", var: "--ss-spacing-6", value: "1.5rem" },
+  { name: "spacing-8", var: "--ss-spacing-8", value: "2rem" },
+  { name: "spacing-10", var: "--ss-spacing-10", value: "2.5rem" },
+  { name: "spacing-12", var: "--ss-spacing-12", value: "3rem" },
+  { name: "spacing-16", var: "--ss-spacing-16", value: "4rem" },
+  { name: "spacing-20", var: "--ss-spacing-20", value: "5rem" },
+  { name: "spacing-24", var: "--ss-spacing-24", value: "6rem" },
+];
+---
+
+<section class="reveal bg-bg-secondary/50 px-4 py-16">
+  <div class="mx-auto max-w-6xl">
+    <div class="section-header">
+      <h2 class="section-title">Spacing Scale</h2>
+      <p class="section-desc">
+        Consistent spacing tokens mapped to CSS custom properties.
+      </p>
+    </div>
+    <div class="theme-card">
+      <div class="space-y-3">
+        {
+          spacingScale.map((s) => (
+            <div class="flex items-center gap-4">
+              <code class="text-fg-muted w-28 shrink-0 font-mono text-xs">
+                {s.name}
+              </code>
+              <div class="flex-1">
+                <div
+                  class="bg-accent-purple h-3 rounded-sm"
+                  style={`width: var(${s.var}); min-width: 2px;`}
+                />
+              </div>
+              <span class="text-fg-muted w-20 shrink-0 text-right font-mono text-xs">
+                {s.value}
+              </span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

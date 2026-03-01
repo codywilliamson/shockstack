@@ -1,0 +1,328 @@
+---
+
+---
+
+<section class="reveal px-4 py-16">
+  <div class="mx-auto max-w-6xl">
+    <div class="section-header">
+      <h2 class="section-title">Component Examples</h2>
+      <p class="section-desc">
+        Common UI patterns built with the design token system.
+      </p>
+    </div>
+
+    <!-- buttons -->
+    <div class="mb-12">
+      <h3
+        class="text-fg-muted mb-4 text-sm font-semibold tracking-wider uppercase"
+      >
+        Buttons
+      </h3>
+      <div class="flex flex-wrap gap-3">
+        <button class="btn-primary">Primary</button>
+        <button class="btn-secondary">Secondary</button>
+        <button class="btn-destructive">Destructive</button>
+        <button class="btn-ghost">Ghost</button>
+      </div>
+      <div class="mt-4 flex flex-wrap gap-3">
+        <button class="btn-accent bg-accent-purple text-bg-primary"
+          >Purple</button
+        >
+        <button class="btn-accent bg-accent-pink text-bg-primary">Pink</button>
+        <button class="btn-accent bg-accent-green text-bg-primary">Green</button
+        >
+        <button class="btn-accent bg-accent-cyan text-bg-primary">Cyan</button>
+        <button class="btn-accent bg-accent-orange text-bg-primary"
+          >Orange</button
+        >
+        <button class="btn-accent bg-accent-red text-bg-primary">Red</button>
+        <button class="btn-accent bg-accent-yellow text-bg-primary"
+          >Yellow</button
+        >
+      </div>
+    </div>
+
+    <!-- badges -->
+    <div class="mb-12">
+      <h3
+        class="text-fg-muted mb-4 text-sm font-semibold tracking-wider uppercase"
+      >
+        Badges
+      </h3>
+      <div class="flex flex-wrap gap-2">
+        <span class="badge badge-purple">Purple</span>
+        <span class="badge badge-pink">Pink</span>
+        <span class="badge badge-green">Green</span>
+        <span class="badge badge-cyan">Cyan</span>
+        <span class="badge badge-orange">Orange</span>
+        <span class="badge badge-red">Red</span>
+        <span class="badge badge-yellow">Yellow</span>
+      </div>
+    </div>
+
+    <!-- cards -->
+    <div class="mb-12">
+      <h3
+        class="text-fg-muted mb-4 text-sm font-semibold tracking-wider uppercase"
+      >
+        Cards
+      </h3>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <div class="theme-card">
+          <h4 class="mb-2 font-semibold">Default Card</h4>
+          <p class="text-fg-secondary text-sm">
+            A standard card with secondary background and default border.
+          </p>
+        </div>
+        <div
+          class="theme-card hover:border-accent-purple transition-all hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          <h4 class="mb-2 font-semibold">Interactive Card</h4>
+          <p class="text-fg-secondary text-sm">
+            Hover for purple border accent and elevation shadow.
+          </p>
+        </div>
+        <div
+          class="border-accent-purple bg-accent-purple/10 rounded-xl border p-5"
+        >
+          <h4 class="text-accent-purple mb-2 font-semibold">Accent Card</h4>
+          <p class="text-fg-secondary text-sm">
+            Highlighted with accent background tint and border.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- form inputs -->
+    <div class="mb-12">
+      <h3
+        class="text-fg-muted mb-4 text-sm font-semibold tracking-wider uppercase"
+      >
+        Form Inputs
+      </h3>
+      <div class="grid max-w-2xl gap-4 sm:grid-cols-2">
+        <input type="text" placeholder="Text input" class="theme-input" />
+        <input type="email" placeholder="Email input" class="theme-input" />
+        <select class="theme-input">
+          <option>Select option</option>
+          <option>Option A</option>
+          <option>Option B</option>
+        </select>
+        <textarea placeholder="Textarea" rows="1" class="theme-input"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- links -->
+    <div class="mb-12">
+      <h3
+        class="text-fg-muted mb-4 text-sm font-semibold tracking-wider uppercase"
+      >
+        Links
+      </h3>
+      <div class="flex flex-wrap gap-6">
+        <a
+          href="#"
+          class="text-accent-purple hover:text-accent-pink underline underline-offset-2 transition-colors"
+          >Default link</a
+        >
+        <a
+          href="#"
+          class="text-fg-secondary hover:text-fg-primary transition-colors"
+          >Muted link</a
+        >
+        <a
+          href="#"
+          class="text-accent-cyan hover:text-accent-green font-mono text-sm transition-colors"
+          >Mono link</a
+        >
+      </div>
+    </div>
+
+    <!-- code block -->
+    <div>
+      <h3
+        class="text-fg-muted mb-4 text-sm font-semibold tracking-wider uppercase"
+      >
+        Code Block
+      </h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="text-fg-muted font-mono text-xs">tokens.config.ts</span>
+        </div>
+        <pre
+          class="code-body"><code><span class="text-accent-purple">import</span> <span class="text-fg-primary">StyleDictionary</span> <span class="text-accent-purple">from</span> <span class="text-accent-yellow">"style-dictionary"</span><span class="text-fg-muted">;</span>
+<span class="text-accent-purple">export default</span> <span class="text-fg-muted">&#123;</span>
+  <span class="text-accent-cyan">source</span><span class="text-fg-muted">:</span> <span class="text-fg-muted">[</span><span class="text-accent-yellow">"tokens/**/*.json"</span><span class="text-fg-muted">],</span>
+  <span class="text-accent-cyan">platforms</span><span class="text-fg-muted">:</span> <span class="text-fg-muted">&#123;</span>
+    <span class="text-accent-cyan">css</span><span class="text-fg-muted">:</span> <span class="text-fg-muted">&#123;</span> <span class="text-accent-cyan">transformGroup</span><span class="text-fg-muted">:</span> <span class="text-accent-yellow">"css"</span> <span class="text-fg-muted">&#125;,</span>
+    <span class="text-accent-cyan">ts</span><span class="text-fg-muted">:</span> <span class="text-fg-muted">&#123;</span> <span class="text-accent-cyan">transformGroup</span><span class="text-fg-muted">:</span> <span class="text-accent-yellow">"js"</span> <span class="text-fg-muted">&#125;</span>
+  <span class="text-fg-muted">&#125;</span>
+<span class="text-fg-muted">&#125;;</span></code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* buttons */
+  .btn-primary {
+    background: var(--color-accent-purple);
+    color: var(--color-bg-primary);
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    border: 1px solid var(--color-border-default);
+    color: var(--color-fg-primary);
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--color-accent-purple);
+    transform: translateY(-1px);
+  }
+
+  .btn-destructive {
+    background: var(--color-accent-red);
+    color: var(--color-bg-primary);
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+  }
+
+  .btn-destructive:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    color: var(--color-fg-secondary);
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+  }
+
+  .btn-ghost:hover {
+    background: var(--color-bg-secondary);
+    color: var(--color-fg-primary);
+  }
+
+  .btn-accent {
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+  }
+
+  .btn-accent:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  /* badges */
+  .badge {
+    display: inline-block;
+    padding: 0.125rem 0.625rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .badge-purple {
+    background: color-mix(in srgb, var(--color-accent-purple) 20%, transparent);
+    color: var(--color-accent-purple);
+  }
+  .badge-pink {
+    background: color-mix(in srgb, var(--color-accent-pink) 20%, transparent);
+    color: var(--color-accent-pink);
+  }
+  .badge-green {
+    background: color-mix(in srgb, var(--color-accent-green) 20%, transparent);
+    color: var(--color-accent-green);
+  }
+  .badge-cyan {
+    background: color-mix(in srgb, var(--color-accent-cyan) 20%, transparent);
+    color: var(--color-accent-cyan);
+  }
+  .badge-orange {
+    background: color-mix(in srgb, var(--color-accent-orange) 20%, transparent);
+    color: var(--color-accent-orange);
+  }
+  .badge-red {
+    background: color-mix(in srgb, var(--color-accent-red) 20%, transparent);
+    color: var(--color-accent-red);
+  }
+  .badge-yellow {
+    background: color-mix(in srgb, var(--color-accent-yellow) 20%, transparent);
+    color: var(--color-accent-yellow);
+  }
+
+  /* form inputs */
+  .theme-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border-default);
+    background: var(--color-bg-primary);
+    color: var(--color-fg-primary);
+    font-size: 0.875rem;
+    transition: border-color 0.2s;
+  }
+
+  .theme-input:focus {
+    outline: none;
+    border-color: var(--color-accent-purple);
+    box-shadow: 0 0 0 2px
+      color-mix(in srgb, var(--color-accent-purple) 25%, transparent);
+  }
+
+  .theme-input::placeholder {
+    color: var(--color-fg-muted);
+  }
+
+  /* code blocks */
+  .code-block {
+    background-color: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+  }
+
+  .code-header {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-border-default);
+    background-color: var(--color-bg-secondary);
+  }
+
+  .code-body {
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .code-body code {
+    font-family: inherit;
+  }
+</style>

@@ -1,0 +1,36 @@
+---
+const radii = [
+  { name: "none", var: "--ss-radius-none", value: "0" },
+  { name: "sm", var: "--ss-radius-sm", value: "0.25rem" },
+  { name: "md", var: "--ss-radius-md", value: "0.375rem" },
+  { name: "lg", var: "--ss-radius-lg", value: "0.5rem" },
+  { name: "xl", var: "--ss-radius-xl", value: "0.75rem" },
+  { name: "2xl", var: "--ss-radius-2xl", value: "1rem" },
+  { name: "full", var: "--ss-radius-full", value: "9999px" },
+];
+---
+
+<section class="reveal px-4 py-16">
+  <div class="mx-auto max-w-6xl">
+    <div class="section-header">
+      <h2 class="section-title">Border Radius</h2>
+      <p class="section-desc">Radius tokens from sharp to fully rounded.</p>
+    </div>
+    <div class="flex flex-wrap items-end gap-6">
+      {
+        radii.map((r) => (
+          <div class="flex flex-col items-center gap-2">
+            <div
+              class="border-accent-purple bg-accent-purple/20 h-16 w-16 border-2"
+              style={`border-radius: var(${r.var})`}
+            />
+            <code class="text-fg-muted font-mono text-xs">{r.name}</code>
+            <span class="text-fg-muted font-mono text-[0.625rem]">
+              {r.value}
+            </span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

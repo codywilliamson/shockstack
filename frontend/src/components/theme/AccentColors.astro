@@ -1,0 +1,40 @@
+---
+import ColorSwatch from "./ColorSwatch.vue";
+
+const accentColors = [
+  { name: "Purple", cssVar: "--color-accent-purple", tw: "bg-accent-purple" },
+  { name: "Pink", cssVar: "--color-accent-pink", tw: "bg-accent-pink" },
+  { name: "Green", cssVar: "--color-accent-green", tw: "bg-accent-green" },
+  { name: "Cyan", cssVar: "--color-accent-cyan", tw: "bg-accent-cyan" },
+  { name: "Orange", cssVar: "--color-accent-orange", tw: "bg-accent-orange" },
+  { name: "Red", cssVar: "--color-accent-red", tw: "bg-accent-red" },
+  { name: "Yellow", cssVar: "--color-accent-yellow", tw: "bg-accent-yellow" },
+];
+---
+
+<section class="reveal px-4 py-16">
+  <div class="mx-auto max-w-6xl">
+    <div class="section-header">
+      <h2 class="section-title">Accent Colors</h2>
+      <p class="section-desc">
+        7 accent colors from the Dracula / Alucard palettes. Click any swatch to
+        copy its hex value.
+      </p>
+    </div>
+    <div
+      class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7"
+    >
+      {
+        accentColors.map((c) => (
+          <ColorSwatch
+            client:visible
+            name={c.name}
+            cssVar={c.cssVar}
+            tailwindClass={c.tw}
+            variant="accent"
+          />
+        ))
+      }
+    </div>
+  </div>
+</section>

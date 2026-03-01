@@ -1,0 +1,109 @@
+---
+import tokensDark from "../../../../packages/tokens/dist/tokens-dark.json";
+import tokensLight from "../../../../packages/tokens/dist/tokens-light.json";
+
+type TokenEntry = {
+  token: string;
+  cssVar: string;
+  tailwind: string;
+  dark: string;
+  light: string;
+};
+const tokenRef: TokenEntry[] = [];
+const darkEntries = Object.entries(tokensDark) as [string, string][];
+for (const [key, darkVal] of darkEntries) {
+  const lightVal = (tokensLight as Record<string, string>)[key] ?? "";
+  const cssVar = `--ss-${key.replace(/\./g, "-")}`;
+  let tw = "";
+  if (key.startsWith("color-accent-"))
+    tw = `bg-accent-${key.replace("color-accent-", "")}`;
+  else if (key.startsWith("color-bg-"))
+    tw = `bg-bg-${key.replace("color-bg-", "")}`;
+  else if (key.startsWith("color-fg-"))
+    tw = `text-fg-${key.replace("color-fg-", "")}`;
+  else if (key.startsWith("color-border-"))
+    tw = `border-border-${key.replace("color-border-", "")}`;
+  else if (key.startsWith("color-")) tw = `bg-${key.replace("color-", "")}`;
+  tokenRef.push({
+    token: key,
+    cssVar,
+    tailwind: tw,
+    dark: darkVal,
+    light: lightVal,
+  });
+}
+---
+
+<section class="reveal bg-bg-secondary/50 px-4 py-16">
+  <div class="mx-auto max-w-6xl">
+    <div class="section-header">
+      <h2 class="section-title">Token Reference</h2>
+      <p class="section-desc">
+        Complete mapping of every token with its CSS variable, Tailwind class,
+        and theme values.
+      </p>
+    </div>
+    <div class="border-border-default overflow-x-auto rounded-xl border">
+      <table class="w-full text-left text-sm">
+        <thead>
+          <tr class="border-border-default bg-bg-tertiary border-b">
+            <th class="text-fg-primary px-4 py-3 font-semibold">Token</th>
+            <th class="text-fg-primary px-4 py-3 font-semibold">CSS Variable</th
+            >
+            <th class="text-fg-primary px-4 py-3 font-semibold">Tailwind</th>
+            <th class="text-fg-primary px-4 py-3 font-semibold">Dark Value</th>
+            <th class="text-fg-primary px-4 py-3 font-semibold">Light Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            tokenRef.map((t, i) => (
+              <tr
+                class:list={[
+                  "border-border-muted border-b",
+                  i % 2 === 0 ? "bg-bg-primary" : "bg-bg-secondary/30",
+                ]}
+              >
+                <td class="text-fg-primary px-4 py-2.5 font-mono text-xs">
+                  {t.token}
+                </td>
+                <td class="text-accent-cyan px-4 py-2.5 font-mono text-xs">
+                  {t.cssVar}
+                </td>
+                <td class="text-accent-pink px-4 py-2.5 font-mono text-xs">
+                  {t.tailwind || "—"}
+                </td>
+                <td class="px-4 py-2.5 font-mono text-xs">
+                  {t.dark.startsWith("#") ? (
+                    <span class="inline-flex items-center gap-1.5">
+                      <span
+                        class="border-border-default inline-block h-3 w-3 rounded-sm border"
+                        style={`background:${t.dark}`}
+                      />
+                      {t.dark}
+                    </span>
+                  ) : (
+                    <span class="text-fg-muted">{t.dark}</span>
+                  )}
+                </td>
+                <td class="px-4 py-2.5 font-mono text-xs">
+                  {t.light.startsWith("#") ? (
+                    <span class="inline-flex items-center gap-1.5">
+                      <span
+                        class="border-border-default inline-block h-3 w-3 rounded-sm border"
+                        style={`background:${t.light}`}
+                      />
+                      {t.light}
+                    </span>
+                  ) : (
+                    <span class="text-fg-muted">{t.light}</span>
+                  )}
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
