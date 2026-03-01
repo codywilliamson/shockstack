@@ -63,7 +63,7 @@ pnpm tokens:build
 
 **Customize:** edit token source files → rebuild.
 
-**Themes:** Dracula (default), Alucard, Nord, Gruvbox, Midnight, and Dawn. Switched via `[data-theme]` on `<html>`.
+**Themes:** Dracula (default), Alucard, Nord, Gruvbox, Gruvbox Light, Midnight, and Dawn. Switched via `[data-theme]` on `<html>`.
 
 ## Auth
 

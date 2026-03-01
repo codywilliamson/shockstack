@@ -33,6 +33,11 @@ const themes = [
     selector: '[data-theme="gruvbox"]',
   },
   {
+    name: "gruvbox-light",
+    source: "gruvbox-light.json",
+    selector: '[data-theme="gruvbox-light"]',
+  },
+  {
     name: "midnight",
     source: "midnight.json",
     selector: '[data-theme="midnight"]',
