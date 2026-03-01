@@ -1,0 +1,13 @@
+{
+  "name": "@shockstack/tokens",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsx build.ts"
+  },
+  "devDependencies": {
+    "style-dictionary": "^4.3.0",
+    "tsx": "^4.19.0"
+  }
+}
