@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/codywilliamson/shockstack/compare/v1.4.0...v1.5.0) (2026-03-01)
+
+### Features
+
+- **theme:** add gruvbox light palette and theme previews ([96d30a6](https://github.com/codywilliamson/shockstack/commit/96d30a64f04573ba9d09de983efe706f51ebbfda))
+- **theme:** add gruvbox variants and popular preset palettes ([dd04ed1](https://github.com/codywilliamson/shockstack/commit/dd04ed1d359248bdfa969fbf78500ed3d2d89bb1))
+
 # [1.4.0](https://github.com/codywilliamson/shockstack/compare/v1.3.0...v1.4.0) (2026-03-01)
 
 ### Features
