@@ -1,3 +1,9 @@
+# [1.2.0](https://github.com/codywilliamson/shockstack/compare/v1.1.0...v1.2.0) (2026-03-01)
+
+### Features
+
+- add docs sidebar, fix footer links, update terminal for aspire ([7884e96](https://github.com/codywilliamson/shockstack/commit/7884e968c26f5b2ec75736531bce0a1fce60a8c1))
+
 # [1.1.0](https://github.com/codywilliamson/shockstack/compare/v1.0.0...v1.1.0) (2026-03-01)
 
 ### Features
