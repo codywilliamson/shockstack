@@ -1,3 +1,9 @@
+# [1.1.0](https://github.com/codywilliamson/shockstack/compare/v1.0.0...v1.1.0) (2026-03-01)
+
+### Features
+
+- add rich frontend content, landing page, and prose styling ([338a9f7](https://github.com/codywilliamson/shockstack/commit/338a9f7e1d68a4ce843a0e196461ee2813cecf29))
+
 # 1.0.0 (2026-03-01)
 
 ### Bug Fixes
