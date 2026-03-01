@@ -1,9 +1,28 @@
 import { defineMiddleware } from "astro:middleware";
-import { auth } from "./lib/auth";
 
 const protectedRoutes = ["/dashboard"];
 
+// static/prerendered routes that should skip auth
+const staticRoutes = ["/blog", "/docs", "/changelog", "/rss.xml"];
+
 export const onRequest = defineMiddleware(async (context, next) => {
+  const pathname = context.url.pathname;
+
+  // skip auth for static content and api routes
+  const isStatic =
+    pathname === "/" ||
+    staticRoutes.some((r) => pathname.startsWith(r)) ||
+    pathname.startsWith("/api/");
+
+  if (isStatic) {
+    context.locals.user = null;
+    context.locals.session = null;
+    return next();
+  }
+
+  // lazy import to avoid loading auth on static routes
+  const { auth } = await import("./lib/auth");
+
   const session = await auth.api.getSession({
     headers: context.request.headers,
   });
@@ -12,7 +31,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   context.locals.session = session?.session ?? null;
 
   const isProtected = protectedRoutes.some((route) =>
-    context.url.pathname.startsWith(route),
+    pathname.startsWith(route),
   );
 
   if (isProtected && !session) {
