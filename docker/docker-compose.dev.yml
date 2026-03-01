@@ -1,0 +1,21 @@
+services:
+  postgres:
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  frontend:
+    build:
+      target: development
+    volumes:
+      - ../frontend:/app/frontend
+      - /app/frontend/node_modules
+    command: pnpm --filter frontend dev --host 0.0.0.0
+
+  backend:
+    build:
+      target: development
+    volumes:
+      - ../backend:/app/backend
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    command: dotnet watch --project src/ShockStack.Api run --urls http://0.0.0.0:8080
