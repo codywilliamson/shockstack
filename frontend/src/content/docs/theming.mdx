@@ -1,0 +1,160 @@
+---
+title: "Theming"
+description: "How the Dracula and Alucard theme system works, including dark/light mode switching and theme-aware utilities."
+order: 4
+---
+
+# Theming
+
+ShockStack ships with two themes: **Dracula** (dark, default) and **Alucard** (light). Theming is driven entirely by CSS custom properties and the `data-theme` attribute on `<html>`.
+
+## How It Works
+
+The theme system relies on three layers:
+
+1. **Token generation** -- Style Dictionary outputs CSS variables scoped to `:root, [data-theme="dark"]` and `[data-theme="light"]`
+2. **Attribute switching** -- the `data-theme` attribute on `<html>` determines which set of CSS variables is active
+3. **Tailwind mapping** -- the `@theme` block in `global.css` maps token CSS vars to Tailwind utilities
+
+When `data-theme="dark"` is set, the Dracula colors activate. When `data-theme="light"`, the Alucard palette takes over. Every Tailwind utility that references a token color switches automatically.
+
+## Color Palettes
+
+### Dracula (Dark)
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `bg-primary` | `#282a36` | main background |
+| `bg-secondary` | `#44475a` | cards, secondary surfaces |
+| `bg-tertiary` | `#1e1f29` | deepest background |
+| `fg-primary` | `#f8f8f2` | main text |
+| `fg-secondary` | `#6272a4` | subdued text, labels |
+| `accent-purple` | `#bd93f9` | primary accent, links |
+| `accent-pink` | `#ff79c6` | highlights |
+| `accent-green` | `#50fa7b` | success states |
+| `accent-cyan` | `#8be9fd` | info, code |
+| `accent-red` | `#ff5555` | errors, destructive |
+| `accent-orange` | `#ffb86c` | warnings |
+| `accent-yellow` | `#f1fa8c` | caution |
+
+### Alucard (Light)
+
+The light theme uses the same token names with adjusted colors for readability on light backgrounds. Accents shift to deeper, more saturated variants (e.g. purple becomes `#7c3aed`, green becomes `#16a34a`).
+
+## The ThemeToggle Component
+
+`ThemeToggle.vue` is a Vue island that handles theme persistence:
+
+```vue
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+
+const theme = ref<"dark" | "light">("dark");
+
+onMounted(() => {
+  const stored = localStorage.getItem("theme");
+  if (stored === "light" || stored === "dark") {
+    theme.value = stored;
+  } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+    theme.value = "light";
+  }
+  document.documentElement.setAttribute("data-theme", theme.value);
+});
+
+function toggle() {
+  theme.value = theme.value === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", theme.value);
+  localStorage.setItem("theme", theme.value);
+}
+</script>
+```
+
+The priority order is:
+
+1. **localStorage** -- if the user previously chose a theme, respect it
+2. **System preference** -- check `prefers-color-scheme: light`
+3. **Default** -- fall back to dark (Dracula)
+
+## Preventing Flash of Wrong Theme
+
+The `BaseLayout.astro` includes an inline script in `<head>` that runs before any content renders:
+
+```html
+<script is:inline>
+  const theme =
+    localStorage.getItem("theme") ||
+    (window.matchMedia("(prefers-color-scheme: light)").matches
+      ? "light"
+      : "dark");
+  document.documentElement.setAttribute("data-theme", theme);
+</script>
+```
+
+Because this is `is:inline` (not deferred), it executes synchronously and sets `data-theme` before the browser paints. This prevents the flash of dark content on a light-preferring system (or vice versa).
+
+## Using Theme-Aware Classes
+
+All token colors are available as Tailwind utilities. They automatically adapt to the active theme:
+
+```html
+<!-- backgrounds -->
+<div class="bg-bg-primary">main background</div>
+<div class="bg-bg-secondary">card/surface background</div>
+<div class="bg-bg-tertiary">deep background</div>
+
+<!-- text colors -->
+<p class="text-fg-primary">primary text</p>
+<p class="text-fg-secondary">secondary/muted text</p>
+<p class="text-fg-muted">subdued text</p>
+
+<!-- accent colors -->
+<a class="text-accent-purple hover:text-accent-pink">styled link</a>
+<span class="text-accent-green">success message</span>
+<span class="text-accent-red">error message</span>
+
+<!-- borders -->
+<div class="border border-border-default rounded-lg">bordered card</div>
+<hr class="border-border-muted" />
+
+<!-- selection -->
+<p class="selection:bg-selection">text with themed selection color</p>
+```
+
+These classes work identically in both themes -- the underlying CSS variable values swap when `data-theme` changes.
+
+## Combining with Tailwind Modifiers
+
+Token colors compose naturally with Tailwind's state and responsive modifiers:
+
+```html
+<button class="
+  bg-accent-purple
+  hover:bg-accent-pink
+  focus:ring-2
+  focus:ring-accent-cyan
+  text-bg-primary
+  font-semibold
+  rounded-lg
+  px-4 py-2
+  transition-colors
+">
+  Click me
+</button>
+```
+
+## prefers-color-scheme Support
+
+The system respects `prefers-color-scheme` as a fallback when no explicit theme is stored. Users who have their OS set to light mode will see the Alucard theme by default on first visit.
+
+Once a user manually toggles the theme, their choice persists in `localStorage` and overrides the system preference on subsequent visits.
+
+## Adding a New Theme
+
+To add a third theme (e.g. "high-contrast"):
+
+1. Create `packages/tokens/tokens/high-contrast.json` with the same `color` structure as `dracula.json`
+2. Add a new Style Dictionary instance in `packages/tokens/build.ts` with selector `[data-theme="high-contrast"]`
+3. Update `ThemeToggle.vue` to cycle through three options
+4. Run `pnpm tokens:build`
+
+The token pipeline handles the rest -- your new theme's CSS variables will be generated and scoped automatically.

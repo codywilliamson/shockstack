@@ -1,0 +1,186 @@
+---
+title: "Design Tokens Deep Dive"
+description: "How a single color value flows from a JSON token through Style Dictionary into CSS variables, Tailwind utilities, and TypeScript constants."
+date: 2026-02-26
+tags: [design-tokens, css, tailwind]
+---
+
+# Design Tokens Deep Dive
+
+ShockStack's design token pipeline turns a handful of JSON files into CSS variables, Tailwind theme values, TypeScript constants, and flat JSON — all from one source of truth. Here's exactly how it works.
+
+## The Source: Token JSON Files
+
+Everything starts in `packages/tokens/tokens/`. There are four files:
+
+- **`base.json`** — spacing, typography, radii, shadows, z-indices, breakpoints
+- **`dracula.json`** — dark theme colors (the default)
+- **`light.json`** — light theme colors (Alucard)
+- **`custom.json`** — empty by default, your project-specific overrides
+
+Here's what a color token looks like in `dracula.json`:
+
+```json
+{
+  "color": {
+    "accent": {
+      "purple": { "value": "#bd93f9", "type": "color" },
+      "pink": { "value": "#ff79c6", "type": "color" },
+      "green": { "value": "#50fa7b", "type": "color" }
+    }
+  }
+}
+```
+
+Each token is a `{ value, type }` pair. Style Dictionary uses the nested object structure to generate the variable name: `color.accent.purple` becomes `--ss-color-accent-purple`.
+
+## The Build: Style Dictionary v5
+
+The build script (`packages/tokens/build.ts`) creates three Style Dictionary instances — one per concern:
+
+```ts
+// dark theme → CSS variables scoped to :root and [data-theme="dark"]
+const dark = new StyleDictionary({
+  source: ["tokens/base.json", "tokens/dracula.json", "tokens/custom.json"],
+  platforms: {
+    css: {
+      transformGroup: "css",
+      prefix: "ss",
+      files: [{
+        destination: "dark.css",
+        format: "css/variables",
+        options: { selector: ':root, [data-theme="dark"]' },
+      }],
+    },
+  },
+});
+
+// light theme → CSS variables scoped to [data-theme="light"]
+const light = new StyleDictionary({
+  source: ["tokens/base.json", "tokens/light.json", "tokens/custom.json"],
+  platforms: {
+    css: {
+      prefix: "ss",
+      files: [{
+        destination: "light.css",
+        format: "css/variables",
+        options: { selector: '[data-theme="light"]' },
+      }],
+    },
+  },
+});
+
+// JS/TS exports for programmatic access
+const base = new StyleDictionary({
+  source: ["tokens/base.json", "tokens/dracula.json", "tokens/custom.json"],
+  platforms: {
+    js: { files: [{ destination: "tokens.js", format: "javascript/esm" }] },
+    ts: { files: [{ destination: "tokens.d.ts", format: "typescript/es6-declarations" }] },
+  },
+});
+```
+
+All three build in parallel:
+
+```ts
+await Promise.all([
+  dark.buildAllPlatforms(),
+  light.buildAllPlatforms(),
+  base.buildAllPlatforms(),
+]);
+```
+
+## The Output: Multiple Formats
+
+After the build, `packages/tokens/dist/` contains:
+
+| File | Format | Purpose |
+|---|---|---|
+| `dark.css` | CSS custom properties | Dark theme variables on `:root` |
+| `light.css` | CSS custom properties | Light theme variables on `[data-theme="light"]` |
+| `tokens.css` | Combined CSS | Both themes in one import |
+| `tokens.js` | ES module | Programmatic access to values |
+| `tokens.d.ts` | TypeScript declarations | Type-safe token access |
+| `tokens.json` | Flat JSON | Both themes as JSON objects |
+| `tailwind.tokens.js` | JS object | Tailwind theme extension |
+
+The generated CSS looks like this:
+
+```css
+:root, [data-theme="dark"] {
+  --ss-color-accent-purple: #bd93f9;
+  --ss-color-accent-pink: #ff79c6;
+  --ss-color-bg-primary: #282a36;
+  --ss-font-family-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --ss-radius-lg: 0.5rem;
+  /* ... */
+}
+```
+
+The `ss` prefix prevents collisions with other CSS variable systems. Every token gets the same prefix regardless of output format.
+
+## Connecting to Tailwind 4
+
+The build also generates a `tailwind.tokens.js` that maps token names to `var()` references. But ShockStack uses Tailwind 4's `@theme` block to wire things up directly in CSS:
+
+```css
+@import "../../../packages/tokens/dist/tokens.css";
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--ss-font-family-sans);
+  --font-mono: var(--ss-font-family-mono);
+
+  --color-bg-primary: var(--ss-color-bg-primary);
+  --color-accent-purple: var(--ss-color-accent-purple);
+  --color-accent-pink: var(--ss-color-accent-pink);
+  --color-border-default: var(--ss-color-border-default);
+
+  --radius-lg: var(--ss-radius-lg);
+  --shadow-md: var(--ss-shadow-md);
+}
+```
+
+This tells Tailwind "these are your theme values." Now `bg-bg-primary`, `text-accent-purple`, `rounded-lg`, and `shadow-md` all resolve to the design token values. When the theme switches from dark to light, the `--ss-*` variables change, and every Tailwind utility updates automatically.
+
+## The Full Journey of a Token
+
+Let's trace `accent-purple` from source to usage:
+
+1. **Source** — `dracula.json`: `"purple": { "value": "#bd93f9" }`
+2. **Build** — Style Dictionary transforms it into `--ss-color-accent-purple: #bd93f9`
+3. **Theme** — `global.css` maps it: `--color-accent-purple: var(--ss-color-accent-purple)`
+4. **Tailwind** — generates utility: `.text-accent-purple { color: var(--color-accent-purple) }`
+5. **Component** — used in markup: `<button class="bg-accent-purple">Submit</button>`
+6. **Theme switch** — `[data-theme="light"]` overrides `--ss-color-accent-purple` to `#7c3aed`, and the button updates instantly
+
+One value, defined once, consumed everywhere. Change it in the JSON file, run `pnpm tokens:build`, and every component in every format updates.
+
+## Why Multi-Format Output?
+
+Different consumers need different formats:
+
+- **CSS variables** — components, stylesheets, anywhere in the browser
+- **TypeScript constants** — runtime logic that needs token values (e.g., chart libraries, canvas drawing)
+- **JSON** — tools, documentation generators, design system catalogs
+- **Tailwind** — utility classes that map directly to token values
+
+By generating all formats from the same source, you eliminate drift. The purple in your CSS is guaranteed to be the same purple in your TypeScript is the same purple in your Tailwind utilities.
+
+## Adding Your Own Tokens
+
+To extend the system, edit `packages/tokens/tokens/custom.json`:
+
+```json
+{
+  "color": {
+    "brand": {
+      "primary": { "value": "#6366f1", "type": "color" }
+    }
+  }
+}
+```
+
+Run `pnpm tokens:build`, add the mapping to your `@theme` block, and you've got `bg-brand-primary` working across both themes. The custom file is merged last, so it can override anything from base or theme files.
+
+That's the whole pipeline — JSON in, everything out.

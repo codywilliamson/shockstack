@@ -1,0 +1,301 @@
+---
+title: "Backend Guide"
+description: ".NET 10 backend with clean architecture, Aspire orchestration, and EF Core database access."
+order: 7
+---
+
+# Backend Guide
+
+The optional .NET 10 backend follows **clean architecture** with separate projects for domain logic, infrastructure, and API concerns. **.NET Aspire** orchestrates all services in development.
+
+## Project Structure
+
+```
+backend/
+├── src/
+│   ├── ShockStack.Core/               # domain layer
+│   │   ├── Entities/BaseEntity.cs
+│   │   ├── Interfaces/IRepository.cs
+│   │   ├── Interfaces/IUnitOfWork.cs
+│   │   ├── DTOs/ApiResponse.cs
+│   │   └── Exceptions/
+│   ├── ShockStack.Infrastructure/      # data access layer
+│   │   ├── Data/AppDbContext.cs
+│   │   ├── Data/Repository.cs
+│   │   └── DependencyInjection.cs
+│   ├── ShockStack.Api/                 # presentation layer
+│   │   ├── Controllers/HealthController.cs
+│   │   ├── Middleware/GlobalExceptionMiddleware.cs
+│   │   └── Program.cs
+│   ├── ShockStack.AppHost/            # aspire orchestrator
+│   │   └── AppHost.cs
+│   ├── ShockStack.ServiceDefaults/    # shared aspire config
+│   │   └── Extensions.cs
+│   └── ShockStack.Tests/             # test project
+└── ShockStack.slnx
+```
+
+## Clean Architecture Layers
+
+### Core (Domain Layer)
+
+The innermost layer with zero external dependencies. Contains entities, interfaces, DTOs, and domain exceptions.
+
+**BaseEntity** -- all entities inherit from this:
+
+```csharp
+public abstract class BaseEntity
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+}
+```
+
+**IRepository** -- generic repository interface:
+
+```csharp
+public interface IRepository<T> where T : BaseEntity
+{
+    Task<T?> GetByIdAsync(Guid id, CancellationToken ct = default);
+    Task<IReadOnlyList<T>> GetAllAsync(CancellationToken ct = default);
+    Task<T> AddAsync(T entity, CancellationToken ct = default);
+    Task UpdateAsync(T entity, CancellationToken ct = default);
+    Task DeleteAsync(T entity, CancellationToken ct = default);
+}
+```
+
+**IUnitOfWork** -- for transactional operations:
+
+```csharp
+public interface IUnitOfWork
+{
+    Task<int> SaveChangesAsync(CancellationToken ct = default);
+}
+```
+
+### Infrastructure (Data Layer)
+
+Implements Core interfaces using EF Core and Npgsql. The `AppDbContext` implements `IUnitOfWork` and auto-discovers entity configurations:
+
+```csharp
+public class AppDbContext(DbContextOptions<AppDbContext> options)
+    : DbContext(options), IUnitOfWork
+{
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+    }
+}
+```
+
+The generic `Repository<T>` provides CRUD operations out of the box. Dependency injection is wired through `DependencyInjection.cs`:
+
+```csharp
+public static IServiceCollection AddInfrastructure(
+    this IServiceCollection services, string connectionString)
+{
+    services.AddDbContext<AppDbContext>(options =>
+        options.UseNpgsql(connectionString));
+
+    services.AddScoped<IUnitOfWork>(provider =>
+        provider.GetRequiredService<AppDbContext>());
+    services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+    return services;
+}
+```
+
+### Api (Presentation Layer)
+
+The outermost layer. Contains controllers, middleware, and the application entry point.
+
+## Adding a New Entity
+
+1. **Define the entity** in Core:
+
+```csharp
+// ShockStack.Core/Entities/Product.cs
+namespace ShockStack.Core.Entities;
+
+public class Product : BaseEntity
+{
+    public string Name { get; set; } = string.Empty;
+    public decimal Price { get; set; }
+    public string? Description { get; set; }
+}
+```
+
+2. **Register the DbSet** in Infrastructure:
+
+```csharp
+// add to AppDbContext
+public DbSet<Product> Products => Set<Product>();
+```
+
+3. **Create a controller** in Api:
+
+```csharp
+[ApiController]
+[Route("api/v1/[controller]")]
+public class ProductsController(IRepository<Product> repo) : ControllerBase
+{
+    [HttpGet]
+    public async Task<IActionResult> GetAll(CancellationToken ct)
+    {
+        var products = await repo.GetAllAsync(ct);
+        return Ok(ApiResponse<IReadOnlyList<Product>>.Ok(products));
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
+    {
+        var product = await repo.GetByIdAsync(id, ct)
+            ?? throw new NotFoundException($"Product {id} not found");
+        return Ok(ApiResponse<Product>.Ok(product));
+    }
+}
+```
+
+4. **Create a migration:**
+
+```bash
+cd backend/src/ShockStack.Infrastructure
+dotnet ef migrations add AddProducts --startup-project ../ShockStack.Api
+dotnet ef database update --startup-project ../ShockStack.Api
+```
+
+## ApiResponse Envelope
+
+All API responses use a consistent envelope:
+
+```csharp
+public record ApiResponse<T>(T? Data, string[]? Errors = null, object? Meta = null)
+{
+    public bool Success => Errors is null || Errors.Length == 0;
+
+    public static ApiResponse<T> Ok(T data, object? meta = null) => new(data, null, meta);
+    public static ApiResponse<T> Fail(params string[] errors) => new(default, errors);
+}
+```
+
+Success response:
+
+```json
+{
+  "data": { "status": "ready" },
+  "errors": null,
+  "meta": null,
+  "success": true
+}
+```
+
+Error response:
+
+```json
+{
+  "data": null,
+  "errors": ["Product abc123 not found"],
+  "meta": null,
+  "success": false
+}
+```
+
+## Global Exception Handling
+
+The `GlobalExceptionMiddleware` catches all unhandled exceptions and returns structured `ApiResponse` errors:
+
+- `NotFoundException` returns `404`
+- `ConflictException` returns `409`
+- Everything else returns `500` with a generic message (details logged server-side)
+
+This means controllers can throw domain exceptions and trust they'll be serialized correctly.
+
+## Health Checks
+
+The API exposes health endpoints via Aspire's ServiceDefaults:
+
+- **`/health`** -- full health check (all checks must pass)
+- **`/alive`** -- liveness check (only "live" tagged checks)
+- **`/api/v1/health/ready`** -- application-level readiness check
+
+These are available in development mode. For production health checks, configure them explicitly.
+
+## Aspire Dev Orchestration
+
+The `AppHost` project orchestrates all services for local development:
+
+```csharp
+var builder = DistributedApplication.CreateBuilder(args);
+
+var postgres = builder.AddPostgres("postgres")
+    .WithDataVolume()
+    .WithPgAdmin();
+
+var db = postgres.AddDatabase("shockstack");
+
+var api = builder.AddProject<Projects.ShockStack_Api>("api")
+    .WithReference(db)
+    .WaitFor(db);
+
+builder.AddViteApp("frontend", "../../../frontend")
+    .WithPnpm(install: false)
+    .WithReference(api)
+    .WaitFor(api);
+
+builder.Build().Run();
+```
+
+One command starts everything:
+
+```bash
+dotnet run --project backend/src/ShockStack.AppHost
+```
+
+This spins up:
+- **Postgres** with a persistent data volume and pgAdmin UI
+- **The .NET API** connected to Postgres
+- **The Astro frontend** dev server connected to the API
+
+Aspire also provides a dashboard with service health, logs, and traces at `https://localhost:17216`.
+
+## EF Core Migrations
+
+```bash
+# create a migration
+dotnet ef migrations add MigrationName \
+  --project backend/src/ShockStack.Infrastructure \
+  --startup-project backend/src/ShockStack.Api
+
+# apply migrations
+dotnet ef database update \
+  --project backend/src/ShockStack.Infrastructure \
+  --startup-project backend/src/ShockStack.Api
+
+# revert last migration
+dotnet ef migrations remove \
+  --project backend/src/ShockStack.Infrastructure \
+  --startup-project backend/src/ShockStack.Api
+```
+
+## CORS Configuration
+
+CORS is configured in `Program.cs` with allowed origins from config:
+
+```csharp
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(
+            builder.Configuration.GetSection("Cors:Origins").Get<string[]>()
+            ?? ["http://localhost:4321"])
+          .AllowAnyHeader()
+          .AllowAnyMethod()
+          .AllowCredentials();
+    });
+});
+```
+
+By default, `http://localhost:4321` (the Astro dev server) is allowed. Add production origins in your app settings or environment variables.

@@ -1,9 +1,151 @@
 ---
 const year = new Date().getFullYear();
+
+const links = {
+  product: [
+    { label: "Documentation", href: "/docs" },
+    { label: "Blog", href: "/blog" },
+    { label: "Changelog", href: "/blog" },
+  ],
+  resources: [
+    { label: "Getting Started", href: "/docs" },
+    { label: "Design Tokens", href: "/docs" },
+    { label: "Examples", href: "/docs" },
+  ],
+  community: [
+    {
+      label: "GitHub",
+      href: "https://github.com/shockbirds/shockstack",
+      external: true,
+    },
+    {
+      label: "Discussions",
+      href: "https://github.com/shockbirds/shockstack/discussions",
+      external: true,
+    },
+    {
+      label: "Issues",
+      href: "https://github.com/shockbirds/shockstack/issues",
+      external: true,
+    },
+  ],
+};
 ---
 
 <footer class="border-border-default mt-auto border-t">
-  <div class="text-fg-muted mx-auto max-w-6xl px-4 py-8 text-center text-sm">
-    <p>&copy; {year} ShockStack. Built with Astro, Vue, and Tailwind.</p>
+  <div class="mx-auto max-w-6xl px-4 py-12">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+      <!-- brand -->
+      <div>
+        <a
+          href="/"
+          class="text-accent-purple mb-3 inline-block text-lg font-bold"
+        >
+          ShockStack
+        </a>
+        <p class="text-fg-muted text-sm leading-relaxed">
+          Convention-first monorepo template. Astro 5 + Vue 3 + Tailwind 4 with
+          an optional .NET 10 backend.
+        </p>
+      </div>
+
+      <!-- product links -->
+      <div>
+        <h4
+          class="text-fg-primary mb-3 text-sm font-semibold tracking-wider uppercase"
+        >
+          Product
+        </h4>
+        <ul class="space-y-2">
+          {
+            links.product.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-fg-muted hover:text-fg-primary text-sm transition-colors"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- resources links -->
+      <div>
+        <h4
+          class="text-fg-primary mb-3 text-sm font-semibold tracking-wider uppercase"
+        >
+          Resources
+        </h4>
+        <ul class="space-y-2">
+          {
+            links.resources.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-fg-muted hover:text-fg-primary text-sm transition-colors"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- community links -->
+      <div>
+        <h4
+          class="text-fg-primary mb-3 text-sm font-semibold tracking-wider uppercase"
+        >
+          Community
+        </h4>
+        <ul class="space-y-2">
+          {
+            links.community.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-fg-muted hover:text-fg-primary text-sm transition-colors"
+                  target={link.external ? "_blank" : undefined}
+                  rel={link.external ? "noopener noreferrer" : undefined}
+                >
+                  {link.label}
+                  {link.external && (
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="ml-1 inline-block"
+                    >
+                      <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>
+                  )}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <!-- bottom bar -->
+    <div
+      class="border-border-default text-fg-muted mt-10 flex flex-col items-center justify-between gap-3 border-t pt-8 text-sm sm:flex-row"
+    >
+      <p>&copy; {year} ShockStack. All rights reserved.</p>
+      <p class="text-fg-muted font-mono text-xs">
+        built with <span class="text-accent-purple">ShockStack</span>
+      </p>
+    </div>
   </div>
 </footer>

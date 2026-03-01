@@ -1,0 +1,144 @@
+---
+title: ".NET Aspire for Full-Stack Dev"
+description: "How .NET Aspire orchestrates Postgres, the API, and the Astro frontend with a single command — and why it beats docker-compose for dev."
+date: 2026-02-22
+tags: [dotnet, aspire, devex]
+---
+
+# .NET Aspire for Full-Stack Dev
+
+ShockStack's backend is optional — but when you use it, you get .NET Aspire for orchestration. One command starts Postgres, the .NET API, and the Astro frontend, all wired together with service discovery. Here's how it works and why it's a significant upgrade over docker-compose for development.
+
+## The Problem With Full-Stack Dev
+
+A typical full-stack setup requires starting multiple services manually:
+
+```bash
+# terminal 1
+docker compose up postgres
+
+# terminal 2
+dotnet run --project backend/src/ShockStack.Api
+
+# terminal 3
+pnpm --filter frontend dev
+```
+
+Three terminals. You need to remember the startup order (Postgres before API, API before frontend). Connection strings are hardcoded or scattered across `.env` files. Logs are split across terminals. If Postgres isn't ready when the API starts, you get a cryptic connection error.
+
+## One Command
+
+With Aspire, the entire stack starts with:
+
+```bash
+dotnet run --project backend/src/ShockStack.AppHost
+```
+
+That's it. Postgres spins up, the API connects to it, and the Astro dev server starts — all from one command, in the correct dependency order.
+
+## The AppHost
+
+The orchestration is defined in `backend/src/ShockStack.AppHost/AppHost.cs`:
+
+```csharp
+var builder = DistributedApplication.CreateBuilder(args);
+
+var postgres = builder.AddPostgres("postgres")
+    .WithDataVolume()
+    .WithPgAdmin();
+
+var db = postgres.AddDatabase("shockstack");
+
+var api = builder.AddProject<Projects.ShockStack_Api>("api")
+    .WithReference(db)
+    .WaitFor(db);
+
+builder.AddViteApp("frontend", "../../../frontend")
+    .WithPnpm(install: false)
+    .WithReference(api)
+    .WaitFor(api);
+
+builder.Build().Run();
+```
+
+18 lines. Let's break down what this does:
+
+**`AddPostgres("postgres")`** — Aspire creates a Postgres container. `WithDataVolume()` persists data between restarts. `WithPgAdmin()` adds a pgAdmin web UI for database inspection.
+
+**`AddDatabase("shockstack")`** — creates the database within the Postgres instance and makes the connection string available to anything that references it.
+
+**`AddProject<Projects.ShockStack_Api>("api")`** — adds the .NET API project. `.WithReference(db)` injects the Postgres connection string automatically. `.WaitFor(db)` ensures the database is healthy before the API starts.
+
+**`AddViteApp("frontend", "../../../frontend")`** — this is the interesting one. Aspire isn't just for .NET services. `AddViteApp` starts the Astro dev server as a managed process. `.WithPnpm()` tells it to use pnpm. `.WithReference(api)` makes the API URL available to the frontend. `.WaitFor(api)` ensures the API is running first.
+
+## The Aspire Dashboard
+
+When the AppHost starts, it opens the Aspire dashboard — a web UI that shows everything about your running stack:
+
+**Structured logs** — every service's output in one place, filterable by service, severity, and content. No more switching between terminals to find an error.
+
+**Distributed traces** — when a request hits the Astro frontend, calls the .NET API, which queries Postgres, you see the entire trace as a waterfall. Latency for each hop is visible. This is the same OpenTelemetry tracing you'd use in production, but available locally during development.
+
+**Metrics** — request rates, error rates, response times. Useful for catching performance regressions early.
+
+**Resource status** — health checks for every service. Green means healthy, red means something's wrong, with logs right there to tell you what.
+
+## Service Discovery
+
+One of the most painful parts of local development is managing connection strings and service URLs. Which port is the API running on? Did it change? Is the frontend pointing at the right backend?
+
+Aspire handles this with automatic service discovery. When you add `.WithReference(api)` to the frontend, Aspire injects an environment variable with the API's URL. Your frontend code doesn't hardcode `localhost:5000` — it reads from the environment, and Aspire sets it correctly.
+
+Same for the database. The API never has a hardcoded connection string. Aspire injects it based on the `WithReference(db)` declaration. If Postgres moves to a different port, everything updates automatically.
+
+## How It Works With a Non-.NET Frontend
+
+Aspire was designed for .NET, but it handles non-.NET services through extensions like `AddViteApp`. Under the hood, it:
+
+1. Starts `pnpm dev` in the frontend directory as a child process
+2. Monitors the process health (restarts if it crashes)
+3. Injects environment variables for service references
+4. Captures stdout/stderr and routes them to the dashboard
+
+The frontend runs as a normal Vite/Astro dev server. Hot module replacement, fast refresh — everything works exactly as it does when you run `pnpm dev` manually. Aspire just manages the lifecycle and provides the dashboard.
+
+## Aspire vs Docker Compose
+
+Docker Compose is the standard tool for orchestrating local services. Aspire isn't trying to replace it for production — but for development, it has meaningful advantages:
+
+| | Docker Compose | .NET Aspire |
+|---|---|---|
+| Config language | YAML | C# (type-safe, refactorable) |
+| Startup order | `depends_on` (limited) | `WaitFor` (health-check aware) |
+| Service discovery | Manual env vars | Automatic via references |
+| Dashboard | None built-in | Logs, traces, metrics |
+| Frontend dev | Runs in container (slow HMR) | Runs natively (fast HMR) |
+| Hot reload | Rebuild container | Native dotnet watch |
+| Learning curve | Low | Low if you know C# |
+
+The biggest practical difference: **the frontend runs natively, not in a container.** With Docker Compose, your Astro dev server runs inside a container, which often means slower file watching, slower HMR, and volume mount performance issues on macOS/Windows. With Aspire, the frontend runs on your host machine with native filesystem performance.
+
+## When to Use docker-compose Instead
+
+Aspire is a development tool. For production, CI, and environments without .NET, docker-compose is still the right choice. ShockStack includes both:
+
+- `docker/` — Docker Compose files for production deployments
+- `backend/src/ShockStack.AppHost/` — Aspire for local development
+
+Use Aspire when you're actively developing. Use Docker Compose when you're deploying or running in CI.
+
+## Getting Started
+
+If you have the .NET 10 SDK installed:
+
+```bash
+# start everything
+dotnet run --project backend/src/ShockStack.AppHost
+
+# open the dashboard (URL printed in terminal)
+# usually https://localhost:17225
+```
+
+First run pulls the Postgres container image, creates the database, builds the API, and starts the frontend. Subsequent runs are fast — containers are reused, and the data volume persists your development data.
+
+The whole point of Aspire in ShockStack is removing friction. You shouldn't need a checklist to start working on the project. One command, one dashboard, everything running.

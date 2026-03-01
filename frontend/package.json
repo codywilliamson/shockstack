@@ -17,6 +17,7 @@
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.3.0",
     "@astrojs/vue": "^5.1.0",
+    "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.1",
     "astro": "^5.5.0",
     "better-auth": "^1.4.20",

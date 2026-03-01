@@ -1,0 +1,192 @@
+---
+title: "Zero-JS Animations With Modern CSS"
+description: "Scroll-driven animations, enter transitions, and discrete display changes — all in CSS, with no JavaScript and full accessibility."
+date: 2026-02-21
+tags: [css, animations, performance]
+---
+
+# Zero-JS Animations With Modern CSS
+
+ShockStack doesn't use a single line of JavaScript for animations. No Framer Motion, no GSAP, no Intersection Observer polyfills. Everything is CSS — scroll-driven reveals, enter animations, and discrete transitions. Here's how, and more importantly, why.
+
+## Why CSS-Only?
+
+The standard approach to scroll-triggered animations in most frameworks involves:
+
+1. Installing an animation library (5-50KB)
+2. Setting up an Intersection Observer
+3. Managing state for "has entered viewport"
+4. Adding/removing CSS classes via JavaScript
+5. Dealing with SSR hydration mismatches
+
+That's a lot of machinery to fade in a card. And every byte of that JavaScript runs on the main thread, competing with your actual application logic for CPU time.
+
+CSS animations run on the compositor thread. They don't block interaction, they don't delay Time to Interactive, and they don't add to your bundle. They also degrade gracefully — if a browser doesn't support a feature, the element just appears without animation. No errors, no broken layouts.
+
+## Scroll-Driven Animations: `animation-timeline: view()`
+
+The `animation-timeline` property lets you tie an animation's progress to scroll position instead of time. ShockStack uses this for the `.reveal` class:
+
+```css
+.reveal {
+  opacity: 0;
+  transform: translateY(1rem);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+  animation: reveal linear both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 30%;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+```
+
+Let's break this down:
+
+**`animation-timeline: view()`** — instead of running on a timer, this animation is driven by the element's visibility in the viewport. As the element scrolls into view, the animation progresses.
+
+**`animation-range: entry 0% entry 30%`** — the animation plays during the first 30% of the element's entry into the viewport. By the time it's 30% visible, the animation is complete. This gives a snappy reveal rather than a slow fade that tracks your scroll position.
+
+**`animation: reveal linear both`** — `linear` is important here. Since the scroll position controls progress, the easing is effectively determined by how fast you scroll. The `linear` timing function gives a 1:1 mapping between scroll position and animation progress.
+
+To use it, just add the class:
+
+```html
+<section class="reveal">
+  <h2>This fades in as you scroll down</h2>
+  <p>No JavaScript involved.</p>
+</section>
+```
+
+## Page Enter Animations: `.fade-in`
+
+Not everything is scroll-driven. For content that should animate on page load, ShockStack has the `.fade-in` class:
+
+```css
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+```
+
+This is a simple time-based animation — 0.4 seconds, runs once on load. It pairs well with Astro's View Transitions API. When navigating between pages, the old page transitions out and the new content fades in, all orchestrated by the browser.
+
+## The `@starting-style` Rule
+
+CSS now has `@starting-style`, which defines the initial state for an element's entry transition. This is useful for elements that are dynamically added to the DOM (like modals or popovers):
+
+```css
+dialog[open] {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.3s, transform 0.3s;
+
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+```
+
+When the dialog opens, it starts from the `@starting-style` values and transitions to the normal state. No JavaScript state management needed — the browser handles the initial frame.
+
+## Discrete Transitions: `transition-behavior: allow-discrete`
+
+Historically, you couldn't transition `display: none` to `display: block`. The property is discrete — there's no intermediate value between "none" and "block." The `transition-behavior: allow-discrete` property changes that:
+
+```css
+.popover {
+  display: none;
+  opacity: 0;
+  transition:
+    display 0.3s,
+    opacity 0.3s;
+  transition-behavior: allow-discrete;
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+.popover:popover-open {
+  display: block;
+  opacity: 1;
+}
+```
+
+The browser now waits to apply `display: none` until after the opacity transition completes. On entry, it immediately sets `display: block` and then transitions opacity. This gives smooth show/hide animations without toggling classes or using JavaScript timing hacks.
+
+## Accessibility: `prefers-reduced-motion`
+
+All of these animations are meaningless — and potentially harmful — if the user has requested reduced motion. ShockStack's global CSS handles this:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
+
+This is a nuclear option on purpose. When a user enables "reduce motion" in their OS settings, **every animation instantly completes** instead of playing. Elements still reach their final state (so nothing is hidden), but there's no visual motion.
+
+The `0.01ms` duration (instead of `0s`) ensures animation events still fire — some JavaScript might depend on `animationend` callbacks. Setting it to zero could break event listeners, but effectively-zero still fires them.
+
+## Combining With Astro View Transitions
+
+Astro's View Transitions API provides page-level transitions. When you navigate between pages, the browser morphs the old page into the new one. ShockStack combines this with CSS animations:
+
+1. **Between pages** — Astro's `<ViewTransitions />` component handles the cross-fade
+2. **On page load** — `.fade-in` on the main content area provides a subtle entry
+3. **As you scroll** — `.reveal` on sections creates the "content appears as you explore" effect
+
+All three layers are CSS-only. The View Transitions API is browser-native. The scroll animations use `animation-timeline`. The enter animations use standard keyframes.
+
+## Browser Support
+
+These features are modern CSS. Here's the current support landscape:
+
+- **`animation-timeline: view()`** — Chrome 115+, Edge 115+. Firefox and Safari are implementing.
+- **`@starting-style`** — Chrome 117+, Edge 117+, Firefox 129+, Safari 17.5+.
+- **`transition-behavior: allow-discrete`** — Chrome 117+, Edge 117+, Firefox 129+.
+- **`prefers-reduced-motion`** — all modern browsers, for years.
+
+For browsers that don't support scroll-driven animations, the fallback is graceful: the `transition` property on `.reveal` still works. Elements start invisible and transition to visible, just not tied to scroll position. A JS-based Intersection Observer could be added as a progressive enhancement, but ShockStack keeps it CSS-only for simplicity.
+
+## The Performance Argument
+
+Here are the numbers that matter:
+
+- **Bundle impact of CSS animations**: 0 bytes of JavaScript
+- **Main thread work**: none (compositor thread handles it)
+- **SSR hydration issues**: impossible (no JS to hydrate)
+- **Accessibility**: built-in via `prefers-reduced-motion`
+
+Compare that with a typical animation library: 15-50KB parsed JavaScript, main thread execution, potential layout thrashing, SSR hydration timing issues, and you need to remember to check `prefers-reduced-motion` yourself.
+
+Modern CSS makes most animation libraries unnecessary. Save your JavaScript budget for things that actually need interactivity.

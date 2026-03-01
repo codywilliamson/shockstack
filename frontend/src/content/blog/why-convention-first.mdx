@@ -1,0 +1,79 @@
+---
+title: "Why Convention-First Matters"
+description: "An opinionated take on why monorepo templates should make decisions for you, not ask you to make them."
+date: 2026-02-27
+tags: [architecture, opinion]
+---
+
+# Why Convention-First Matters
+
+Every monorepo template has a philosophy. Some hand you a blank canvas and say "configure everything." ShockStack takes the opposite approach: decisions are made upfront so you can skip the bikeshedding and start building.
+
+## The Configuration Tax
+
+You know the drill. You spin up a new project and immediately face a wall of decisions:
+
+- Which package manager? npm, yarn, pnpm, bun?
+- Tabs or spaces? Semicolons or not? Single or double quotes?
+- How do you structure commits? Do you even lint them?
+- CSS framework? Utility-first? CSS-in-JS? Modules?
+- Monorepo tooling? Nx? Turborepo? Lerna? Just workspaces?
+
+Each of these is a 15-minute decision that turns into a 2-hour rabbit hole. Multiply by the number of tools in a modern stack, and you've burned a full day before writing a single line of product code. That's the configuration tax.
+
+## What "Convention-First" Actually Means
+
+Convention-first doesn't mean "no configuration." It means **the defaults are the decision.** You _can_ override them, but you shouldn't need to for 90% of projects.
+
+Here's what ShockStack decides for you:
+
+| Decision | Convention | Why |
+|---|---|---|
+| Package manager | pnpm | Fast, strict, disk-efficient |
+| Monorepo tool | Turborepo | Simple config, great caching |
+| CSS | Tailwind 4 | Utility-first, zero runtime |
+| Commits | Conventional Commits | Machine-readable, auto-changelogs |
+| Linting | ESLint + Prettier | Industry standard |
+| Design tokens | Style Dictionary | Multi-format output, theme-aware |
+| Theming | `data-theme` attribute | CSS-only switching, no JS required |
+| Animations | CSS-only | No runtime, respects `prefers-reduced-motion` |
+
+Every one of these is a choice backed by a reason. Not "it's the most popular" — more like "it solves the most problems with the fewest tradeoffs for this stack."
+
+## The "Configure Everything" Alternative
+
+Plenty of templates take the opposite approach. They give you a minimal setup and let you bolt on whatever you want. That sounds flexible, but in practice it means:
+
+1. **Every project diverges.** Two teams using the same template end up with completely different setups. Onboarding becomes "learn this specific project's config."
+2. **Integration gaps.** When you pick your own CSS framework, commit tooling, and build system independently, you own all the glue code. Nobody tested those specific combinations together.
+3. **Decision fatigue compounds.** It's not just the initial setup. Every new feature requires re-evaluating: "does this fit with the choices we made?"
+
+Convention-first templates trade flexibility for velocity. You lose the ability to swap pnpm for yarn without friction. You gain the ability to clone a repo and ship something by the end of the day.
+
+## The Tradeoffs (Honestly)
+
+This approach isn't free. Here's what you give up:
+
+**Opinionated means opinionated.** If you hate Tailwind, ShockStack is going to annoy you. The design tokens generate Tailwind utilities. The components use Tailwind classes. You could rip it out, but you'd be fighting the template instead of using it.
+
+**Upgrades are coordinated.** When Tailwind 5 drops, the whole template needs to move together — tokens, components, build config. In a "configure everything" setup, you could upgrade one piece at a time.
+
+**Learning curve for disagreements.** If a convention doesn't match your mental model, you need to either adapt or fork. There's no "just change this one config file" escape hatch for core decisions.
+
+## Why It Works for Teams
+
+The biggest payoff is team scalability. When every project uses the same conventions:
+
+- **Onboarding is fast.** New devs learn the stack once, not per-project.
+- **Code reviews focus on logic.** No more arguing about import order or commit message format — the linter handles it.
+- **Shared tooling compounds.** A component built for one ShockStack project works in any ShockStack project. Same tokens, same utilities, same patterns.
+
+## The Bottom Line
+
+Convention-first is a bet that **most decisions don't matter as much as you think they do.** pnpm vs yarn? Both work. The choice barely affects your product. What affects your product is how fast you can ship, how easily your team can collaborate, and how little time you spend on infrastructure.
+
+ShockStack makes the boring decisions so you can focus on the interesting ones.
+
+That said — if you genuinely need a different stack, use a different template. Convention-first only works when the conventions actually fit. That's why ShockStack targets a specific niche (Astro + Vue + optional .NET) instead of trying to be everything for everyone.
+
+Pick your conventions. Commit to them. Build stuff.

@@ -10,9 +10,10 @@ interface Props {
   description?: string;
   image?: string;
   type?: "website" | "article";
+  fullWidth?: boolean;
 }
 
-const { title, description, image, type } = Astro.props;
+const { title, description, image, type, fullWidth = false } = Astro.props;
 ---
 
 <html lang="en" data-theme="dark">
@@ -30,7 +31,12 @@ const { title, description, image, type } = Astro.props;
   </head>
   <body class="bg-bg-primary text-fg-primary flex min-h-screen flex-col">
     <Header />
-    <main class="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+    <main
+      class:list={[
+        "flex-1",
+        fullWidth ? "w-full" : "mx-auto w-full max-w-6xl px-4 py-8",
+      ]}
+    >
       <slot />
     </main>
     <Footer />

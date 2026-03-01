@@ -4,26 +4,669 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 export const prerender = true;
 ---
 
-<BaseLayout title="ShockStack">
-  <div class="flex flex-col items-center justify-center py-20 text-center">
-    <h1 class="text-accent-purple mb-4 text-5xl font-bold">ShockStack</h1>
-    <p class="text-fg-secondary mb-8 max-w-2xl text-xl">
-      Convention-first monorepo template with Astro 5, Vue 3, Tailwind 4, and
-      optional .NET 10 backend.
-    </p>
-    <div class="flex gap-4">
-      <a
-        href="/docs"
-        class="bg-accent-purple text-bg-primary rounded-lg px-6 py-3 font-semibold transition-opacity hover:opacity-90"
+<BaseLayout
+  title="ShockStack — Convention-First Monorepo Template"
+  description="Ship faster with Astro 5, Vue 3, Tailwind 4, and an optional .NET 10 backend. Batteries included."
+  fullWidth
+>
+  <!-- hero -->
+  <section class="relative overflow-hidden px-4 pt-20 pb-24 md:pt-28 md:pb-32">
+    <!-- background glow -->
+    <div class="hero-glow" aria-hidden="true"></div>
+
+    <div class="relative mx-auto max-w-5xl text-center">
+      <p
+        class="fade-in text-accent-green mb-4 font-mono text-sm font-medium tracking-wider uppercase"
       >
-        Get Started
-      </a>
-      <a
-        href="/blog"
-        class="border-border-default text-fg-primary hover:border-accent-purple rounded-lg border px-6 py-3 font-semibold transition-colors"
+        v0 &mdash; convention-first monorepo
+      </p>
+
+      <h1
+        class="fade-in mb-6 text-5xl leading-tight font-extrabold md:text-7xl"
       >
-        Read Blog
-      </a>
+        Build full-stack apps
+        <span class="hero-gradient">at lightning speed</span>
+      </h1>
+
+      <p
+        class="fade-in text-fg-secondary mx-auto mb-10 max-w-2xl text-lg md:text-xl"
+      >
+        Astro 5 SSR, Vue 3 islands, Tailwind 4, design tokens, Better Auth, and
+        an optional .NET 10 backend &mdash; all wired together with sensible
+        defaults so you can focus on shipping.
+      </p>
+
+      <div class="fade-in flex flex-wrap items-center justify-center gap-4">
+        <a
+          href="/docs"
+          class="bg-accent-purple text-bg-primary rounded-lg px-7 py-3.5 font-semibold shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
+        >
+          Get Started
+        </a>
+        <a
+          href="https://github.com/shockbirds/shockstack"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="border-border-default text-fg-primary hover:border-accent-purple rounded-lg border px-7 py-3.5 font-semibold transition-all hover:-translate-y-0.5"
+        >
+          <span class="mr-2 inline-block align-middle" aria-hidden="true">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="inline"
+            >
+              <path
+                d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"
+              ></path>
+            </svg>
+          </span>
+          GitHub
+        </a>
+      </div>
+
+      <!-- terminal mockup -->
+      <div class="fade-in mx-auto mt-16 max-w-2xl text-left">
+        <div
+          class="bg-bg-tertiary border-border-default overflow-hidden rounded-xl border shadow-xl"
+        >
+          <div
+            class="border-border-default flex items-center gap-2 border-b px-4 py-3"
+          >
+            <span class="bg-accent-red inline-block h-3 w-3 rounded-full"
+            ></span>
+            <span class="bg-accent-yellow inline-block h-3 w-3 rounded-full"
+            ></span>
+            <span class="bg-accent-green inline-block h-3 w-3 rounded-full"
+            ></span>
+            <span class="text-fg-muted ml-2 font-mono text-xs">terminal</span>
+          </div>
+          <div class="p-5 font-mono text-sm leading-relaxed">
+            <p>
+              <span class="text-accent-green">$</span>
+              <span class="text-fg-primary">
+                pnpm create shockstack my-app</span
+              >
+            </p>
+            <p>
+              <span class="text-accent-green">$</span>
+              <span class="text-fg-primary"> cd my-app</span>
+            </p>
+            <p>
+              <span class="text-accent-green">$</span>
+              <span class="text-fg-primary"> pnpm dev</span>
+            </p>
+            <p class="text-fg-muted mt-2">
+              &#10148; frontend ready on http://localhost:4321
+            </p>
+            <p class="text-fg-muted">
+              &#10148; backend ready on http://localhost:5000
+            </p>
+            <p class="text-accent-purple mt-2">&#10003; ready in 1.2s</p>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
+
+  <!-- features grid -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-16 text-center">
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Everything you need, nothing you don't
+        </h2>
+        <p class="text-fg-secondary mx-auto max-w-2xl text-lg">
+          Batteries included where it matters. Every piece is optional,
+          swappable, and documented.
+        </p>
+      </div>
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="feature-card group">
+          <div class="feature-icon text-accent-orange">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
+          <h3 class="mb-2 text-lg font-semibold">Astro 5 SSR</h3>
+          <p class="text-fg-muted text-sm">
+            Island architecture with server-side rendering. Deploy to Cloudflare
+            Workers or Docker.
+          </p>
+        </div>
+
+        <div class="feature-card group">
+          <div class="feature-icon text-accent-green">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+              <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+              <path d="M2 2l7.586 7.586"></path>
+              <circle cx="11" cy="11" r="2"></circle>
+            </svg>
+          </div>
+          <h3 class="mb-2 text-lg font-semibold">Vue 3 Islands</h3>
+          <p class="text-fg-muted text-sm">
+            Interactive components hydrate on demand. Ship zero JS by default,
+            add reactivity where needed.
+          </p>
+        </div>
+
+        <div class="feature-card group">
+          <div class="feature-icon text-accent-purple">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="13.5" cy="6.5" r="2.5"></circle>
+              <circle cx="6" cy="12" r="2.5"></circle>
+              <circle cx="18" cy="12" r="2.5"></circle>
+              <circle cx="13.5" cy="17.5" r="2.5"></circle>
+            </svg>
+          </div>
+          <h3 class="mb-2 text-lg font-semibold">Design Tokens</h3>
+          <p class="text-fg-muted text-sm">
+            Style Dictionary v5 generates CSS vars, Tailwind config, TS
+            constants, and JSON from a single source.
+          </p>
+        </div>
+
+        <div class="feature-card group">
+          <div class="feature-icon text-accent-pink">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0110 0v4"></path>
+            </svg>
+          </div>
+          <h3 class="mb-2 text-lg font-semibold">Better Auth</h3>
+          <p class="text-fg-muted text-sm">
+            Email/password and OAuth out of the box. JWT validation shared with
+            the .NET backend.
+          </p>
+        </div>
+
+        <div class="feature-card group">
+          <div class="feature-icon text-accent-cyan">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+          </div>
+          <h3 class="mb-2 text-lg font-semibold">.NET 10 Backend</h3>
+          <p class="text-fg-muted text-sm">
+            Optional clean architecture API with EF Core, Aspire orchestration,
+            and shared auth.
+          </p>
+        </div>
+
+        <div class="feature-card group">
+          <div class="feature-icon text-accent-yellow">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5"></path>
+              <path d="M2 12l10 5 10-5"></path>
+            </svg>
+          </div>
+          <h3 class="mb-2 text-lg font-semibold">Tailwind 4</h3>
+          <p class="text-fg-muted text-sm">
+            Latest Tailwind with Vite plugin integration. Token-powered theme
+            with Dracula dark and Alucard light modes.
+          </p>
+        </div>
+
+        <div class="feature-card group">
+          <div class="feature-icon text-accent-green">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </div>
+          <h3 class="mb-2 text-lg font-semibold">CI/CD Pipeline</h3>
+          <p class="text-fg-muted text-sm">
+            GitHub Actions with semantic-release, commitlint, and automated
+            deployments baked in.
+          </p>
+        </div>
+
+        <div class="feature-card group">
+          <div class="feature-icon text-accent-orange">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0022 16z"
+              ></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+          </div>
+          <h3 class="mb-2 text-lg font-semibold">Docker Ready</h3>
+          <p class="text-fg-muted text-sm">
+            Multi-stage Dockerfiles, compose configs, and Aspire AppHost for
+            single-command orchestration.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- tech stack -->
+  <section class="reveal bg-bg-secondary/50 px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-16 text-center">
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          The stack, visualized
+        </h2>
+        <p class="text-fg-secondary mx-auto max-w-2xl text-lg">
+          A layered architecture where every piece is independently useful.
+        </p>
+      </div>
+
+      <div class="mx-auto max-w-3xl space-y-4">
+        <!-- layer: frontend -->
+        <div class="stack-layer">
+          <div class="stack-layer-label text-accent-orange">Frontend</div>
+          <div class="stack-layer-items">
+            <span class="stack-badge">Astro 5</span>
+            <span class="stack-badge">Vue 3</span>
+            <span class="stack-badge">Tailwind 4</span>
+            <span class="stack-badge">reka-ui</span>
+          </div>
+        </div>
+
+        <!-- connector -->
+        <div class="flex justify-center">
+          <div class="border-border-default h-6 border-l-2 border-dashed"></div>
+        </div>
+
+        <!-- layer: shared -->
+        <div class="stack-layer">
+          <div class="stack-layer-label text-accent-purple">Shared</div>
+          <div class="stack-layer-items">
+            <span class="stack-badge">Design Tokens</span>
+            <span class="stack-badge">Better Auth</span>
+            <span class="stack-badge">Drizzle ORM</span>
+            <span class="stack-badge">JWT</span>
+          </div>
+        </div>
+
+        <!-- connector -->
+        <div class="flex justify-center">
+          <div class="border-border-default h-6 border-l-2 border-dashed"></div>
+        </div>
+
+        <!-- layer: backend -->
+        <div class="stack-layer">
+          <div class="stack-layer-label text-accent-cyan">Backend</div>
+          <div class="stack-layer-items">
+            <span class="stack-badge">.NET 10</span>
+            <span class="stack-badge">EF Core</span>
+            <span class="stack-badge">Aspire</span>
+            <span class="stack-badge">Clean Arch</span>
+          </div>
+        </div>
+
+        <!-- connector -->
+        <div class="flex justify-center">
+          <div class="border-border-default h-6 border-l-2 border-dashed"></div>
+        </div>
+
+        <!-- layer: infra -->
+        <div class="stack-layer">
+          <div class="stack-layer-label text-accent-green">Infra</div>
+          <div class="stack-layer-items">
+            <span class="stack-badge">Docker</span>
+            <span class="stack-badge">Turborepo</span>
+            <span class="stack-badge">GitHub Actions</span>
+            <span class="stack-badge">Postgres</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- code preview -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-16 text-center">
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Developer experience first
+        </h2>
+        <p class="text-fg-secondary mx-auto max-w-2xl text-lg">
+          Clean APIs, sensible defaults, and code that reads like documentation.
+        </p>
+      </div>
+
+      <div class="grid gap-8 lg:grid-cols-2">
+        <!-- code block: token config -->
+        <div>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="text-fg-muted font-mono text-xs"
+                >tokens/dracula.json</span
+              >
+            </div>
+            <pre
+              class="code-body"><code><span class="text-fg-muted">&#123;</span>
+  <span class="text-accent-cyan">"color"</span><span class="text-fg-muted">:</span> <span class="text-fg-muted">&#123;</span>
+    <span class="text-accent-cyan">"accent"</span><span class="text-fg-muted">:</span> <span class="text-fg-muted">&#123;</span>
+      <span class="text-accent-cyan">"purple"</span><span class="text-fg-muted">:</span> <span class="text-fg-muted">&#123;</span>
+        <span class="text-accent-cyan">"$value"</span><span class="text-fg-muted">:</span> <span class="text-accent-purple">"#bd93f9"</span>
+      <span class="text-fg-muted">&#125;</span><span class="text-fg-muted">,</span>
+      <span class="text-accent-cyan">"pink"</span><span class="text-fg-muted">:</span> <span class="text-fg-muted">&#123;</span>
+        <span class="text-accent-cyan">"$value"</span><span class="text-fg-muted">:</span> <span class="text-accent-pink">"#ff79c6"</span>
+      <span class="text-fg-muted">&#125;</span><span class="text-fg-muted">,</span>
+      <span class="text-accent-cyan">"green"</span><span class="text-fg-muted">:</span> <span class="text-fg-muted">&#123;</span>
+        <span class="text-accent-cyan">"$value"</span><span class="text-fg-muted">:</span> <span class="text-accent-green">"#50fa7b"</span>
+      <span class="text-fg-muted">&#125;</span>
+    <span class="text-fg-muted">&#125;</span>
+  <span class="text-fg-muted">&#125;</span>
+<span class="text-fg-muted">&#125;</span></code></pre>
+          </div>
+          <p class="text-fg-muted mt-3 text-center text-sm">
+            Define once &mdash; generate CSS vars, Tailwind config, TS constants
+          </p>
+        </div>
+
+        <!-- code block: astro component -->
+        <div>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="text-fg-muted font-mono text-xs"
+                >pages/index.astro</span
+              >
+            </div>
+            <pre
+              class="code-body"><code><span class="text-fg-muted">---</span>
+<span class="text-accent-purple">import</span> <span class="text-fg-primary">BaseLayout</span> <span class="text-accent-purple">from</span> <span class="text-accent-yellow">"../layouts/BaseLayout.astro"</span><span class="text-fg-muted">;</span>
+<span class="text-accent-purple">import</span> <span class="text-fg-primary">Counter</span> <span class="text-accent-purple">from</span> <span class="text-accent-yellow">"../components/Counter.vue"</span><span class="text-fg-muted">;</span>
+
+<span class="text-accent-purple">export const</span> <span class="text-fg-primary">prerender</span> <span class="text-accent-purple">=</span> <span class="text-accent-purple">true</span><span class="text-fg-muted">;</span>
+<span class="text-fg-muted">---</span>
+
+<span class="text-accent-pink">&lt;BaseLayout</span> <span class="text-accent-green">title</span><span class="text-fg-muted">=</span><span class="text-accent-yellow">"Home"</span><span class="text-accent-pink">&gt;</span>
+  <span class="text-accent-pink">&lt;h1</span> <span class="text-accent-green">class</span><span class="text-fg-muted">=</span><span class="text-accent-yellow">"text-accent-purple"</span><span class="text-accent-pink">&gt;</span>
+    <span class="text-fg-primary">Hello ShockStack</span>
+  <span class="text-accent-pink">&lt;/h1&gt;</span>
+  <span class="text-accent-pink">&lt;Counter</span> <span class="text-accent-green">client:visible</span> <span class="text-accent-pink">/&gt;</span>
+<span class="text-accent-pink">&lt;/BaseLayout&gt;</span></code></pre>
+          </div>
+          <p class="text-fg-muted mt-3 text-center text-sm">
+            Astro components with Vue islands that hydrate on demand
+          </p>
+        </div>
+
+        <!-- code block: quick start (full width) -->
+        <div class="lg:col-span-2">
+          <div class="code-block">
+            <div class="code-header">
+              <span class="text-fg-muted font-mono text-xs">quick start</span>
+            </div>
+            <pre
+              class="code-body"><code><span class="text-fg-muted"># clone and install</span>
+<span class="text-accent-green">$</span> <span class="text-fg-primary">git clone https://github.com/shockbirds/shockstack my-app</span>
+<span class="text-accent-green">$</span> <span class="text-fg-primary">cd my-app && pnpm install</span>
+
+<span class="text-fg-muted"># build design tokens</span>
+<span class="text-accent-green">$</span> <span class="text-fg-primary">pnpm tokens:build</span>
+
+<span class="text-fg-muted"># start dev servers (frontend + backend)</span>
+<span class="text-accent-green">$</span> <span class="text-fg-primary">pnpm dev</span>
+
+<span class="text-fg-muted"># or run the full stack via aspire</span>
+<span class="text-accent-green">$</span> <span class="text-fg-primary">dotnet run --project backend/src/ShockStack.AppHost</span></code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- cta -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-3xl text-center">
+      <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+        Ready to build something?
+      </h2>
+      <p class="text-fg-secondary mx-auto mb-10 max-w-xl text-lg">
+        ShockStack gives you the architecture so you can focus on the product.
+        Clone, customize, ship.
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a
+          href="/docs"
+          class="bg-accent-purple text-bg-primary rounded-lg px-8 py-4 text-lg font-semibold shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
+        >
+          Read the Docs
+        </a>
+        <a
+          href="https://github.com/shockbirds/shockstack"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="border-border-default text-fg-primary hover:border-accent-purple rounded-lg border px-8 py-4 text-lg font-semibold transition-all hover:-translate-y-0.5"
+        >
+          Star on GitHub
+        </a>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  /* hero gradient text */
+  .hero-gradient {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-purple),
+      var(--color-accent-pink),
+      var(--color-accent-cyan)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* hero background glow effect */
+  .hero-glow {
+    position: absolute;
+    top: -40%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 100%;
+    background: radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, var(--color-accent-purple) 15%, transparent),
+      color-mix(in srgb, var(--color-accent-pink) 5%, transparent) 50%,
+      transparent 70%
+    );
+    filter: blur(60px);
+    pointer-events: none;
+  }
+
+  /* feature cards */
+  .feature-card {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .feature-card:hover {
+    border-color: var(--color-accent-purple);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-tertiary);
+    margin-bottom: 1rem;
+  }
+
+  /* stack visualization */
+  .stack-layer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    padding: 1.25rem 1.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .stack-layer:hover {
+    border-color: var(--color-accent-purple);
+  }
+
+  @media (min-width: 640px) {
+    .stack-layer {
+      flex-direction: row;
+    }
+  }
+
+  .stack-layer-label {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-width: 6rem;
+    text-align: center;
+  }
+
+  @media (min-width: 640px) {
+    .stack-layer-label {
+      text-align: left;
+    }
+  }
+
+  .stack-layer-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  @media (min-width: 640px) {
+    .stack-layer-items {
+      justify-content: flex-start;
+    }
+  }
+
+  .stack-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    background-color: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-muted);
+    color: var(--color-fg-primary);
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+
+  /* code blocks */
+  .code-block {
+    background-color: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+  }
+
+  .code-header {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-border-default);
+    background-color: var(--color-bg-secondary);
+  }
+
+  .code-body {
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .code-body code {
+    font-family: inherit;
+  }
+</style>

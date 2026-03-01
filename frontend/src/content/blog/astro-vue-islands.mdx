@@ -1,0 +1,167 @@
+---
+title: "Astro + Vue Islands Architecture"
+description: "When to use Astro components for static content and Vue islands for interactivity — and how hydration strategies affect performance."
+date: 2026-02-25
+tags: [astro, vue, architecture]
+---
+
+# Astro + Vue Islands Architecture
+
+ShockStack uses Astro 5 for the overall application shell and Vue 3 for interactive "islands." This isn't just a tech preference — it's an architectural pattern that ships dramatically less JavaScript to the browser.
+
+## What Are Islands?
+
+The islands architecture treats your page as a sea of static HTML with small islands of interactivity. Most of your page — the header, footer, blog content, navigation links — is rendered as plain HTML at build time or on the server. Only the pieces that actually need JavaScript get hydrated as interactive components.
+
+In Astro, this is the default. Every `.astro` component renders to static HTML. Vue components only become interactive when you explicitly tell Astro to hydrate them.
+
+## When to Use Astro Components
+
+Astro components (`.astro` files) are the right choice for anything that doesn't need client-side interactivity:
+
+- **Layouts** — page shells, navigation structure, footer
+- **Content rendering** — blog posts, documentation, marketing pages
+- **Static UI** — cards, grids, typography, decorative elements
+- **SEO-critical content** — anything that needs to be in the initial HTML
+
+An Astro component for a blog post layout might look like:
+
+```astro
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ThemeToggle from "../components/ui/ThemeToggle.vue";
+
+const { frontmatter } = Astro.props;
+---
+<BaseLayout title={frontmatter.title}>
+  <article class="prose max-w-2xl mx-auto">
+    <h1>{frontmatter.title}</h1>
+    <time class="text-fg-secondary">{frontmatter.date}</time>
+    <slot />
+  </article>
+  <ThemeToggle client:load />
+</BaseLayout>
+```
+
+The entire article renders as static HTML. Zero JavaScript. The only interactive piece is the `ThemeToggle`, which gets its own tiny Vue runtime.
+
+## When to Use Vue Islands
+
+Vue components make sense when you need:
+
+- **User input** — forms, search, filters
+- **State management** — toggling, selections, dynamic content
+- **API calls** — anything that talks to a server after page load
+- **Complex interactions** — drag and drop, animations triggered by user actions
+
+ShockStack includes two Vue islands out of the box:
+
+### ThemeToggle.vue
+
+The theme toggle reads from `localStorage`, updates the `data-theme` attribute on `<html>`, and persists the choice. This requires client-side JavaScript — there's no way to do it with static HTML.
+
+```vue
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+
+const theme = ref<"dark" | "light">("dark");
+
+onMounted(() => {
+  const stored = localStorage.getItem("theme");
+  if (stored === "light" || stored === "dark") {
+    theme.value = stored;
+  } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+    theme.value = "light";
+  }
+  document.documentElement.setAttribute("data-theme", theme.value);
+});
+
+function toggle() {
+  theme.value = theme.value === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", theme.value);
+  localStorage.setItem("theme", theme.value);
+}
+</script>
+```
+
+This is used with `client:load` because the theme toggle needs to be interactive immediately — users expect to click it as soon as they see it.
+
+### AuthForm.vue
+
+The auth form handles email/password login and registration. It manages form state, validation, API calls to Better Auth, and error display. Classic island territory.
+
+```astro
+---
+import AuthForm from "../components/ui/AuthForm.vue";
+---
+<div class="flex min-h-screen items-center justify-center">
+  <AuthForm mode="login" client:load />
+</div>
+```
+
+Again, `client:load` — a login form that doesn't respond to input isn't useful.
+
+## Hydration Strategies
+
+The `client:*` directive tells Astro _when_ to hydrate a Vue component. Choosing the right one matters for performance:
+
+### `client:load`
+Hydrates immediately when the page loads. Use for above-the-fold interactive content that users need right away.
+
+```astro
+<ThemeToggle client:load />
+<AuthForm mode="login" client:load />
+```
+
+### `client:idle`
+Hydrates when the browser is idle (via `requestIdleCallback`). Good for interactive content that isn't needed in the first second.
+
+```astro
+<NewsletterSignup client:idle />
+<FeedbackWidget client:idle />
+```
+
+### `client:visible`
+Hydrates when the component scrolls into the viewport (via `IntersectionObserver`). Perfect for below-the-fold content.
+
+```astro
+<CommentSection client:visible />
+<RelatedPosts client:visible />
+```
+
+### `client:media`
+Hydrates only when a CSS media query matches. Useful for mobile-only or desktop-only interactions.
+
+```astro
+<MobileMenu client:media="(max-width: 768px)" />
+```
+
+### `client:only="vue"`
+Skips server rendering entirely. The component only renders on the client. Use sparingly — it defeats the purpose of SSR.
+
+## The Performance Payoff
+
+Here's why this matters. A typical SPA (React, Vue SPA, Next.js with full hydration) ships the entire framework to the client and hydrates the whole page. Even static text gets wrapped in a reactive component tree.
+
+With islands:
+
+- A blog post page ships **zero JS** for the content itself
+- Only the theme toggle (~2KB of Vue runtime + component) gets hydrated
+- A page with no interactive components ships **no JavaScript at all**
+
+This translates to:
+
+- **Faster Time to Interactive** — the browser doesn't need to parse and execute a 200KB framework bundle to show a blog post
+- **Lower memory usage** — no reactive component tree for static content
+- **Better Core Web Vitals** — less JS means better INP and TBT scores
+
+## Making the Decision
+
+When you're building a new component in ShockStack, ask one question: **does this need to respond to user interaction after the initial page load?**
+
+- **No** — make it an Astro component. It renders once and ships no JS.
+- **Yes** — make it a Vue component. Pick the most conservative hydration strategy that still gives a good UX.
+
+Most pages are 80-90% static. Islands architecture lets you treat that 80-90% as free — zero JavaScript cost — and only pay for the interactive parts you actually need.
+
+That's not an optimization trick. That's the architecture doing the right thing by default.

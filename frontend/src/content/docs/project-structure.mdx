@@ -1,0 +1,144 @@
+---
+title: "Project Structure"
+description: "Deep dive into the ShockStack monorepo layout, workspaces, and build orchestration."
+order: 2
+---
+
+# Project Structure
+
+ShockStack is a monorepo powered by **pnpm workspaces** and **Turborepo**. Every package lives in one repository, shares tooling, and ships with a single version number.
+
+## Full Directory Tree
+
+```
+shockstack/
+├── frontend/                  # astro 5 SSR application
+│   ├── src/
+│   │   ├── components/        # astro + vue components
+│   │   │   ├── layout/        # Header, Footer
+│   │   │   └── ui/            # ThemeToggle, SEO, AuthForm
+│   │   ├── content/           # content collections (blog, docs, changelog)
+│   │   ├── layouts/           # BaseLayout.astro
+│   │   ├── lib/               # auth, db, api-client utilities
+│   │   ├── pages/             # file-based routing
+│   │   ├── styles/            # global.css (token imports + tailwind)
+│   │   └── middleware.ts      # auth session injection + route guards
+│   ├── astro.config.ts
+│   └── package.json
+├── backend/                   # optional .NET 10 API
+│   ├── src/
+│   │   ├── ShockStack.Core/           # entities, interfaces, DTOs
+│   │   ├── ShockStack.Infrastructure/ # EF Core, repositories
+│   │   ├── ShockStack.Api/            # controllers, middleware
+│   │   ├── ShockStack.AppHost/        # aspire orchestration
+│   │   ├── ShockStack.ServiceDefaults/# shared aspire config
+│   │   └── ShockStack.Tests/          # unit/integration tests
+│   └── ShockStack.slnx
+├── packages/
+│   └── tokens/                # design token system (Style Dictionary)
+│       ├── tokens/            # source token JSON files
+│       ├── build.ts           # token build script
+│       └── dist/              # generated outputs (CSS, JS, JSON)
+├── docker/                    # docker compose + Dockerfiles
+│   ├── docker-compose.yml
+│   ├── docker-compose.dev.yml
+│   ├── frontend.Dockerfile
+│   └── postgres/init.sql
+├── docs/                      # project documentation
+│   └── system/                # modular architecture docs
+├── .github/
+│   └── workflows/             # CI, release, deploy pipelines
+├── turbo.json                 # turborepo task config
+├── pnpm-workspace.yaml        # workspace definitions
+└── package.json               # root scripts + shared devDependencies
+```
+
+## Workspace Configuration
+
+The `pnpm-workspace.yaml` file defines which directories are packages:
+
+```yaml
+packages:
+  - "frontend"
+  - "packages/*"
+```
+
+This means pnpm treats `frontend/` and every directory under `packages/` as independent packages. Each has its own `package.json`, dependencies, and scripts.
+
+Shared dev tooling lives in the root `package.json` -- things like ESLint, Prettier, commitlint, husky, and semantic-release. Individual packages only declare the dependencies they actually use.
+
+## Turborepo Orchestration
+
+Turborepo manages task execution across workspaces. The `turbo.json` config:
+
+```json
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".astro/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {},
+    "typecheck": {},
+    "test": {}
+  }
+}
+```
+
+Key behaviors:
+
+- **`build`** -- `dependsOn: ["^build"]` means a package's build waits for its dependencies to build first. So `frontend` won't build until `@shockstack/tokens` finishes. Outputs are cached.
+- **`dev`** -- runs all workspace dev servers in parallel. `persistent: true` keeps them running. No caching since dev servers are long-lived.
+- **`lint`/`typecheck`/`test`** -- run in parallel across all workspaces with no dependencies between them.
+
+Run any task from the root:
+
+```bash
+pnpm dev        # starts all dev servers
+pnpm build      # builds tokens first, then frontend
+pnpm lint       # lints all workspaces in parallel
+pnpm test       # runs all test suites
+pnpm typecheck  # typechecks all workspaces
+```
+
+## The Tokens-to-Frontend Pipeline
+
+The `@shockstack/tokens` package is a build dependency of `frontend`. The flow:
+
+1. Edit token JSON files in `packages/tokens/tokens/`
+2. Run `pnpm tokens:build` (or let Turborepo handle it via `pnpm build`)
+3. Style Dictionary generates CSS variables, JS exports, and Tailwind config into `packages/tokens/dist/`
+4. The frontend imports `packages/tokens/dist/tokens.css` in its `global.css`
+5. Tailwind 4's `@theme` block maps token CSS vars to Tailwind utilities
+
+This means a single token change flows through to every component using Tailwind classes automatically.
+
+## The Optional Backend
+
+The `.NET 10` backend is completely optional. It follows clean architecture with separate projects for Core, Infrastructure, and Api layers. The backend directory also includes:
+
+- **AppHost** -- .NET Aspire orchestrator that starts Postgres, the API, and the frontend dev server together
+- **ServiceDefaults** -- shared config for health checks, OpenTelemetry, and service discovery
+
+If you don't need a backend API, simply delete the `backend/` directory. The frontend works standalone with Astro, Better Auth, and Drizzle handling everything server-side.
+
+## Root Scripts
+
+```json
+{
+  "dev": "turbo dev",
+  "build": "turbo build",
+  "lint": "turbo lint",
+  "test": "turbo test",
+  "typecheck": "turbo typecheck",
+  "tokens:build": "pnpm --filter @shockstack/tokens build",
+  "prepare": "husky"
+}
+```
+
+The `prepare` script sets up husky git hooks on `pnpm install`, enabling commitlint and lint-staged to run automatically on every commit.

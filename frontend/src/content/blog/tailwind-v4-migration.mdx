@@ -1,0 +1,207 @@
+---
+title: "Tailwind v4: What Actually Changed"
+description: "The practical differences between Tailwind 3 and 4 — new Vite plugin, CSS-first config, @theme blocks, and how ShockStack uses them."
+date: 2026-02-24
+tags: [tailwind, css, migration]
+---
+
+# Tailwind v4: What Actually Changed
+
+Tailwind 4 is a ground-up rewrite. Not a minor version bump with some new utilities — a fundamentally different architecture. ShockStack is built on v4 from the start, so here's what's different and why it matters.
+
+## Goodbye PostCSS, Hello Vite Plugin
+
+The biggest change: Tailwind 4 doesn't use PostCSS. It ships as a native Vite plugin.
+
+**Tailwind 3 setup:**
+
+```js
+// postcss.config.js
+export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+```
+
+```js
+// tailwind.config.js
+export default {
+  content: ["./src/**/*.{astro,vue,ts,tsx}"],
+  theme: { extend: { /* ... */ } },
+  plugins: [],
+};
+```
+
+**Tailwind 4 setup:**
+
+```ts
+// vite.config.ts (or astro.config.ts)
+import tailwindcss from "@tailwindcss/vite";
+
+export default defineConfig({
+  plugins: [tailwindcss()],
+});
+```
+
+That's it. No `postcss.config.js`. No `tailwind.config.js`. No `content` array — Tailwind 4 automatically detects your source files. Two config files reduced to zero.
+
+In ShockStack's Astro config, it looks like this:
+
+```ts
+import { defineConfig } from "astro/config";
+import tailwindcss from "@tailwindcss/vite";
+
+export default defineConfig({
+  vite: {
+    plugins: [tailwindcss()],
+  },
+});
+```
+
+## CSS-First Configuration
+
+In Tailwind 3, you customized the theme in JavaScript:
+
+```js
+// tailwind.config.js (v3)
+export default {
+  theme: {
+    extend: {
+      colors: {
+        primary: "#bd93f9",
+        secondary: "#44475a",
+      },
+      fontFamily: {
+        sans: ["Inter", "system-ui", "sans-serif"],
+      },
+      borderRadius: {
+        lg: "0.5rem",
+      },
+    },
+  },
+};
+```
+
+In Tailwind 4, you do it in CSS with the `@theme` block:
+
+```css
+/* global.css (v4) */
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #bd93f9;
+  --color-secondary: #44475a;
+  --font-sans: Inter, system-ui, sans-serif;
+  --radius-lg: 0.5rem;
+}
+```
+
+This is a big shift. Your theme is now CSS, living alongside your styles. No more context-switching between a JS config file and your stylesheets.
+
+## The @theme Block
+
+The `@theme` block is how you tell Tailwind "these are the values I want to use in my utility classes." Whatever you define in `@theme` becomes available as utilities.
+
+```css
+@theme {
+  --color-brand: #6366f1;
+}
+```
+
+Now `bg-brand`, `text-brand`, `border-brand` all work. The naming convention follows the CSS variable name: `--color-{name}` creates color utilities, `--font-{name}` creates font utilities, `--radius-{name}` creates border-radius utilities.
+
+This is how ShockStack connects design tokens to Tailwind. The token pipeline generates CSS variables with `--ss-` prefixes, and the `@theme` block maps them to Tailwind's namespace:
+
+```css
+@import "../../../packages/tokens/dist/tokens.css";
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--ss-font-family-sans);
+  --font-mono: var(--ss-font-family-mono);
+
+  --color-bg-primary: var(--ss-color-bg-primary);
+  --color-bg-secondary: var(--ss-color-bg-secondary);
+  --color-bg-tertiary: var(--ss-color-bg-tertiary);
+  --color-fg-primary: var(--ss-color-fg-primary);
+  --color-fg-secondary: var(--ss-color-fg-secondary);
+
+  --color-accent-purple: var(--ss-color-accent-purple);
+  --color-accent-pink: var(--ss-color-accent-pink);
+  --color-accent-green: var(--ss-color-accent-green);
+  --color-accent-cyan: var(--ss-color-accent-cyan);
+
+  --color-border-default: var(--ss-color-border-default);
+
+  --radius-sm: var(--ss-radius-sm);
+  --radius-lg: var(--ss-radius-lg);
+  --shadow-md: var(--ss-shadow-md);
+}
+```
+
+Because the `--ss-*` variables change when the `data-theme` attribute switches (dark tokens are on `:root`, light tokens are on `[data-theme="light"]`), every Tailwind utility automatically adapts to the current theme. No dark mode variant needed.
+
+## What Happened to `darkMode`?
+
+In Tailwind 3, you'd configure dark mode in the config:
+
+```js
+// v3
+export default {
+  darkMode: "class", // or "media"
+  // ...
+};
+```
+
+Then use `dark:` variants everywhere:
+
+```html
+<div class="bg-white dark:bg-gray-900 text-black dark:text-white">
+```
+
+ShockStack doesn't need this pattern at all. Since the design tokens change via CSS variables when the theme switches, a single class handles both modes:
+
+```html
+<div class="bg-bg-primary text-fg-primary">
+```
+
+No `dark:` prefix. The CSS variables resolve to the right values based on the active theme. This cuts the class count roughly in half on themed elements.
+
+## No More `content` Array
+
+Tailwind 3 required you to tell it where your templates live:
+
+```js
+// v3
+export default {
+  content: [
+    "./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}",
+  ],
+};
+```
+
+Forget to add a path? Your classes get purged and nothing renders. It was a constant source of "why isn't my class working" debugging.
+
+Tailwind 4 uses automatic content detection. It scans your project based on imports and module graph — no config needed. If your file is part of the build, Tailwind sees it.
+
+## New Default Scale
+
+Tailwind 4 ships a refined default color palette and spacing scale. The naming is also cleaner — `text-gray-900` is still there, but the scale is more consistent.
+
+For ShockStack, this doesn't matter much since we override all color and spacing values with design tokens. But if you use any default Tailwind values alongside the token system, you'll find them slightly different from v3.
+
+## Migration Checklist
+
+If you're coming from a Tailwind 3 project:
+
+1. **Remove** `postcss.config.js` and `tailwind.config.js`
+2. **Install** `@tailwindcss/vite` instead of `tailwindcss` and `autoprefixer`
+3. **Add** the Vite plugin to your build config
+4. **Replace** `@tailwind base/components/utilities` with `@import "tailwindcss"`
+5. **Move** theme customizations from `tailwind.config.js` to a `@theme` block
+6. **Remove** the `content` array (automatic detection handles it)
+7. **Test** — some edge cases around custom plugins may need updates
+
+The migration is worth it. Less config, faster builds, and a more natural CSS-first workflow.

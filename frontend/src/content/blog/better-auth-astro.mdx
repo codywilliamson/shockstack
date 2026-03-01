@@ -1,0 +1,219 @@
+---
+title: "Better Auth in Astro 5"
+description: "How ShockStack integrates Better Auth for server-side sessions, the Drizzle adapter pattern, protected routes, and client-side auth."
+date: 2026-02-23
+tags: [auth, astro, security]
+---
+
+# Better Auth in Astro 5
+
+Authentication is one of those things that sounds simple until you actually implement it. ShockStack uses [Better Auth](https://www.better-auth.com/) — a framework-agnostic TypeScript auth library that plays exceptionally well with Astro 5's SSR model.
+
+## Why Better Auth?
+
+There are a few auth libraries in the TypeScript ecosystem. Here's why ShockStack landed on Better Auth over the alternatives:
+
+**Lucia** was the go-to for a while, but the maintainer deprecated it in favor of rolling your own auth with their guides. Great learning resource, but not what you want in a template that's supposed to save you time.
+
+**Auth.js (NextAuth)** is React-centric. It works with other frameworks through adapters, but the DX is designed around Next.js. It also has a history of breaking changes between major versions.
+
+**Better Auth** is framework-agnostic from the ground up. It works with any server framework, ships with a Drizzle adapter, handles session management via cookies, and has a clean client-side API. It does one thing well and doesn't try to own your whole stack.
+
+## Server-Side Setup
+
+The auth instance lives in `frontend/src/lib/auth.ts`:
+
+```ts
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { db } from "./db/client";
+import * as schema from "./db/schema";
+
+export const auth = betterAuth({
+  baseURL: import.meta.env.BETTER_AUTH_URL || "http://localhost:4321",
+  database: drizzleAdapter(db, {
+    provider: "pg",
+    schema,
+  }),
+  emailAndPassword: {
+    enabled: true,
+  },
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 60 * 5, // 5 minutes
+    },
+  },
+});
+```
+
+A few things to note:
+
+- **Drizzle adapter** — Better Auth stores sessions, users, and accounts in your existing Postgres database via Drizzle ORM. No separate auth database.
+- **Cookie caching** — sessions are cached in a signed cookie for 5 minutes, avoiding a database hit on every request. After 5 minutes, it re-validates against the DB.
+- **Email/password** — enabled by default. You can add OAuth providers (Google, GitHub, etc.) by importing their plugins.
+
+## The Middleware Pattern
+
+Astro's middleware runs on every server-rendered request. ShockStack uses it to attach the user session to the request context:
+
+```ts
+import { defineMiddleware } from "astro:middleware";
+
+const protectedRoutes = ["/dashboard"];
+const staticRoutes = ["/blog", "/docs", "/changelog", "/rss.xml"];
+
+export const onRequest = defineMiddleware(async (context, next) => {
+  const pathname = context.url.pathname;
+
+  // skip auth for static content and api routes
+  const isStatic =
+    pathname === "/" ||
+    staticRoutes.some((r) => pathname.startsWith(r)) ||
+    pathname.startsWith("/api/");
+
+  if (isStatic) {
+    context.locals.user = null;
+    context.locals.session = null;
+    return next();
+  }
+
+  // lazy import to avoid loading auth on static routes
+  try {
+    const { auth } = await import("./lib/auth");
+    const session = await auth.api.getSession({
+      headers: context.request.headers,
+    });
+    context.locals.user = session?.user ?? null;
+    context.locals.session = session?.session ?? null;
+  } catch {
+    context.locals.user = null;
+    context.locals.session = null;
+  }
+
+  // redirect unauthenticated users from protected routes
+  const isProtected = protectedRoutes.some((route) =>
+    pathname.startsWith(route),
+  );
+
+  if (isProtected && !context.locals.session) {
+    return context.redirect("/login");
+  }
+
+  return next();
+});
+```
+
+The key design decisions here:
+
+1. **Static routes skip auth entirely.** Blog posts, docs, and other prerendered content don't need session data. This avoids importing the auth module (and hitting the database) for pages that don't need it.
+
+2. **Lazy import.** The `await import("./lib/auth")` ensures the auth module and its database dependency only load when needed. On static routes, this code never runs.
+
+3. **Graceful fallback.** If the database is down or auth fails, the middleware catches the error and treats the user as unauthenticated. Your public pages still work even when the DB is unreachable.
+
+## Protected Routes
+
+Adding a protected route is straightforward — just add the path to the `protectedRoutes` array:
+
+```ts
+const protectedRoutes = ["/dashboard", "/settings", "/admin"];
+```
+
+Any request to these paths without a valid session gets redirected to `/login`. The redirect happens server-side, so unauthorized users never see a flash of protected content.
+
+In your Astro pages, you can access the user:
+
+```astro
+---
+const user = Astro.locals.user;
+---
+<h1>Welcome, {user?.name}</h1>
+```
+
+## Client-Side Auth
+
+For Vue islands that need auth (login forms, registration, profile updates), ShockStack uses Better Auth's client:
+
+```ts
+// frontend/src/lib/auth-client.ts
+import { createAuthClient } from "better-auth/client";
+
+export const authClient = createAuthClient();
+```
+
+The `AuthForm.vue` component uses this client to handle sign-in and sign-up:
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { authClient } from "../../lib/auth-client";
+
+const email = ref("");
+const password = ref("");
+const error = ref("");
+const loading = ref(false);
+
+async function handleSubmit() {
+  loading.value = true;
+  try {
+    const result = await authClient.signIn.email({
+      email: email.value,
+      password: password.value,
+    });
+    if (result.error) {
+      error.value = result.error.message || "Login failed";
+      return;
+    }
+    window.location.href = "/dashboard";
+  } catch {
+    error.value = "An unexpected error occurred";
+  } finally {
+    loading.value = false;
+  }
+}
+</script>
+```
+
+The client sends credentials to Better Auth's API endpoint, which sets a session cookie. After successful login, a full page navigation to `/dashboard` lets the middleware pick up the new session.
+
+## Cookies vs JWTs
+
+ShockStack uses cookie-based sessions, not JWTs. Here's why:
+
+**Cookies** are httpOnly, secure, and managed by the browser. They're automatically sent with every request. You can't access them from JavaScript (which is a feature — XSS attacks can't steal them). They're easy to revoke server-side by deleting the session from the database.
+
+**JWTs** are stateless, which sounds great until you need to revoke one. You either maintain a blocklist (defeating the "stateless" benefit) or accept that stolen tokens work until they expire. They're also stored in memory or `localStorage`, both accessible to JavaScript.
+
+For a server-rendered app like Astro, cookies are the natural fit. The server checks the cookie on every request, the middleware attaches the session, and pages render with the correct user context. No client-side token management needed.
+
+## Adding OAuth Providers
+
+Better Auth supports OAuth out of the box. To add GitHub login:
+
+```ts
+import { betterAuth } from "better-auth";
+import { github } from "better-auth/plugins";
+
+export const auth = betterAuth({
+  // ... existing config
+  plugins: [
+    github({
+      clientId: import.meta.env.GITHUB_CLIENT_ID,
+      clientSecret: import.meta.env.GITHUB_CLIENT_SECRET,
+    }),
+  ],
+});
+```
+
+Then on the client:
+
+```ts
+await authClient.signIn.social({ provider: "github" });
+```
+
+Better Auth handles the OAuth flow, callback, and account linking automatically. The session cookie works the same way regardless of how the user authenticated.
+
+## The Big Picture
+
+Auth in ShockStack follows the same convention-first philosophy as everything else: sensible defaults, minimal config, and clear boundaries between server and client. The middleware handles protection. Better Auth handles sessions. Drizzle handles persistence. You handle the UI.
