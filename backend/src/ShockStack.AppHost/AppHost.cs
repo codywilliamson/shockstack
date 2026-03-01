@@ -13,6 +13,8 @@ var api = builder.AddProject<Projects.ShockStack_Api>("api")
 builder.AddViteApp("frontend", "../../../frontend")
     .WithPnpm(install: false)
     .WithReference(api)
-    .WaitFor(api);
+    .WithReference(db)
+    .WaitFor(api)
+    .WaitFor(db);
 
 builder.Build().Run();

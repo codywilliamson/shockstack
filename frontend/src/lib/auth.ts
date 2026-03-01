@@ -7,8 +7,14 @@ export const auth = betterAuth({
   baseURL: import.meta.env.BETTER_AUTH_URL || "http://localhost:4321",
   database: drizzleAdapter(db, {
     provider: "pg",
-    schema,
+    schema: {
+      user: schema.users,
+      session: schema.sessions,
+      account: schema.accounts,
+      verification: schema.verifications,
+    },
   }),
+  trustedOrigins: ["http://localhost:*", "https://localhost:*"],
   emailAndPassword: {
     enabled: true,
     changeEmail: {

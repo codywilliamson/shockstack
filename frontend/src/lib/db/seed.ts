@@ -1,6 +1,12 @@
-import { db } from "./client";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import { users } from "./schema";
 import { eq } from "drizzle-orm";
+
+const connectionString =
+  process.env.DATABASE_URL || "postgres://localhost:5432/shockstack";
+const client = postgres(connectionString);
+const db = drizzle(client);
 
 const DEMO_EMAIL = "demo@shockstack.dev";
 const DEMO_PASSWORD = "password123";
@@ -17,16 +23,16 @@ async function seed() {
 
   if (existing.length > 0) {
     console.log("demo user already exists, skipping");
+    await client.end();
     process.exit(0);
   }
 
   console.log("seeding demo user...");
 
-  // use better auth signup to hash password properly
   const baseUrl = process.env.BETTER_AUTH_URL || "http://localhost:4321";
   const res = await fetch(`${baseUrl}/api/auth/sign-up/email`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Origin: baseUrl },
     body: JSON.stringify({
       email: DEMO_EMAIL,
       password: DEMO_PASSWORD,
@@ -37,14 +43,17 @@ async function seed() {
   if (!res.ok) {
     const body = await res.text();
     console.error("failed to seed demo user:", body);
+    await client.end();
     process.exit(1);
   }
 
   console.log(`demo user created: ${DEMO_EMAIL} / ${DEMO_PASSWORD}`);
+  await client.end();
   process.exit(0);
 }
 
-seed().catch((e) => {
+seed().catch(async (e) => {
   console.error("seed error:", e);
+  await client.end();
   process.exit(1);
 });
