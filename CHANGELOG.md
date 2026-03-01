@@ -1,3 +1,9 @@
+# [1.3.0](https://github.com/codywilliamson/shockstack/compare/v1.2.0...v1.3.0) (2026-03-01)
+
+### Features
+
+- add logo, favicon, about section, and spectacle software cta ([c792620](https://github.com/codywilliamson/shockstack/commit/c7926208d4c89804f62c98c2ec30317267f5bb9e))
+
 # [1.2.0](https://github.com/codywilliamson/shockstack/compare/v1.1.0...v1.2.0) (2026-03-01)
 
 ### Features
