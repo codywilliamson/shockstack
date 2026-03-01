@@ -18,7 +18,7 @@ export class LocalStorageAdapter implements StorageAdapter {
   ): Promise<string> {
     const filePath = join(this.baseDir, key);
     await mkdir(dirname(filePath), { recursive: true });
-    await writeFile(filePath, Buffer.from(data));
+    await writeFile(filePath, new Uint8Array(data));
     return `${this.baseUrl}/${key}`;
   }
 

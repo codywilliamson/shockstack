@@ -1,10 +1,20 @@
 import type { StorageAdapter } from "./index";
 
+// minimal R2 bucket interface — avoids @cloudflare/workers-types dependency
+interface R2BucketLike {
+  put(
+    key: string,
+    value: ArrayBuffer,
+    options?: { httpMetadata?: { contentType: string } },
+  ): Promise<unknown>;
+  delete(key: string): Promise<void>;
+}
+
 export class R2StorageAdapter implements StorageAdapter {
-  private bucket: R2Bucket;
+  private bucket: R2BucketLike;
   private publicUrl: string;
 
-  constructor(bucket: R2Bucket, publicUrl: string) {
+  constructor(bucket: R2BucketLike, publicUrl: string) {
     this.bucket = bucket;
     this.publicUrl = publicUrl.replace(/\/$/, "");
   }
