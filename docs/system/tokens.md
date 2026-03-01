@@ -5,7 +5,7 @@ Design tokens are defined once and compiled into formats used by the frontend bu
 ## Token Model
 
 - Base tokens: spacing, typography, radii, shadows, and shared primitives
-- Theme tokens: dark and light palettes mapped to semantic names
+- Theme tokens: multiple built-in palettes mapped to shared semantic names
 - Custom overrides: project-specific additions layered on top
 
 ## Build Outputs

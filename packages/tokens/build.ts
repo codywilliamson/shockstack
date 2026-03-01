@@ -8,85 +8,83 @@ const outDir = resolve(__dirname, "dist");
 
 mkdirSync(outDir, { recursive: true });
 
-// dark theme (dracula) — default
-const dark = new StyleDictionary({
-  source: [
-    resolve(__dirname, "tokens/base.json"),
-    resolve(__dirname, "tokens/dracula.json"),
-    resolve(__dirname, "tokens/custom.json"),
-  ],
-  platforms: {
-    css: {
-      transformGroup: "css",
-      buildPath: `${outDir}/`,
-      prefix: "ss",
-      files: [
-        {
-          destination: "dark.css",
-          format: "css/variables",
-          options: {
-            selector: ':root, [data-theme="dark"]',
-            outputReferences: true,
-          },
-        },
-      ],
-    },
-    json: {
-      transformGroup: "css",
-      buildPath: `${outDir}/`,
-      files: [
-        {
-          destination: "tokens-dark.json",
-          format: "json/flat",
-        },
-      ],
-    },
-  },
-});
+const baseTokens = resolve(__dirname, "tokens/base.json");
+const customTokens = resolve(__dirname, "tokens/custom.json");
 
-// light theme (alucard)
-const light = new StyleDictionary({
-  source: [
-    resolve(__dirname, "tokens/base.json"),
-    resolve(__dirname, "tokens/light.json"),
-    resolve(__dirname, "tokens/custom.json"),
-  ],
-  platforms: {
-    css: {
-      transformGroup: "css",
-      buildPath: `${outDir}/`,
-      prefix: "ss",
-      files: [
-        {
-          destination: "light.css",
-          format: "css/variables",
-          options: {
-            selector: '[data-theme="light"]',
-            outputReferences: true,
-          },
-        },
-      ],
-    },
-    json: {
-      transformGroup: "css",
-      buildPath: `${outDir}/`,
-      files: [
-        {
-          destination: "tokens-light.json",
-          format: "json/flat",
-        },
-      ],
-    },
+const themes = [
+  {
+    name: "dark",
+    source: "dracula.json",
+    selector: ':root, [data-theme="dark"]',
   },
-});
+  {
+    name: "light",
+    source: "light.json",
+    selector: '[data-theme="light"]',
+  },
+  {
+    name: "nord",
+    source: "nord.json",
+    selector: '[data-theme="nord"]',
+  },
+  {
+    name: "gruvbox",
+    source: "gruvbox.json",
+    selector: '[data-theme="gruvbox"]',
+  },
+  {
+    name: "midnight",
+    source: "midnight.json",
+    selector: '[data-theme="midnight"]',
+  },
+  {
+    name: "dawn",
+    source: "dawn.json",
+    selector: '[data-theme="dawn"]',
+  },
+] as const;
+
+const themedDictionaries = themes.map(
+  (theme) =>
+    new StyleDictionary({
+      source: [
+        baseTokens,
+        resolve(__dirname, `tokens/${theme.source}`),
+        customTokens,
+      ],
+      platforms: {
+        css: {
+          transformGroup: "css",
+          buildPath: `${outDir}/`,
+          prefix: "ss",
+          files: [
+            {
+              destination: `${theme.name}.css`,
+              format: "css/variables",
+              options: {
+                selector: theme.selector,
+                outputReferences: true,
+              },
+            },
+          ],
+        },
+        json: {
+          transformGroup: "css",
+          buildPath: `${outDir}/`,
+          files: [
+            {
+              destination: `tokens-${theme.name}.json`,
+              format: "json/flat",
+            },
+          ],
+        },
+      },
+    }),
+);
 
 // base tokens (non-themed) for js/ts exports
 const base = new StyleDictionary({
-  source: [
-    resolve(__dirname, "tokens/base.json"),
-    resolve(__dirname, "tokens/dracula.json"),
-    resolve(__dirname, "tokens/custom.json"),
-  ],
+  source: [baseTokens, resolve(__dirname, "tokens/dracula.json"), customTokens],
   platforms: {
     js: {
       transformGroup: "js",
@@ -112,26 +110,28 @@ const base = new StyleDictionary({
 });
 
 await Promise.all([
-  dark.buildAllPlatforms(),
-  light.buildAllPlatforms(),
+  ...themedDictionaries.map((dictionary) => dictionary.buildAllPlatforms()),
   base.buildAllPlatforms(),
 ]);
 
 // combine CSS files into single tokens.css
-const darkCss = readFileSync(resolve(outDir, "dark.css"), "utf-8");
-const lightCss = readFileSync(resolve(outDir, "light.css"), "utf-8");
-writeFileSync(resolve(outDir, "tokens.css"), `${darkCss}\n${lightCss}`);
+const themeCss = themes
+  .map((theme) => readFileSync(resolve(outDir, `${theme.name}.css`), "utf-8"))
+  .join("\n");
+writeFileSync(resolve(outDir, "tokens.css"), themeCss);
 
-// merge json into single tokens.json
-const darkJson = JSON.parse(
-  readFileSync(resolve(outDir, "tokens-dark.json"), "utf-8"),
-);
-const lightJson = JSON.parse(
-  readFileSync(resolve(outDir, "tokens-light.json"), "utf-8"),
+// merge all themed json outputs into single tokens.json
+const tokensByTheme = Object.fromEntries(
+  themes.map((theme) => [
+    theme.name,
+    JSON.parse(
+      readFileSync(resolve(outDir, `tokens-${theme.name}.json`), "utf-8"),
+    ),
+  ]),
 );
 writeFileSync(
   resolve(outDir, "tokens.json"),
-  JSON.stringify({ dark: darkJson, light: lightJson }, null, 2),
+  JSON.stringify(tokensByTheme, null, 2),
 );
 
 // generate tailwind theme extension
@@ -150,7 +150,8 @@ const generateTailwindConfig = (tokens: Record<string, string>) => {
   return theme;
 };
 
-const tailwindTheme = generateTailwindConfig(darkJson);
+const defaultThemeTokens = tokensByTheme.dark as Record<string, string>;
+const tailwindTheme = generateTailwindConfig(defaultThemeTokens);
 const tailwindContent = `// auto-generated by @shockstack/tokens — do not edit
 export default ${JSON.stringify(tailwindTheme, null, 2)};
 `;

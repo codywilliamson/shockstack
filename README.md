@@ -13,7 +13,7 @@ Convention-first monorepo template: Astro + optional .NET backend, ready for Clo
 | Backend       | .NET Web API (optional)           |
 | Backend DB    | EF Core + Postgres                |
 | Design Tokens | Style Dictionary                  |
-| Theme         | Dracula dark + Alucard light      |
+| Theme         | Multiple built-in palettes        |
 | Animations    | CSS + View Transitions (zero JS)  |
 | Monorepo      | Turborepo + pnpm workspaces       |
 | CI/CD         | GitHub Actions + semantic-release |
@@ -63,7 +63,7 @@ pnpm tokens:build
 
 **Customize:** edit token source files → rebuild.
 
-**Themes:** Dracula (dark, default) + Alucard (light). Switched via `[data-theme]` attribute on `<html>`.
+**Themes:** Dracula (default), Alucard, Nord, Gruvbox, Midnight, and Dawn. Switched via `[data-theme]` on `<html>`.
 
 ## Auth
 

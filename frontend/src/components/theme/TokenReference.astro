@@ -1,18 +1,32 @@
 ---
-import tokensDark from "../../../../packages/tokens/dist/tokens-dark.json";
-import tokensLight from "../../../../packages/tokens/dist/tokens-light.json";
+import tokens from "../../../../packages/tokens/dist/tokens.json";
+import { THEME_OPTIONS } from "../../lib/themes";
 
 type TokenEntry = {
   token: string;
   cssVar: string;
   tailwind: string;
-  dark: string;
-  light: string;
+  values: Record<string, string>;
 };
+
+const tokensByTheme = tokens as Record<string, Record<string, string>>;
+const discoveredThemes = Object.keys(tokensByTheme);
+const configuredThemes = THEME_OPTIONS.map((theme) => theme.value).filter(
+  (theme) => theme in tokensByTheme,
+);
+const themeKeys =
+  configuredThemes.length > 0 ? configuredThemes : discoveredThemes;
+const themeLabels = Object.fromEntries(
+  THEME_OPTIONS.map((theme) => [theme.value, theme.label]),
+) as Record<string, string>;
+
 const tokenRef: TokenEntry[] = [];
-const darkEntries = Object.entries(tokensDark) as [string, string][];
-for (const [key, darkVal] of darkEntries) {
-  const lightVal = (tokensLight as Record<string, string>)[key] ?? "";
+const baseTheme = themeKeys[0] ?? "";
+const baseEntries = Object.entries(tokensByTheme[baseTheme] ?? {}) as [
+  string,
+  string,
+][];
+for (const [key] of baseEntries) {
   const cssVar = `--ss-${key.replace(/\./g, "-")}`;
   let tw = "";
   if (key.startsWith("color-accent-"))
@@ -28,8 +42,9 @@ for (const [key, darkVal] of darkEntries) {
     token: key,
     cssVar,
     tailwind: tw,
-    dark: darkVal,
-    light: lightVal,
+    values: Object.fromEntries(
+      themeKeys.map((theme) => [theme, tokensByTheme[theme]?.[key] ?? ""]),
+    ) as Record<string, string>,
   });
 }
 ---
@@ -51,8 +66,13 @@ for (const [key, darkVal] of darkEntries) {
             <th class="text-fg-primary px-4 py-3 font-semibold">CSS Variable</th
             >
             <th class="text-fg-primary px-4 py-3 font-semibold">Tailwind</th>
-            <th class="text-fg-primary px-4 py-3 font-semibold">Dark Value</th>
-            <th class="text-fg-primary px-4 py-3 font-semibold">Light Value</th>
+            {
+              themeKeys.map((theme) => (
+                <th class="text-fg-primary px-4 py-3 font-semibold">
+                  {(themeLabels[theme] ?? theme).toUpperCase()} Value
+                </th>
+              ))
+            }
           </tr>
         </thead>
         <tbody>
@@ -73,32 +93,24 @@ for (const [key, darkVal] of darkEntries) {
                 <td class="text-accent-pink px-4 py-2.5 font-mono text-xs">
                   {t.tailwind || "—"}
                 </td>
-                <td class="px-4 py-2.5 font-mono text-xs">
-                  {t.dark.startsWith("#") ? (
-                    <span class="inline-flex items-center gap-1.5">
-                      <span
-                        class="border-border-default inline-block h-3 w-3 rounded-sm border"
-                        style={`background:${t.dark}`}
-                      />
-                      {t.dark}
-                    </span>
-                  ) : (
-                    <span class="text-fg-muted">{t.dark}</span>
-                  )}
-                </td>
-                <td class="px-4 py-2.5 font-mono text-xs">
-                  {t.light.startsWith("#") ? (
-                    <span class="inline-flex items-center gap-1.5">
-                      <span
-                        class="border-border-default inline-block h-3 w-3 rounded-sm border"
-                        style={`background:${t.light}`}
-                      />
-                      {t.light}
-                    </span>
-                  ) : (
-                    <span class="text-fg-muted">{t.light}</span>
-                  )}
-                </td>
+                {themeKeys.map((theme) => {
+                  const value = t.values[theme] ?? "";
+                  return (
+                    <td class="px-4 py-2.5 font-mono text-xs">
+                      {value.startsWith("#") ? (
+                        <span class="inline-flex items-center gap-1.5">
+                          <span
+                            class="border-border-default inline-block h-3 w-3 rounded-sm border"
+                            style={`background:${value}`}
+                          />
+                          {value}
+                        </span>
+                      ) : (
+                        <span class="text-fg-muted">{value || "—"}</span>
+                      )}
+                    </td>
+                  );
+                })}
               </tr>
             ))
           }

@@ -13,7 +13,7 @@ Design tokens are the visual source of truth for spacing, typography, color, rad
 ShockStack uses layered token sources:
 
 - base primitives for shared values
-- theme palettes for dark/light presentation
+- multiple built-in theme palettes
 - custom overrides for project-specific changes
 
 This keeps the design language consistent while still allowing local customization.
@@ -37,10 +37,7 @@ Components then consume semantic classes rather than hardcoded color values.
 
 ## Theme Switching
 
-Theme switching is controlled through a root `data-theme` attribute:
-
-- `dark`
-- `light`
+Theme switching is controlled through a root `data-theme` attribute.
 
 Because utilities map to semantic token names, the UI can switch themes without changing component markup.
 
