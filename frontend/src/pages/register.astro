@@ -1,0 +1,19 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AuthForm from "../components/ui/AuthForm.vue";
+
+if (Astro.locals.user) {
+  return Astro.redirect("/dashboard");
+}
+---
+
+<BaseLayout title="Register" noindex>
+  <div class="flex flex-col items-center py-16">
+    <h1 class="mb-8 text-3xl font-bold">Create Account</h1>
+    <AuthForm mode="register" client:load />
+    <p class="text-fg-secondary mt-4 text-sm">
+      Already have an account?
+      <a href="/login" class="text-accent-purple hover:underline">Sign in</a>
+    </p>
+  </div>
+</BaseLayout>

@@ -2,6 +2,7 @@ import eslintPluginAstro from "eslint-plugin-astro";
 import eslintPluginVue from "eslint-plugin-vue";
 import tseslint from "@typescript-eslint/eslint-plugin";
 import tsparser from "@typescript-eslint/parser";
+import vueParser from "vue-eslint-parser";
 
 export default [
   {
@@ -33,4 +34,15 @@ export default [
   },
   ...eslintPluginAstro.configs.recommended,
   ...eslintPluginVue.configs["flat/recommended"],
+  {
+    files: ["**/*.vue"],
+    languageOptions: {
+      parser: vueParser,
+      parserOptions: {
+        parser: tsparser,
+        ecmaVersion: "latest",
+        sourceType: "module",
+      },
+    },
+  },
 ];
