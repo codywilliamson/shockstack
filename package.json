@@ -8,6 +8,7 @@
     "lint": "turbo lint",
     "test": "turbo test",
     "typecheck": "turbo typecheck",
+    "tokens:build": "pnpm --filter @shockstack/tokens build",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -36,5 +37,12 @@
   },
   "engines": {
     "node": ">=22"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "@bundled-es-modules/glob",
+      "esbuild",
+      "style-dictionary"
+    ]
   }
 }
