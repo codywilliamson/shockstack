@@ -1,43 +1,32 @@
 # Backend
 
-.NET 10 Web API with clean architecture. Optional — activated by `backend/` directory presence.
+The backend is optional and follows clean architecture so domain logic stays independent of delivery and persistence concerns.
 
-## Projects
+## Layering
 
-- `ShockStack.Api` — controllers, middleware, Program.cs
-- `ShockStack.Core` — entities, interfaces, DTOs (zero external deps)
-- `ShockStack.Infrastructure` — EF Core DbContext, repositories
-- `ShockStack.ServiceDefaults` — Aspire service defaults (OpenTelemetry, health checks, resilience)
-- `ShockStack.AppHost` — Aspire orchestrator (Postgres, API, frontend)
-- `ShockStack.Tests` — xUnit tests
+- API layer: HTTP endpoints, request/response handling, middleware
+- Core layer: domain entities, interfaces, and business contracts
+- Infrastructure layer: persistence and external integrations
+- Shared service defaults: observability, health, resilience conventions
+- App host: local orchestration for multi-service development
+- Tests: backend verification suite
 
-## Key Patterns
+## Behavior Conventions
 
-- DI: `services.AddInfrastructure(connectionString)`
-- Global exception handler maps domain exceptions → HTTP status codes
-- Response envelope: `ApiResponse<T>` with data, errors, meta
-- ServiceDefaults: OpenTelemetry tracing/metrics, health checks, service discovery
-- Health endpoints: `/health` (readiness), `/alive` (liveness)
+- Dependency injection wires infrastructure behind core interfaces
+- Domain-oriented exceptions are translated to HTTP status codes
+- API responses use a consistent envelope shape
+- Health endpoints support readiness/liveness checks
 
-## Aspire (Dev Orchestration)
+## Local Development
 
-Single command starts Postgres, API, and frontend with Aspire dashboard:
+Use the app host when you want a full-stack local environment (database + API + frontend + service dashboard).  
+Use the API project directly when iterating on backend-only changes.
 
-```bash
-dotnet run --project backend/src/ShockStack.AppHost
-```
-
-Dashboard shows logs, traces, metrics for all services. Postgres provisioned automatically with data volume.
-
-## Commands
+## Build and Test
 
 ```bash
-# run entire stack via aspire (recommended for dev)
-dotnet run --project backend/src/ShockStack.AppHost
-
-# or run api standalone
-dotnet run --project backend/src/ShockStack.Api
-
-dotnet build backend/ShockStack.slnx
-dotnet test backend/ShockStack.slnx
+cd backend
+dotnet build
+dotnet test
 ```

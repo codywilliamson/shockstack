@@ -1,232 +1,54 @@
 ---
 title: "Deployment"
-description: "Deploy to Cloudflare Workers or Docker, with CI/CD via GitHub Actions and semantic-release."
+description: "Deployment model, required environment variables, and release flow."
 order: 8
 ---
 
 # Deployment
 
-ShockStack supports two deployment targets: **Cloudflare Workers** for the frontend and **Docker** for full-stack deployment. CI/CD is handled by GitHub Actions with semantic-release for automated versioning.
+ShockStack supports frontend-focused deployment and full-stack container deployment.
 
-## Environment Variables
+## Deployment Targets
 
-Before deploying, ensure these variables are configured:
+- Frontend runtime deployment
+- Containerized full-stack deployment
 
-| Variable | Where | Description |
-|----------|-------|-------------|
-| `DATABASE_URL` | Frontend | Postgres connection string |
-| `BETTER_AUTH_SECRET` | Frontend | Secret for signing auth sessions |
-| `BETTER_AUTH_URL` | Frontend | Production URL (e.g. `https://shockstack.dev`) |
-| `CLOUDFLARE_API_TOKEN` | CI/CD | Cloudflare API token for Workers deploy |
-| `CLOUDFLARE_ACCOUNT_ID` | CI/CD | Cloudflare account ID |
-| `GITHUB_TOKEN` | CI/CD | Provided automatically by GitHub Actions |
+Choose based on whether you need only the web app or the complete API/database stack.
 
-For the backend:
+## Required Environment Variables
 
-| Variable | Where | Description |
-|----------|-------|-------------|
-| `ConnectionStrings__DefaultConnection` | Backend | Postgres connection string (EF Core format) |
-| `ASPNETCORE_ENVIRONMENT` | Backend | `Production` or `Development` |
+| Variable | Scope | Purpose |
+|----------|-------|---------|
+| `DATABASE_URL` | App | Database connection |
+| `BETTER_AUTH_SECRET` | App | Session/auth signing secret |
+| `BETTER_AUTH_URL` | App | Public application URL |
+| `CLOUDFLARE_API_TOKEN` | CI/CD | Frontend deployment credentials |
+| `CLOUDFLARE_ACCOUNT_ID` | CI/CD | Frontend deployment account |
+| `ConnectionStrings__DefaultConnection` | Backend | Backend database connection |
 | `Cors__Origins__0` | Backend | Allowed frontend origin |
 
-## Cloudflare Workers
+## Typical Frontend Deploy Flow
 
-The frontend deploys to Cloudflare Workers using wrangler:
+1. Build design tokens
+2. Build frontend artifacts
+3. Publish runtime bundle with deployment CLI/tooling
 
-```bash
-# build tokens first
-pnpm tokens:build
+## Typical Full-Stack Deploy Flow
 
-# build the frontend
-pnpm --filter frontend build
+1. Build and tag backend container image
+2. Push image to container registry
+3. Deploy runtime with environment variables and secrets
+4. Run health checks and rollout verification
 
-# deploy to cloudflare
-pnpm --filter frontend exec wrangler deploy
-```
+## CI/CD Behavior
 
-The Astro Cloudflare adapter compiles the app into a Workers-compatible bundle. Configure your `wrangler.toml` in the `frontend/` directory with your account ID, zone, and route settings.
+- CI runs lint, typecheck, test, and build tasks
+- Release automation publishes changelog/tag artifacts
+- Deploy automation can publish frontend and backend independently
 
-## Docker
+## Rollout Checklist
 
-The `docker/` directory contains everything for containerized deployment.
-
-### Frontend Dockerfile
-
-The multi-stage `frontend.Dockerfile` builds an optimized production image:
-
-```dockerfile
-FROM node:22-alpine AS base
-RUN corepack enable
-WORKDIR /app
-
-FROM base AS build
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
-COPY frontend/package.json frontend/
-COPY packages/ packages/
-RUN pnpm install --frozen-lockfile
-COPY frontend/ frontend/
-RUN pnpm --filter @shockstack/tokens build
-RUN pnpm --filter frontend build
-
-FROM base AS production
-COPY --from=build /app/frontend/dist /app/dist
-COPY --from=build /app/frontend/package.json /app/
-EXPOSE 4321
-CMD ["node", "./dist/server/entry.mjs"]
-```
-
-Key points:
-- Tokens are built inside the Docker build (no pre-built artifacts needed)
-- The production image only contains the compiled output, not source code
-- Uses `node:22-alpine` for a small final image
-
-### Docker Compose
-
-The `docker-compose.yml` orchestrates all services:
-
-```yaml
-services:
-  postgres:
-    image: postgres:17-alpine
-    environment:
-      POSTGRES_DB: shockstack
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "127.0.0.1:5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-
-  frontend:
-    build:
-      context: ..
-      dockerfile: docker/frontend.Dockerfile
-    ports:
-      - "127.0.0.1:4321:4321"
-    environment:
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/shockstack
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  backend:
-    build:
-      context: ../backend
-      dockerfile: Dockerfile
-    ports:
-      - "127.0.0.1:5000:8080"
-    environment:
-      ConnectionStrings__DefaultConnection: Host=postgres;Database=shockstack;...
-      ASPNETCORE_ENVIRONMENT: Production
-    depends_on:
-      postgres:
-        condition: service_healthy
-```
-
-Start everything:
-
-```bash
-cd docker
-docker compose up -d
-```
-
-All services bind to `127.0.0.1` -- put a reverse proxy (Caddy, nginx) in front for TLS.
-
-## CI/CD Pipeline
-
-Three GitHub Actions workflows handle the full lifecycle.
-
-### CI (`ci.yml`)
-
-Runs on every push to `main` and on pull requests. Uses path filtering to only run relevant jobs:
-
-```yaml
-jobs:
-  changes:
-    # detects which directories changed
-    # outputs: frontend, backend, tokens
-
-  tokens:
-    # builds design tokens
-    # uploads as artifact for downstream jobs
-
-  frontend:
-    # matrix: [lint, typecheck, test, build]
-    # downloads token artifacts
-    # runs each task in parallel
-
-  backend:
-    # matrix: [build, test]
-    # runs dotnet build + test + format check
-```
-
-The path filter means backend changes don't trigger frontend CI and vice versa. Token changes trigger both frontend and token jobs.
-
-### Release (`release.yml`)
-
-Runs on pushes to `main` after CI passes:
-
-```yaml
-jobs:
-  release:
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm exec semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
-
-Semantic-release analyzes commit messages since the last release, determines the version bump, generates a changelog, creates a GitHub release, and tags the commit.
-
-### Deploy (`deploy.yml`)
-
-Triggered by a published release or manual dispatch:
-
-```yaml
-jobs:
-  build-tokens:
-    # builds tokens as an artifact
-
-  deploy-frontend:
-    # builds frontend, deploys via wrangler
-    # needs: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
-
-  deploy-backend:
-    # builds Docker image, pushes to GHCR
-    # tagged with release version + latest
-```
-
-Manual dispatch supports skipping either frontend or backend deployment independently.
-
-## Semantic Release
-
-Semantic-release determines version bumps from commit messages:
-
-| Commit prefix | Version bump | Example |
-|--------------|--------------|---------|
-| `fix:` | Patch (0.0.x) | `fix: resolve auth redirect loop` |
-| `feat:` | Minor (0.x.0) | `feat: add user profile page` |
-| `feat!:` or `BREAKING CHANGE:` | Major (x.0.0) | `feat!: redesign auth API` |
-| `chore:`, `docs:`, `style:`, etc. | No release | `chore: update dependencies` |
-
-The entire monorepo shares a single version number. A release includes everything that changed since the last tag.
-
-## Production Checklist
-
-Before going live:
-
-- [ ] Set strong `BETTER_AUTH_SECRET` (generate with `openssl rand -base64 32`)
-- [ ] Set `BETTER_AUTH_URL` to your production domain
-- [ ] Configure `DATABASE_URL` for your production Postgres
-- [ ] Set up Cloudflare API token with Workers permissions
-- [ ] Add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as GitHub secrets
-- [ ] Update `site` in `astro.config.ts` to your production URL
-- [ ] Configure CORS origins in the backend for your production frontend URL
-- [ ] Set `ASPNETCORE_ENVIRONMENT=Production` for the backend
-- [ ] Set up TLS termination (Cloudflare handles this for Workers, use a reverse proxy for Docker)
+- Validate env vars/secrets are set in target environment
+- Confirm database connectivity before cutover
+- Verify readiness/liveness endpoints after deploy
+- Confirm auth flow works end-to-end in production URL

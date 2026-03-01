@@ -1,6 +1,6 @@
 ---
 title: Getting Started
-description: Get up and running with ShockStack in minutes.
+description: Get up and running with ShockStack quickly.
 order: 1
 ---
 
@@ -8,37 +8,24 @@ order: 1
 
 ## Prerequisites
 
-- **Node.js** >= 22
-- **pnpm** >= 10
-- **.NET 10 SDK** (for backend and Aspire orchestration)
-- **Docker** (Aspire manages Postgres via Docker automatically)
+- Node.js (current LTS recommended)
+- pnpm
+- .NET SDK (needed if you want the optional backend/app host)
+- Docker (needed for local containerized dependencies)
 
-## Quick Start (Recommended)
-
-The fastest way to get the full stack running is with .NET Aspire. One command spins up Postgres, the .NET API, and the Astro frontend:
+## Quick Start
 
 ```bash
-# clone and install
 git clone https://github.com/codywilliamson/shockstack.git my-project
 cd my-project
 pnpm install
-
-# build design tokens (required on first run)
 pnpm tokens:build
-
-# start everything with aspire
 dotnet run --project backend/src/ShockStack.AppHost
 ```
 
-Aspire will:
-- Start a **Postgres** container with pgAdmin
-- Launch the **.NET API** with service discovery and health checks
-- Start the **Astro frontend** dev server
-- Open the **Aspire dashboard** at `http://localhost:15888` for logs, traces, and metrics
+This starts a full local stack with frontend, backend, and supporting services.
 
-## Frontend-Only Development
-
-If you don't need the backend, you can run just the frontend:
+## Frontend-Only Mode
 
 ```bash
 pnpm install
@@ -46,26 +33,20 @@ pnpm tokens:build
 pnpm --filter frontend dev
 ```
 
-The frontend will start at `http://localhost:4321`. Auth and API features will gracefully degrade when the backend isn't available.
+Use this mode when you only need UI/content development.
 
-## Project Structure
+## First Validation Pass
 
-```
-shockstack/
-├── frontend/                          # astro 5 application
-├── backend/
-│   └── src/
-│       ├── ShockStack.Api/            # .NET 10 web API
-│       ├── ShockStack.AppHost/        # aspire orchestrator
-│       └── ShockStack.ServiceDefaults/ # shared service config
-├── packages/tokens/                   # design token system (style dictionary)
-├── docker/                            # docker compose configs
-└── docs/                              # project documentation
-```
+After startup, confirm:
+
+- the frontend loads
+- authentication pages render
+- docs/blog routes render
+- health endpoints respond when backend is enabled
 
 ## Next Steps
 
-- [Design Tokens](/docs/design-tokens) — customize the color palette and theme
-- [Frontend Guide](/docs/frontend-guide) — learn about Astro islands, Vue components, and routing
-- [Backend Guide](/docs/backend-guide) — explore the .NET clean architecture and API patterns
-- [Authentication](/docs/authentication) — set up Better Auth with email/password and OAuth
+- [Project Structure](/docs/project-structure)
+- [Design Tokens](/docs/design-tokens)
+- [Frontend Guide](/docs/frontend-guide)
+- [Authentication](/docs/authentication)

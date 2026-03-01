@@ -1,18 +1,18 @@
 # ShockStack
 
-Convention-first monorepo template: Astro 5 + optional .NET 10 backend, ready for Cloudflare Workers or Docker deployment.
+Convention-first monorepo template: Astro + optional .NET backend, ready for Cloudflare Workers or Docker deployment.
 
 ## Tech Stack
 
 | Layer         | Technology                        |
 | ------------- | --------------------------------- |
-| Frontend      | Astro 5, Vue 3, Tailwind 4        |
+| Frontend      | Astro, Vue, Tailwind              |
 | Content       | Astro Content Collections (MDX)   |
 | Auth          | Better Auth (email/password)      |
 | Frontend DB   | Drizzle ORM + Postgres            |
-| Backend       | .NET 10 Web API (optional)        |
+| Backend       | .NET Web API (optional)           |
 | Backend DB    | EF Core + Postgres                |
-| Design Tokens | Style Dictionary v4               |
+| Design Tokens | Style Dictionary                  |
 | Theme         | Dracula dark + Alucard light      |
 | Animations    | CSS + View Transitions (zero JS)  |
 | Monorepo      | Turborepo + pnpm workspaces       |
@@ -22,7 +22,7 @@ Convention-first monorepo template: Astro 5 + optional .NET 10 backend, ready fo
 ## Quick Start
 
 ```bash
-# prerequisites: node 22+, pnpm 10+, .NET 10 SDK, Docker
+# prerequisites: Node.js, pnpm, .NET SDK, Docker
 pnpm install
 pnpm tokens:build
 
@@ -44,7 +44,7 @@ pnpm --filter frontend dev
 ```
 shockstack/
 ├── frontend/           # astro 5 + vue 3 application
-├── backend/            # .NET 10 web api (optional)
+├── backend/            # .NET web api (optional)
 ├── packages/tokens/    # style dictionary design tokens
 ├── docker/             # compose files + dockerfiles
 ├── docs/system/        # modular system documentation
@@ -61,17 +61,17 @@ pnpm tokens:build
 
 **Outputs:** CSS custom properties, Tailwind theme extension, TypeScript constants, JSON manifest.
 
-**Customize:** edit `packages/tokens/tokens/custom.json` → rebuild.
+**Customize:** edit token source files → rebuild.
 
 **Themes:** Dracula (dark, default) + Alucard (light). Switched via `[data-theme]` attribute on `<html>`.
 
 ## Auth
 
-Better Auth with email/password. Session stored in httpOnly secure cookies. Middleware injects user into `Astro.locals` and guards protected routes.
+Better Auth with email/password. Session state is cookie-backed with route protection enforced server-side.
 
 ## Backend (Optional)
 
-The .NET 10 backend activates when the `/backend` directory is present. Clean architecture with `Core` → `Infrastructure` → `Api` layers.
+The backend activates when the `/backend` directory is present. Clean architecture with Core, Infrastructure, and API layers.
 
 ```bash
 cd backend
@@ -120,7 +120,7 @@ Detailed system docs live in `docs/system/`.
 
 - **Commits:** conventional commits enforced by commitlint + husky
 - **Package manager:** pnpm only
-- **Linting:** ESLint flat config + Prettier with Astro/Vue/Tailwind plugins
+- **Linting:** ESLint flat config + Prettier
 - **Versioning:** semantic-release, single version for entire repo
 
 ## License

@@ -1,181 +1,54 @@
 ---
 title: "Design Tokens"
-description: "How the Style Dictionary token system works, from source JSON to CSS variables and Tailwind utilities."
+description: "Token model, build flow, and practical theming workflow."
 order: 3
 ---
 
 # Design Tokens
 
-ShockStack uses **Style Dictionary v4** to manage design tokens. Tokens are defined as JSON, then compiled into CSS custom properties, TypeScript constants, a Tailwind theme extension, and a flat JSON manifest.
+Design tokens are the visual source of truth for spacing, typography, color, radii, and shadows.
 
-## Token Hierarchy
+## Token Strategy
 
-Source tokens live in `packages/tokens/tokens/` with a layered structure:
+ShockStack uses layered token sources:
 
-```
-tokens/
-├── base.json       # theme-agnostic values (spacing, typography, radii, shadows)
-├── dracula.json    # dark theme colors (default)
-├── light.json      # light theme colors (Alucard)
-└── custom.json     # your overrides (empty by default)
-```
+- base primitives for shared values
+- theme palettes for dark/light presentation
+- custom overrides for project-specific changes
 
-**Base tokens** define the design system's structural values -- these don't change between themes:
+This keeps the design language consistent while still allowing local customization.
 
-```json
-{
-  "spacing": {
-    "4": { "value": "1rem", "type": "spacing" },
-    "8": { "value": "2rem", "type": "spacing" }
-  },
-  "font": {
-    "family": {
-      "sans": { "value": "Inter, ui-sans-serif, system-ui, sans-serif", "type": "fontFamily" },
-      "mono": { "value": "JetBrains Mono, ui-monospace, monospace", "type": "fontFamily" }
-    },
-    "size": {
-      "base": { "value": "1rem", "type": "fontSize" },
-      "lg": { "value": "1.125rem", "type": "fontSize" }
-    }
-  },
-  "radius": {
-    "md": { "value": "0.375rem", "type": "borderRadius" },
-    "lg": { "value": "0.5rem", "type": "borderRadius" }
-  }
-}
-```
-
-**Theme tokens** define color palettes. The dark theme uses Dracula colors:
-
-```json
-{
-  "color": {
-    "bg": {
-      "primary": { "value": "#282a36", "type": "color" },
-      "secondary": { "value": "#44475a", "type": "color" }
-    },
-    "accent": {
-      "purple": { "value": "#bd93f9", "type": "color" },
-      "pink": { "value": "#ff79c6", "type": "color" },
-      "green": { "value": "#50fa7b", "type": "color" }
-    }
-  }
-}
-```
-
-**Custom tokens** (`custom.json`) let you override or extend any token. They're loaded last, so they take precedence. Start with an empty object `{}` and add overrides as needed.
-
-## Build Process
-
-Run the token build:
+## Build Flow
 
 ```bash
 pnpm tokens:build
 ```
 
-This executes `packages/tokens/build.ts`, which creates three Style Dictionary instances:
+The token build generates:
 
-1. **Dark** (base + dracula + custom) -- generates `dark.css` with `:root, [data-theme="dark"]` selector
-2. **Light** (base + light + custom) -- generates `light.css` with `[data-theme="light"]` selector
-3. **Base** (for JS/TS exports) -- generates `tokens.js` and `tokens.d.ts`
+- CSS variables for runtime theming
+- JavaScript/TypeScript exports for app usage
+- JSON artifacts for tooling and integrations
 
-After all three build, the script combines outputs:
+## Frontend Integration
 
-- `tokens.css` -- merged dark + light CSS (this is what the frontend imports)
-- `tokens.json` -- flat JSON with both theme palettes
-- `tailwind.tokens.js` -- auto-generated Tailwind theme extension
+Generated tokens are imported into global styles and mapped to semantic utilities.  
+Components then consume semantic classes rather than hardcoded color values.
 
-## Build Outputs
+## Theme Switching
 
-All outputs land in `packages/tokens/dist/`:
+Theme switching is controlled through a root `data-theme` attribute:
 
-| File | Purpose |
-|------|---------|
-| `dark.css` | Dark theme CSS variables (`:root` and `[data-theme="dark"]`) |
-| `light.css` | Light theme CSS variables (`[data-theme="light"]`) |
-| `tokens.css` | Combined CSS (imported by the frontend) |
-| `tokens.js` | ES module with all token values |
-| `tokens.d.ts` | TypeScript declarations for type-safe token access |
-| `tokens.json` | Flat JSON manifest (both themes) |
-| `tokens-dark.json` | Dark theme flat JSON |
-| `tokens-light.json` | Light theme flat JSON |
-| `tailwind.tokens.js` | Auto-generated Tailwind theme config |
+- `dark`
+- `light`
 
-## The `--ss-` Prefix
+Because utilities map to semantic token names, the UI can switch themes without changing component markup.
 
-All CSS custom properties use the `--ss-` prefix (short for ShockStack). This avoids collisions with third-party CSS and makes token variables instantly recognizable:
+## Customization Workflow
 
-```css
-:root, [data-theme="dark"] {
-  --ss-color-bg-primary: #282a36;
-  --ss-color-accent-purple: #bd93f9;
-  --ss-spacing-4: 1rem;
-  --ss-font-family-sans: Inter, ui-sans-serif, system-ui, sans-serif;
-  --ss-radius-lg: 0.5rem;
-  --ss-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-}
-```
+1. Update token sources
+2. Rebuild tokens
+3. Verify styles in both themes
+4. Commit generated outputs with source changes
 
-## How Tokens Flow to Tailwind
-
-The frontend's `global.css` imports the generated CSS and maps token variables to Tailwind's `@theme` block:
-
-```css
-@import "../../../packages/tokens/dist/tokens.css";
-@import "tailwindcss";
-
-@theme {
-  --font-sans: var(--ss-font-family-sans);
-  --font-mono: var(--ss-font-family-mono);
-
-  --color-bg-primary: var(--ss-color-bg-primary);
-  --color-bg-secondary: var(--ss-color-bg-secondary);
-  --color-accent-purple: var(--ss-color-accent-purple);
-  --color-accent-pink: var(--ss-color-accent-pink);
-  /* ... */
-
-  --radius-md: var(--ss-radius-md);
-  --shadow-lg: var(--ss-shadow-lg);
-}
-```
-
-This mapping means you can use token-backed Tailwind utilities directly:
-
-```html
-<div class="bg-bg-primary text-fg-primary rounded-lg shadow-md">
-  <h1 class="text-accent-purple font-sans">Hello</h1>
-</div>
-```
-
-## Customizing Tokens
-
-To add or override tokens:
-
-1. Edit `packages/tokens/tokens/custom.json`:
-
-```json
-{
-  "color": {
-    "accent": {
-      "brand": { "value": "#e040fb", "type": "color" }
-    }
-  },
-  "spacing": {
-    "18": { "value": "4.5rem", "type": "spacing" }
-  }
-}
-```
-
-2. Rebuild: `pnpm tokens:build`
-
-3. If you added a new color semantic (like `brand` above), add it to the `@theme` block in `frontend/src/styles/global.css`:
-
-```css
-@theme {
-  --color-accent-brand: var(--ss-color-accent-brand);
-}
-```
-
-4. Use it: `<span class="text-accent-brand">branded text</span>`
-
-For theme-specific overrides, edit `dracula.json` (dark) or `light.json` (light) directly. The `custom.json` file is applied to both themes.
+Treat token updates like API changes for the design system: prefer semantic naming and avoid one-off values.

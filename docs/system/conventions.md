@@ -7,13 +7,19 @@ Types: `feat`, `fix`, `chore`, `ci`, `test`, `refactor`, `docs`, `style`, `perf`
 
 ## Package Management
 
-pnpm only. Workspaces defined in `pnpm-workspace.yaml`.
+pnpm only. Workspaces are configured at the repo root.
 
 ## Linting
 
-- ESLint flat config with Astro, Vue, TypeScript plugins
-- Prettier with Astro + Tailwind plugins
+- ESLint + Prettier run across workspace packages
 - lint-staged runs on pre-commit
+
+## Documentation Style
+
+- Prefer behavior and intent over implementation details
+- Avoid hardcoding library/framework versions in docs text
+- Keep file-path references minimal and only when they are required for action
+- Update docs when conventions or workflows change
 
 ## Versioning
 

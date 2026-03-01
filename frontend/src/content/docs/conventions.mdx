@@ -1,247 +1,54 @@
 ---
 title: "Conventions"
-description: "Coding conventions, commit standards, linting, formatting, and CSS animation patterns."
+description: "Commit, quality, and documentation conventions for consistent team workflows."
 order: 9
 ---
 
 # Conventions
 
-ShockStack enforces a set of conventions to keep the codebase consistent across contributors. These are automated wherever possible through tooling.
+Conventions in ShockStack are meant to reduce decision fatigue and keep collaboration smooth.
 
-## Conventional Commits
+## Commit Convention
 
-All commits must follow the [Conventional Commits](https://www.conventionalcommits.org/) spec. This is enforced by **commitlint** via a husky commit-msg hook.
+Use Conventional Commits for every change:
 
-### Format
+- `feat`
+- `fix`
+- `chore`
+- `docs`
+- `refactor`
+- `test`
+- `ci`
+- `build`
+- `perf`
+- `style`
 
-```
-type: description
+This keeps release notes and change intent clear.
 
-[optional body]
-```
+## Quality Gates
 
-### Commit Types
+- Lint and formatting checks run in workspace tasks
+- Type checks and tests run as part of CI
+- Pre-commit hooks enforce the same baseline locally
 
-| Type | Purpose |
-|------|---------|
-| `feat` | new feature or capability |
-| `fix` | bug fix |
-| `chore` | maintenance, dependencies, config |
-| `docs` | documentation changes |
-| `style` | formatting, whitespace (not CSS) |
-| `refactor` | code restructuring without behavior change |
-| `test` | adding or updating tests |
-| `perf` | performance improvement |
-| `ci` | CI/CD pipeline changes |
-| `build` | build system or external dependencies |
+## Workspace Rules
 
-### Examples
+- Use `pnpm` commands for package/task execution
+- Run shared tasks from repo root when possible
+- Keep package dependencies scoped to where they are used
 
-```bash
-# good
-feat: add user profile page
-fix: resolve auth redirect loop on expired sessions
-chore: update astro to 5.5
-docs: add deployment guide
-refactor: extract auth middleware into separate module
-feat!: redesign token build pipeline
+## Documentation Convention
 
-# bad
-Updated stuff               # no type prefix
-feat: Add User Profile Page  # don't capitalize
-FEAT: add profile            # type should be lowercase
-```
+Docs should optimize for long-term accuracy:
 
-Use `!` after the type for breaking changes (e.g. `feat!:`). Add a body when the "why" isn't obvious from the subject line.
+- prioritize concepts and workflows over code dumps
+- avoid hardcoded version numbers in narrative text
+- reference exact files only when a user must edit one directly
+- update docs in the same change when behavior changes
 
-Scope is optional -- use it when it adds clarity:
+## Code Style Principles
 
-```bash
-fix(auth): handle expired cookie gracefully
-feat(tokens): add spacing-18 token
-```
-
-## ESLint
-
-ESLint is configured at the root with plugins for TypeScript, Astro, and Vue:
-
-```json
-{
-  "devDependencies": {
-    "eslint": "^10.0.2",
-    "@typescript-eslint/eslint-plugin": "^8.56.1",
-    "@typescript-eslint/parser": "^8.56.1",
-    "eslint-plugin-astro": "^1.6.0",
-    "eslint-plugin-vue": "^10.8.0",
-    "vue-eslint-parser": "^10.4.0"
-  }
-}
-```
-
-Run linting:
-
-```bash
-pnpm lint           # lint all workspaces
-pnpm --filter frontend lint  # lint frontend only
-```
-
-## Prettier
-
-Prettier handles formatting with plugins for Astro and Tailwind class sorting:
-
-```json
-{
-  "devDependencies": {
-    "prettier": "^3.8.1",
-    "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.7.2"
-  }
-}
-```
-
-The Tailwind plugin automatically sorts utility classes in a consistent order across all `.astro`, `.vue`, and `.ts` files.
-
-## Lint-Staged and Husky
-
-Every commit triggers automatic linting and formatting via **husky** git hooks and **lint-staged**:
-
-```json
-{
-  "lint-staged": {
-    "*.{ts,tsx,vue,astro,js,cjs,mjs}": [
-      "eslint --fix"
-    ],
-    "*.{ts,tsx,vue,astro,js,cjs,mjs,json,css,md}": [
-      "prettier --write"
-    ]
-  }
-}
-```
-
-The `prepare` script in `package.json` runs `husky` on `pnpm install`, setting up the hooks automatically. No manual setup needed.
-
-## Code Style
-
-### General Principles
-
-- **DRY and KISS** -- don't repeat yourself, keep it simple
-- **Minimal comments** -- code should be self-documenting. Add comments only when the "why" isn't obvious
-- **Comments are lowercase** -- informal, minimal punctuation
-- **Small focused files** -- split when files get large
-- **TypeScript everywhere** -- prefer type safety over `any`
-
-### Comment Style
-
-```ts
-// good
-// skip auth for static routes to avoid db queries
-const isStatic = staticRoutes.some((r) => pathname.startsWith(r));
-
-// bad
-// This function checks if the current pathname matches any of the
-// defined static routes in the staticRoutes array, returning true
-// if there is a match and false otherwise.
-const isStatic = staticRoutes.some((r) => pathname.startsWith(r));
-```
-
-## Tailwind 4 Patterns
-
-ShockStack uses Tailwind 4 with the Vite plugin, not the legacy PostCSS integration. Key differences from Tailwind 3:
-
-### Configuration in CSS
-
-No `tailwind.config.js`. Theme customization happens in `global.css` via `@theme`:
-
-```css
-@import "tailwindcss";
-
-@theme {
-  --color-bg-primary: var(--ss-color-bg-primary);
-  --color-accent-purple: var(--ss-color-accent-purple);
-  --radius-lg: var(--ss-radius-lg);
-}
-```
-
-### Using Token Colors
-
-All semantic colors are available as utilities without the `color-` prefix in class names:
-
-```html
-<div class="bg-bg-primary text-fg-primary border-border-default">
-  <span class="text-accent-purple">highlighted</span>
-</div>
-```
-
-## CSS-Only Animations
-
-ShockStack uses CSS-only animations -- zero JavaScript animation libraries. Two patterns are provided in `global.css`:
-
-### Scroll-Driven Reveal
-
-```css
-.reveal {
-  opacity: 0;
-  transform: translateY(1rem);
-  animation: reveal linear both;
-  animation-timeline: view();
-  animation-range: entry 0% entry 30%;
-}
-
-@keyframes reveal {
-  from { opacity: 0; transform: translateY(1rem); }
-  to { opacity: 1; transform: translateY(0); }
-}
-```
-
-Elements with the `reveal` class animate into view as they enter the viewport using the Scroll-Driven Animations API.
-
-### Page Fade-In
-
-```css
-.fade-in {
-  animation: fadeIn 0.4s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(0.5rem); }
-  to { opacity: 1; transform: translateY(0); }
-}
-```
-
-## prefers-reduced-motion
-
-All animations are disabled for users who prefer reduced motion:
-
-```css
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-```
-
-This is applied globally. You don't need to add reduced-motion handling to individual animations.
-
-## pnpm Workspace Rules
-
-- **Always use pnpm** -- never npm or yarn. The `packageManager` field in `package.json` enforces `pnpm@10.4.1`.
-- **Root devDependencies** are for shared tooling (ESLint, Prettier, commitlint, husky, semantic-release, Turborepo).
-- **Package dependencies** belong in each package's own `package.json`.
-- **Filter commands** target specific packages: `pnpm --filter frontend dev`.
-- **Tokens shortcut**: `pnpm tokens:build` is a root script alias for `pnpm --filter @shockstack/tokens build`.
-
-## Backend Conventions
-
-For the .NET backend:
-
-- Controllers route at `api/v1/[controller]`
-- All responses use the `ApiResponse<T>` envelope
-- Throw domain exceptions (`NotFoundException`, `ConflictException`) instead of returning error status codes manually
-- Entities inherit from `BaseEntity` (Id, CreatedAt, UpdatedAt)
-- Use `IRepository<T>` for data access, `IUnitOfWork` for transactions
-- Register dependencies via extension methods in `DependencyInjection.cs`
+- Keep logic simple and explicit
+- Favor small, focused modules
+- Add comments for intent, not for obvious mechanics
+- Prefer type-safe interfaces over implicit behavior

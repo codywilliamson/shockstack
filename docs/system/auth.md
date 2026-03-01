@@ -1,21 +1,33 @@
 # Auth
 
-Better Auth with email/password. Drizzle adapter for Postgres.
+Authentication is session-based and designed for secure defaults with low frontend complexity.
 
-## Setup
+## What It Handles
 
-- Config: `frontend/src/lib/auth.ts`
-- Client: `frontend/src/lib/auth-client.ts`
-- API route: `frontend/src/pages/api/auth/[...all].ts`
+- Email/password sign-up and sign-in
+- Session creation and rotation
+- Cookie-backed session persistence
+- Route protection for authenticated areas
 
 ## Session Flow
 
-1. User signs in via Better Auth API
-2. Session stored in httpOnly secure cookie
-3. Middleware (`src/middleware.ts`) reads session, injects user into `Astro.locals`
-4. Protected routes redirect to `/login` if no session
+1. User submits credentials
+2. Auth layer validates credentials and creates a session
+3. Session token is stored in secure, httpOnly cookies
+4. Middleware resolves session on each request and attaches user context
+5. Protected routes redirect to sign-in when no valid session exists
 
-## Schema
+## Data Model
 
-Tables: `users`, `sessions`, `accounts`, `verifications`
-Defined in `frontend/src/lib/db/schema.ts`
+Core records include:
+
+- users
+- sessions
+- linked accounts
+- verification records
+
+## Security Notes
+
+- Session cookies are not readable from client-side JavaScript
+- Protected routes rely on server-side checks, not just client state
+- Auth failures degrade gracefully to unauthenticated behavior

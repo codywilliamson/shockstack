@@ -1,25 +1,23 @@
 # Design Tokens
 
-Style Dictionary v4 generates multi-format outputs from JSON source tokens.
+Design tokens are defined once and compiled into formats used by the frontend build and runtime styling.
 
-## Token Files
+## Token Model
 
-- `packages/tokens/tokens/base.json` — spacing, typography, radii, shadows, z-index
-- `packages/tokens/tokens/dracula.json` — dark theme colors (Dracula)
-- `packages/tokens/tokens/light.json` — light theme colors (Alucard)
-- `packages/tokens/tokens/custom.json` — user overrides (empty by default)
+- Base tokens: spacing, typography, radii, shadows, and shared primitives
+- Theme tokens: dark and light palettes mapped to semantic names
+- Custom overrides: project-specific additions layered on top
 
 ## Build Outputs
 
-- `dist/tokens.css` — CSS custom properties (dark + light selectors)
-- `dist/tailwind.tokens.js` — Tailwind theme extension
-- `dist/tokens.js` + `tokens.d.ts` — TypeScript constants
-- `dist/tokens.json` — JSON manifest
+- CSS variables for runtime theming
+- JavaScript and TypeScript exports for code usage
+- JSON outputs for tooling and integrations
 
 ## Customization
 
-Edit `custom.json` → `pnpm tokens:build` → all outputs regenerate.
+Update token source files, run `pnpm tokens:build`, and consume the regenerated outputs in the frontend.
 
 ## Theme Switching
 
-`[data-theme="dark"]` / `[data-theme="light"]` on `<html>`. Default: system preference, persisted to localStorage.
+Themes are switched using the `data-theme` attribute on the root document element.

@@ -1,263 +1,49 @@
 ---
 title: "Authentication"
-description: "Better Auth setup, session management, protected routes, and the Drizzle database schema."
+description: "Session-based authentication flow, route protection, and extension points."
 order: 6
 ---
 
 # Authentication
 
-ShockStack uses **Better Auth** for authentication, backed by a **Drizzle ORM** adapter connected to Postgres. It supports email/password login out of the box and is designed to easily add OAuth providers.
+ShockStack uses a server-backed, cookie-based authentication model. The goal is simple UX for users and secure defaults for the app.
 
-## Architecture Overview
+## Authentication Model
 
-```
-Browser ──→ /api/auth/* ──→ Better Auth ──→ Drizzle ──→ Postgres
-                                ↓
-                          httpOnly cookie
-                                ↓
-Middleware ──→ getSession() ──→ Astro.locals.user
-```
+- Email/password sign-in is supported out of the box
+- Session state is stored in secure, httpOnly cookies
+- Request-time middleware resolves the current user session
+- Protected routes are enforced on the server
 
-Better Auth handles all auth logic through a catch-all API route. Sessions are stored as httpOnly cookies. The middleware reads the session on every SSR request and injects the user into `Astro.locals`.
+## Request Flow
 
-## Server Configuration
+1. User submits credentials to the auth endpoint
+2. Credentials are validated and a session is created
+3. Session cookie is set in the browser
+4. Middleware reads the cookie on each request
+5. Protected routes allow or redirect based on session validity
 
-The auth server is configured in `src/lib/auth.ts`:
+## Protected Areas
 
-```ts
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "./db/client";
-import * as schema from "./db/schema";
+Protected pages should rely on server-side session checks, not only client UI state.  
+If a session is missing or expired, the user is redirected to sign in.
 
-export const auth = betterAuth({
-  baseURL: import.meta.env.BETTER_AUTH_URL || "http://localhost:4321",
-  database: drizzleAdapter(db, {
-    provider: "pg",
-    schema,
-  }),
-  emailAndPassword: {
-    enabled: true,
-  },
-  session: {
-    cookieCache: {
-      enabled: true,
-      maxAge: 60 * 5, // 5 minutes
-    },
-  },
-});
-```
+## Data Shape
 
-Key settings:
+The auth subsystem typically includes:
 
-- **`baseURL`** -- where auth callbacks resolve to. Set via `BETTER_AUTH_URL` env var.
-- **`cookieCache`** -- caches session validation for 5 minutes, avoiding a database query on every request. The session is still stored in an httpOnly cookie.
-- **`emailAndPassword`** -- enables the built-in email/password flow.
+- user records
+- active sessions
+- provider/account links
+- verification or one-time token records
 
-## API Route Handler
+## Extending Auth
 
-All auth endpoints are handled by a single catch-all route at `src/pages/api/auth/[...all].ts`:
+You can add additional providers or flows without changing route architecture:
 
-```ts
-import type { APIRoute } from "astro";
-import { auth } from "../../../lib/auth";
+- social login providers
+- email verification
+- password reset
+- account linking
 
-export const ALL: APIRoute = async (ctx) => {
-  return auth.handler(ctx.request);
-};
-```
-
-This exposes endpoints like `/api/auth/sign-up`, `/api/auth/sign-in`, `/api/auth/sign-out`, `/api/auth/session`, etc.
-
-## Database Schema
-
-The auth system requires four tables defined in `src/lib/db/schema.ts`:
-
-```ts
-export const users = pgTable("users", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  emailVerified: boolean("email_verified").notNull().default(false),
-  image: text("image"),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
-
-export const sessions = pgTable("sessions", {
-  id: text("id").primaryKey(),
-  expiresAt: timestamp("expires_at").notNull(),
-  token: text("token").notNull().unique(),
-  ipAddress: text("ip_address"),
-  userAgent: text("user_agent"),
-  userId: text("user_id").notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
-
-export const accounts = pgTable("accounts", {
-  id: text("id").primaryKey(),
-  accountId: text("account_id").notNull(),
-  providerId: text("provider_id").notNull(),
-  userId: text("user_id").notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  accessToken: text("access_token"),
-  refreshToken: text("refresh_token"),
-  idToken: text("id_token"),
-  accessTokenExpiresAt: timestamp("access_token_expires_at"),
-  refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
-  scope: text("scope"),
-  password: text("password"),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
-
-export const verifications = pgTable("verifications", {
-  id: text("id").primaryKey(),
-  identifier: text("identifier").notNull(),
-  value: text("value").notNull(),
-  expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
-```
-
-- **users** -- user profiles with email, name, and avatar
-- **sessions** -- active sessions tied to users, with expiry and device info
-- **accounts** -- links users to auth providers (email/password stores the password hash here)
-- **verifications** -- email verification tokens and similar one-time codes
-
-## Database Client
-
-The Drizzle client is configured in `src/lib/db/client.ts`:
-
-```ts
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
-import * as schema from "./schema";
-
-const connectionString =
-  import.meta.env.DATABASE_URL || "postgres://localhost:5432/shockstack";
-
-const client = postgres(connectionString);
-export const db = drizzle(client, { schema });
-```
-
-Set the `DATABASE_URL` environment variable to point to your Postgres instance.
-
-## Middleware Session Injection
-
-The middleware (`src/middleware.ts`) fetches the session on every SSR request:
-
-```ts
-const protectedRoutes = ["/dashboard"];
-const staticRoutes = ["/blog", "/docs", "/changelog", "/rss.xml"];
-
-export const onRequest = defineMiddleware(async (context, next) => {
-  const pathname = context.url.pathname;
-
-  // skip auth for static content and api routes
-  const isStatic =
-    pathname === "/" ||
-    staticRoutes.some((r) => pathname.startsWith(r)) ||
-    pathname.startsWith("/api/");
-
-  if (isStatic) {
-    context.locals.user = null;
-    context.locals.session = null;
-    return next();
-  }
-
-  // lazy import to avoid loading auth on static routes
-  const { auth } = await import("./lib/auth");
-  const session = await auth.api.getSession({
-    headers: context.request.headers,
-  });
-
-  context.locals.user = session?.user ?? null;
-  context.locals.session = session?.session ?? null;
-
-  if (isProtected && !session) {
-    return context.redirect("/login");
-  }
-
-  return next();
-});
-```
-
-Static routes skip the auth import entirely for performance. Protected routes redirect to `/login` when no session is found.
-
-## Protected Routes
-
-To protect a page, add its path to the `protectedRoutes` array in `middleware.ts`. Then access the user in your page:
-
-```astro
----
-// src/pages/dashboard.astro
-const user = Astro.locals.user!;
----
-
-<p>Welcome back, {user.name}</p>
-<p>{user.email}</p>
-```
-
-## Client-Side Auth
-
-For client-side auth operations (sign-up forms, sign-in, sign-out), use the auth client:
-
-```ts
-import { authClient } from "../lib/auth-client";
-
-// sign up
-await authClient.signUp.email({
-  email: "user@example.com",
-  password: "securepassword",
-  name: "User Name",
-});
-
-// sign in
-await authClient.signIn.email({
-  email: "user@example.com",
-  password: "securepassword",
-});
-
-// sign out
-await authClient.signOut();
-```
-
-## Adding OAuth Providers
-
-To add an OAuth provider (e.g. GitHub):
-
-1. Update `src/lib/auth.ts`:
-
-```ts
-export const auth = betterAuth({
-  // ...existing config
-  socialProviders: {
-    github: {
-      clientId: import.meta.env.GITHUB_CLIENT_ID,
-      clientSecret: import.meta.env.GITHUB_CLIENT_SECRET,
-    },
-  },
-});
-```
-
-2. Add the env vars to your `.env` and deployment configuration.
-
-3. Use the client to trigger the OAuth flow:
-
-```ts
-await authClient.signIn.social({ provider: "github" });
-```
-
-Better Auth handles the redirect, callback, and account linking automatically.
-
-## Environment Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DATABASE_URL` | Postgres connection string | `postgres://localhost:5432/shockstack` |
-| `BETTER_AUTH_SECRET` | Secret for signing sessions | (required) |
-| `BETTER_AUTH_URL` | Base URL for auth callbacks | `http://localhost:4321` |
+Keep the session model consistent so middleware and protected routes continue to work unchanged.

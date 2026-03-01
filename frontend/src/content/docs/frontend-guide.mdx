@@ -1,216 +1,59 @@
 ---
 title: "Frontend Guide"
-description: "Astro 5 architecture, Vue islands, content collections, routing, and Tailwind 4 integration."
+description: "Frontend rendering strategy, component boundaries, content model, and route behavior."
 order: 5
 ---
 
 # Frontend Guide
 
-The frontend is an **Astro 5** application with SSR, Vue 3 islands for interactive components, content collections for structured content, and Tailwind 4 for styling.
+The frontend is structured to keep static content fast and interactive features focused.
 
-## Astro Configuration
+## Rendering Strategy
 
-```ts
-// astro.config.ts
-import { defineConfig } from "astro/config";
-import cloudflare from "@astrojs/cloudflare";
-import vue from "@astrojs/vue";
-import mdx from "@astrojs/mdx";
-import sitemap from "@astrojs/sitemap";
-import tailwindcss from "@tailwindcss/vite";
+- Server rendering is the default mode
+- Static generation is used for durable content like docs and blog pages
+- Dynamic rendering is used for auth and user-specific routes
 
-export default defineConfig({
-  output: "server",
-  adapter: cloudflare(),
-  site: "https://shockstack.dev",
-  integrations: [vue(), mdx(), sitemap()],
-  vite: {
-    plugins: [tailwindcss()],
-  },
-});
-```
+This hybrid approach gives strong baseline performance while preserving dynamic capabilities.
 
-Key decisions:
+## Component Boundaries
 
-- **`output: "server"`** -- SSR by default, every page is server-rendered on each request. Opt into static generation per-page with `export const prerender = true`.
-- **Cloudflare adapter** -- deploys to Cloudflare Workers. Swap to `@astrojs/node` for Docker deployment.
-- **Tailwind 4** -- integrated via `@tailwindcss/vite` plugin (not the legacy `@astrojs/tailwind` integration).
+- Layout/content components stay server-first and mostly static
+- Interactive features are isolated as client islands
+- Islands are used only where state or browser APIs are required
 
-## Output Modes
+## Content Model
 
-Astro supports both SSR and prerendered pages in the same project:
+The project uses content collections for predictable authoring:
 
-```astro
----
-// this page is prerendered at build time
-export const prerender = true;
----
-```
+- blog content
+- documentation pages
+- changelog entries
 
-Use SSR (default) for pages that need auth, dynamic data, or per-request logic. Use prerendering for static content like blog posts and docs.
+Schemas keep content structured and queryable.
 
-## Vue Islands Pattern
+## Routing and API
 
-Astro renders pages as static HTML by default. Interactive behavior is added through **Vue islands** -- Vue components hydrated on the client with a `client:*` directive.
+- File-based routing maps page intent to URLs
+- Dynamic routes support docs/blog details
+- API routes handle server interactions such as auth operations
 
-```astro
----
-import ThemeToggle from "../components/ui/ThemeToggle.vue";
-import AuthForm from "../components/ui/AuthForm.vue";
----
+## Middleware Responsibilities
 
-<!-- hydrated immediately on page load -->
-<ThemeToggle client:load />
+Middleware is responsible for:
 
-<!-- hydrated when visible in viewport -->
-<AuthForm client:visible />
-```
+- resolving session context on request
+- attaching user/session to request-local context
+- guarding protected routes
+- skipping unnecessary work for fully public content
 
-**When to use Astro components:**
-- Static UI (headers, footers, layout shells)
-- Content rendering (blog posts, docs)
-- Pages that need no client-side interactivity
+## Styling and Theming
 
-**When to use Vue islands:**
-- Interactive widgets (theme toggles, forms, modals)
-- Stateful components (auth forms, dashboards)
-- Anything that needs `ref`, `onMounted`, or event handlers
+- Utility styling consumes semantic tokens
+- Global theme behavior comes from token-generated CSS variables
+- Theme switching affects values, not component markup
 
-## File-Based Routing
+## Practical Rule of Thumb
 
-Pages live in `src/pages/`. The file path maps directly to the URL:
-
-```
-src/pages/
-├── index.astro           →  /
-├── login.astro           →  /login
-├── register.astro        →  /register
-├── dashboard.astro       →  /dashboard
-├── changelog.astro       →  /changelog
-├── rss.xml.ts            →  /rss.xml
-├── blog/
-│   ├── index.astro       →  /blog
-│   └── [...slug].astro   →  /blog/:slug
-├── docs/
-│   ├── index.astro       →  /docs
-│   └── [...slug].astro   →  /docs/:slug
-└── api/
-    └── auth/
-        └── [...all].ts   →  /api/auth/*
-```
-
-Dynamic routes use bracket syntax. `[...slug].astro` is a rest parameter that captures any depth of path segments.
-
-## Content Collections
-
-Content is managed through Astro's content collections, defined in `src/content.config.ts`:
-
-```ts
-const blog = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/blog" }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    date: z.coerce.date(),
-    tags: z.array(z.string()).default([]),
-    image: z.string().optional(),
-    draft: z.boolean().default(false),
-  }),
-});
-
-const docs = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/docs" }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    order: z.number().default(0),
-  }),
-});
-
-const changelog = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/changelog" }),
-  schema: z.object({
-    version: z.string(),
-    date: z.coerce.date(),
-  }),
-});
-```
-
-Three collections: **blog** (posts with dates, tags, drafts), **docs** (ordered documentation pages), and **changelog** (version-tagged release notes).
-
-## The Layout System
-
-`BaseLayout.astro` wraps every page with consistent structure:
-
-```astro
-<html lang="en" data-theme="dark">
-  <head>
-    <SEO title={title} description={description} image={image} type={type} />
-    <ViewTransitions />
-    <!-- inline theme detection script -->
-  </head>
-  <body class="bg-bg-primary text-fg-primary flex min-h-screen flex-col">
-    <Header />
-    <main class="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
-      <slot />
-    </main>
-    <Footer />
-  </body>
-</html>
-```
-
-It provides the SEO component, View Transitions API, theme initialization, and a consistent page shell with header/footer.
-
-## The SEO Component
-
-`SEO.astro` generates comprehensive meta tags from props:
-
-- Standard `<title>` and `<meta name="description">`
-- Canonical URL
-- Open Graph tags (og:title, og:description, og:image, og:type)
-- Twitter card meta tags
-- JSON-LD structured data
-- RSS feed `<link>` tag
-- Optional `noindex` for private pages (like the dashboard)
-
-## Middleware
-
-The middleware (`src/middleware.ts`) runs on every SSR request. It handles two things:
-
-1. **Session injection** -- fetches the user's session from Better Auth and injects it into `Astro.locals.user` and `Astro.locals.session`
-2. **Route protection** -- redirects unauthenticated users away from protected routes (like `/dashboard`)
-
-Static/prerendered routes (`/blog`, `/docs`, `/changelog`, `/`) skip auth entirely for performance.
-
-## Tailwind 4 Integration
-
-Tailwind 4 uses the Vite plugin approach instead of the legacy PostCSS integration:
-
-```ts
-// astro.config.ts
-import tailwindcss from "@tailwindcss/vite";
-
-export default defineConfig({
-  vite: {
-    plugins: [tailwindcss()],
-  },
-});
-```
-
-Configuration happens in CSS via `@theme` blocks rather than `tailwind.config.js`. The `global.css` file imports tokens and defines the theme mapping. No separate config file needed.
-
-## API Client
-
-For backend communication, `src/lib/api-client.ts` provides a typed fetch wrapper:
-
-```ts
-import { api } from "../lib/api-client";
-
-// typed API calls matching the backend's ApiResponse<T> envelope
-const result = await api.get<{ status: string }>("/health/ready");
-if (result.success) {
-  console.log(result.data);
-}
-```
-
-The client automatically sets `Content-Type: application/json` and matches the .NET backend's `ApiResponse<T>` envelope format.
+Use static routes unless per-request state is required.  
+When interactivity is needed, add the smallest possible client island instead of hydrating full pages.
