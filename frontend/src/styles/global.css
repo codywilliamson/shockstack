@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--ss-font-family-sans);
+  --font-mono: var(--ss-font-family-mono);
+
+  --color-bg-primary: var(--ss-color-bg-primary);
+  --color-bg-secondary: var(--ss-color-bg-secondary);
+  --color-bg-tertiary: var(--ss-color-bg-tertiary);
+  --color-fg-primary: var(--ss-color-fg-primary);
+  --color-fg-secondary: var(--ss-color-fg-secondary);
+  --color-fg-muted: var(--ss-color-fg-muted);
+
+  --color-accent-purple: var(--ss-color-accent-purple);
+  --color-accent-pink: var(--ss-color-accent-pink);
+  --color-accent-green: var(--ss-color-accent-green);
+  --color-accent-cyan: var(--ss-color-accent-cyan);
+  --color-accent-orange: var(--ss-color-accent-orange);
+  --color-accent-red: var(--ss-color-accent-red);
+  --color-accent-yellow: var(--ss-color-accent-yellow);
+
+  --color-border-default: var(--ss-color-border-default);
+  --color-border-muted: var(--ss-color-border-muted);
+  --color-selection: var(--ss-color-selection);
+
+  --radius-sm: var(--ss-radius-sm);
+  --radius-md: var(--ss-radius-md);
+  --radius-lg: var(--ss-radius-lg);
+  --radius-xl: var(--ss-radius-xl);
+  --radius-2xl: var(--ss-radius-2xl);
+  --radius-full: var(--ss-radius-full);
+
+  --shadow-sm: var(--ss-shadow-sm);
+  --shadow-md: var(--ss-shadow-md);
+  --shadow-lg: var(--ss-shadow-lg);
+  --shadow-xl: var(--ss-shadow-xl);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-primary);
+  color: var(--color-fg-primary);
+}
+
+::selection {
+  background-color: var(--color-selection);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
