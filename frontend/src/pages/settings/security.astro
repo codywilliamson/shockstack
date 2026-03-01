@@ -1,0 +1,10 @@
+---
+import SettingsLayout from "../../layouts/SettingsLayout.astro";
+import SecuritySettings from "../../components/settings/SecuritySettings.vue";
+
+const user = Astro.locals.user!;
+---
+
+<SettingsLayout title="Security Settings">
+  <SecuritySettings user={user} client:load />
+</SettingsLayout>

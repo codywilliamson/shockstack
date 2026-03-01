@@ -1,0 +1,10 @@
+---
+import SettingsLayout from "../../layouts/SettingsLayout.astro";
+import ProfileSettings from "../../components/settings/ProfileSettings.vue";
+
+const user = Astro.locals.user!;
+---
+
+<SettingsLayout title="Profile Settings">
+  <ProfileSettings user={user} client:load />
+</SettingsLayout>
