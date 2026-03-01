@@ -1,8 +1,10 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/ShockStack.Api/ShockStack.Api.csproj" />
+    <Project Path="src/ShockStack.AppHost/ShockStack.AppHost.csproj" />
     <Project Path="src/ShockStack.Core/ShockStack.Core.csproj" />
     <Project Path="src/ShockStack.Infrastructure/ShockStack.Infrastructure.csproj" />
+    <Project Path="src/ShockStack.ServiceDefaults/ShockStack.ServiceDefaults.csproj" />
     <Project Path="src/ShockStack.Tests/ShockStack.Tests.csproj" />
   </Folder>
 </Solution>

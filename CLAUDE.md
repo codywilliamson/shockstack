@@ -45,9 +45,13 @@ pnpm --filter frontend test      # vitest
 ## Backend Commands
 
 ```bash
+# start entire stack via aspire (recommended)
+dotnet run --project backend/src/ShockStack.AppHost
+
+# or standalone
+dotnet run --project backend/src/ShockStack.Api
 dotnet build backend/ShockStack.slnx
 dotnet test backend/ShockStack.slnx
-dotnet run --project backend/src/ShockStack.Api
 ```
 
 ## Conventions

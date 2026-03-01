@@ -22,23 +22,21 @@ Convention-first monorepo template: Astro 5 + optional .NET 10 backend, ready fo
 ## Quick Start
 
 ```bash
-# prerequisites: node 22+, pnpm 10+
+# prerequisites: node 22+, pnpm 10+, .NET 10 SDK, Docker
 pnpm install
-
-# build design tokens (required before frontend)
 pnpm tokens:build
 
-# dev
-pnpm dev
+# start everything with aspire (postgres + api + frontend + dashboard)
+dotnet run --project backend/src/ShockStack.AppHost
+```
 
-# build
-pnpm build
+Aspire starts Postgres, the .NET API, and the Astro frontend automatically. The Aspire dashboard gives you logs, traces, and metrics for all services.
 
-# test
-pnpm test
+**Frontend-only development:**
 
-# lint
-pnpm lint
+```bash
+pnpm tokens:build
+pnpm --filter frontend dev
 ```
 
 ## Project Structure

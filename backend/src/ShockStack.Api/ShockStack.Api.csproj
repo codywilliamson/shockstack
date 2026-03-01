@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ShockStack.Core\ShockStack.Core.csproj" />
     <ProjectReference Include="..\ShockStack.Infrastructure\ShockStack.Infrastructure.csproj" />
+    <ProjectReference Include="..\ShockStack.ServiceDefaults\ShockStack.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>
