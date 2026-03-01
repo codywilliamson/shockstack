@@ -1,0 +1,40 @@
+---
+title: Getting Started
+description: Get up and running with ShockStack in minutes.
+order: 1
+---
+
+# Getting Started
+
+## Prerequisites
+
+- Node.js >= 22
+- pnpm >= 10
+
+## Installation
+
+```bash
+# clone the template
+git clone https://github.com/your-org/shockstack.git my-project
+cd my-project
+
+# install dependencies
+pnpm install
+
+# build design tokens
+pnpm tokens:build
+
+# start development
+pnpm dev
+```
+
+## Project structure
+
+```
+shockstack/
+├── frontend/          # astro 5 application
+├── backend/           # optional .NET 10 API
+├── packages/tokens/   # design token system
+├── docker/            # docker compose configs
+└── docs/              # project documentation
+```
