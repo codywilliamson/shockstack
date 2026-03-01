@@ -38,6 +38,41 @@ const themes = [
     selector: '[data-theme="gruvbox-light"]',
   },
   {
+    name: "gruvbox-soft",
+    source: "gruvbox-soft.json",
+    selector: '[data-theme="gruvbox-soft"]',
+  },
+  {
+    name: "gruvbox-hard",
+    source: "gruvbox-hard.json",
+    selector: '[data-theme="gruvbox-hard"]',
+  },
+  {
+    name: "catppuccin-mocha",
+    source: "catppuccin-mocha.json",
+    selector: '[data-theme="catppuccin-mocha"]',
+  },
+  {
+    name: "tokyo-night",
+    source: "tokyo-night.json",
+    selector: '[data-theme="tokyo-night"]',
+  },
+  {
+    name: "one-dark",
+    source: "one-dark.json",
+    selector: '[data-theme="one-dark"]',
+  },
+  {
+    name: "solarized-dark",
+    source: "solarized-dark.json",
+    selector: '[data-theme="solarized-dark"]',
+  },
+  {
+    name: "solarized-light",
+    source: "solarized-light.json",
+    selector: '[data-theme="solarized-light"]',
+  },
+  {
     name: "midnight",
     source: "midnight.json",
     selector: '[data-theme="midnight"]',

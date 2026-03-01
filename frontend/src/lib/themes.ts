@@ -50,6 +50,76 @@ export const THEME_OPTIONS = [
     },
   },
   {
+    value: "gruvbox-soft",
+    label: "Gruvbox Soft",
+    preview: {
+      page: "#32302f",
+      surface: "#3c3836",
+      accent: "#b8bb26",
+      text: "#ebdbb2",
+    },
+  },
+  {
+    value: "gruvbox-hard",
+    label: "Gruvbox Hard",
+    preview: {
+      page: "#1d2021",
+      surface: "#282828",
+      accent: "#fe8019",
+      text: "#ebdbb2",
+    },
+  },
+  {
+    value: "catppuccin-mocha",
+    label: "Catppuccin Mocha",
+    preview: {
+      page: "#1e1e2e",
+      surface: "#313244",
+      accent: "#cba6f7",
+      text: "#cdd6f4",
+    },
+  },
+  {
+    value: "tokyo-night",
+    label: "Tokyo Night",
+    preview: {
+      page: "#1a1b26",
+      surface: "#24283b",
+      accent: "#7dcfff",
+      text: "#c0caf5",
+    },
+  },
+  {
+    value: "one-dark",
+    label: "One Dark",
+    preview: {
+      page: "#282c34",
+      surface: "#353b45",
+      accent: "#56b6c2",
+      text: "#abb2bf",
+    },
+  },
+  {
+    value: "solarized-dark",
+    label: "Solarized Dark",
+    preview: {
+      page: "#002b36",
+      surface: "#073642",
+      accent: "#2aa198",
+      text: "#93a1a1",
+    },
+  },
+  {
+    value: "solarized-light",
+    label: "Solarized Light",
+    preview: {
+      page: "#fdf6e3",
+      surface: "#eee8d5",
+      accent: "#2aa198",
+      text: "#586e75",
+    },
+  },
+  {
     value: "midnight",
     label: "Midnight",
     preview: {

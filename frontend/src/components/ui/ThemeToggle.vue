@@ -154,7 +154,7 @@ onUnmounted(() => {
 
     <div
       v-if="isOpen"
-      class="border-border-default bg-bg-secondary absolute top-full right-0 z-50 mt-2 w-44 overflow-hidden rounded-lg border shadow-lg"
+      class="border-border-default bg-bg-secondary absolute top-full right-0 z-50 mt-2 w-56 overflow-hidden rounded-lg border shadow-lg"
     >
       <ul
         role="listbox"
