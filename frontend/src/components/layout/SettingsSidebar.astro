@@ -1,0 +1,44 @@
+---
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+
+const links = [
+  { href: "/settings/profile", label: "Profile" },
+  { href: "/settings/security", label: "Security" },
+];
+---
+
+<aside class="shrink-0 lg:w-56">
+  <nav class="lg:sticky lg:top-8">
+    <h3
+      class="text-fg-muted mb-3 text-xs font-semibold tracking-wider uppercase"
+    >
+      Settings
+    </h3>
+    <ul class="space-y-1">
+      {
+        links.map(({ href, label }) => {
+          const isActive = currentPath === href;
+          return (
+            <li>
+              <a
+                href={href}
+                class:list={[
+                  "block rounded-md px-3 py-1.5 text-sm transition-colors",
+                  isActive
+                    ? "bg-accent-purple/10 text-accent-purple font-medium"
+                    : "text-fg-secondary hover:text-fg-primary hover:bg-bg-tertiary",
+                ]}
+              >
+                {label}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </nav>
+</aside>
