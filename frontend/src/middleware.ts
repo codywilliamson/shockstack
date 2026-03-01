@@ -21,14 +21,18 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   // lazy import to avoid loading auth on static routes
-  const { auth } = await import("./lib/auth");
-
-  const session = await auth.api.getSession({
-    headers: context.request.headers,
-  });
-
-  context.locals.user = session?.user ?? null;
-  context.locals.session = session?.session ?? null;
+  try {
+    const { auth } = await import("./lib/auth");
+    const session = await auth.api.getSession({
+      headers: context.request.headers,
+    });
+    context.locals.user = session?.user ?? null;
+    context.locals.session = session?.session ?? null;
+  } catch {
+    // auth/db unavailable — treat as unauthenticated
+    context.locals.user = null;
+    context.locals.session = null;
+  }
 
   const isProtected = protectedRoutes.some((route) =>
     pathname.startsWith(route),

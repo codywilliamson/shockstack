@@ -7,9 +7,9 @@ namespace ShockStack.Api.Controllers;
 [Route("api/v1/[controller]")]
 public class HealthController : ControllerBase
 {
-    [HttpGet("ready")]
-    public IActionResult Ready()
-    {
-        return Ok(ApiResponse<object>.Ok(new { status = "ready" }));
-    }
+  [HttpGet("ready")]
+  public IActionResult Ready()
+  {
+    return Ok(ApiResponse<object>.Ok(new { status = "ready" }));
+  }
 }
