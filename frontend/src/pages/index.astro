@@ -44,7 +44,7 @@ export const prerender = true;
           Get Started
         </a>
         <a
-          href="https://github.com/shockbirds/shockstack"
+          href="https://github.com/codywilliamson/shockstack"
           target="_blank"
           rel="noopener noreferrer"
           class="border-border-default text-fg-primary hover:border-accent-purple rounded-lg border px-7 py-3.5 font-semibold transition-all hover:-translate-y-0.5"
@@ -86,24 +86,31 @@ export const prerender = true;
             <p>
               <span class="text-accent-green">$</span>
               <span class="text-fg-primary">
-                pnpm create shockstack my-app</span
+                git clone https://github.com/codywilliamson/shockstack my-app</span
               >
             </p>
             <p>
               <span class="text-accent-green">$</span>
-              <span class="text-fg-primary"> cd my-app</span>
+              <span class="text-fg-primary"> cd my-app && pnpm install</span>
             </p>
             <p>
               <span class="text-accent-green">$</span>
-              <span class="text-fg-primary"> pnpm dev</span>
+              <span class="text-fg-primary">
+                dotnet run --project backend/src/ShockStack.AppHost</span
+              >
             </p>
             <p class="text-fg-muted mt-2">
-              &#10148; frontend ready on http://localhost:4321
+              &#10148; postgres running on port 5432
             </p>
             <p class="text-fg-muted">
-              &#10148; backend ready on http://localhost:5000
+              &#10148; api ready on https://localhost:7275
             </p>
-            <p class="text-accent-purple mt-2">&#10003; ready in 1.2s</p>
+            <p class="text-fg-muted">
+              &#10148; frontend ready on http://localhost:4321
+            </p>
+            <p class="text-accent-purple mt-2">
+              &#10003; aspire dashboard on http://localhost:15888
+            </p>
           </div>
         </div>
       </div>
@@ -475,17 +482,17 @@ export const prerender = true;
             </div>
             <pre
               class="code-body"><code><span class="text-fg-muted"># clone and install</span>
-<span class="text-accent-green">$</span> <span class="text-fg-primary">git clone https://github.com/shockbirds/shockstack my-app</span>
+<span class="text-accent-green">$</span> <span class="text-fg-primary">git clone https://github.com/codywilliamson/shockstack my-app</span>
 <span class="text-accent-green">$</span> <span class="text-fg-primary">cd my-app && pnpm install</span>
 
 <span class="text-fg-muted"># build design tokens</span>
 <span class="text-accent-green">$</span> <span class="text-fg-primary">pnpm tokens:build</span>
 
-<span class="text-fg-muted"># start dev servers (frontend + backend)</span>
-<span class="text-accent-green">$</span> <span class="text-fg-primary">pnpm dev</span>
+<span class="text-fg-muted"># start everything with aspire (postgres, api, frontend, dashboard)</span>
+<span class="text-accent-green">$</span> <span class="text-fg-primary">dotnet run --project backend/src/ShockStack.AppHost</span>
 
-<span class="text-fg-muted"># or run the full stack via aspire</span>
-<span class="text-accent-green">$</span> <span class="text-fg-primary">dotnet run --project backend/src/ShockStack.AppHost</span></code></pre>
+<span class="text-fg-muted"># or frontend-only development</span>
+<span class="text-accent-green">$</span> <span class="text-fg-primary">pnpm --filter frontend dev</span></code></pre>
           </div>
         </div>
       </div>
@@ -510,7 +517,7 @@ export const prerender = true;
           Read the Docs
         </a>
         <a
-          href="https://github.com/shockbirds/shockstack"
+          href="https://github.com/codywilliamson/shockstack"
           target="_blank"
           rel="noopener noreferrer"
           class="border-border-default text-fg-primary hover:border-accent-purple rounded-lg border px-8 py-4 text-lg font-semibold transition-all hover:-translate-y-0.5"

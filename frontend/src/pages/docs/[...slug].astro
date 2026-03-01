@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import DocsSidebar from "../../components/layout/DocsSidebar.astro";
 
 export const prerender = true;
 
@@ -14,10 +15,51 @@ export async function getStaticPaths() {
 
 const { doc } = Astro.props;
 const { Content } = await render(doc);
+
+const allDocs = (await getCollection("docs")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const currentIndex = allDocs.findIndex((d) => d.id === doc.id);
+const prev = currentIndex > 0 ? allDocs[currentIndex - 1] : null;
+const next =
+  currentIndex < allDocs.length - 1 ? allDocs[currentIndex + 1] : null;
 ---
 
 <BaseLayout title={doc.data.title} description={doc.data.description}>
-  <article class="prose prose-lg mx-auto max-w-3xl">
-    <Content />
-  </article>
+  <div class="flex flex-col gap-10 lg:flex-row">
+    <DocsSidebar currentSlug={doc.id} />
+    <div class="min-w-0 flex-1">
+      <article class="prose prose-lg mx-auto max-w-3xl">
+        <Content />
+      </article>
+      <nav
+        class="border-border-default mx-auto mt-12 flex max-w-3xl items-center justify-between border-t pt-6"
+      >
+        {
+          prev ? (
+            <a href={`/docs/${prev.id}`} class="group flex flex-col">
+              <span class="text-fg-muted text-xs uppercase">Previous</span>
+              <span class="text-accent-purple group-hover:text-accent-pink text-sm font-medium transition-colors">
+                &larr; {prev.data.title}
+              </span>
+            </a>
+          ) : (
+            <div />
+          )
+        }
+        {
+          next ? (
+            <a href={`/docs/${next.id}`} class="group flex flex-col items-end">
+              <span class="text-fg-muted text-xs uppercase">Next</span>
+              <span class="text-accent-purple group-hover:text-accent-pink text-sm font-medium transition-colors">
+                {next.data.title} &rarr;
+              </span>
+            </a>
+          ) : (
+            <div />
+          )
+        }
+      </nav>
+    </div>
+  </div>
 </BaseLayout>

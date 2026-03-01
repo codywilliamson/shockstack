@@ -1,0 +1,45 @@
+---
+import { getCollection } from "astro:content";
+
+interface Props {
+  currentSlug?: string;
+}
+
+const { currentSlug } = Astro.props;
+
+const docs = (await getCollection("docs")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<aside class="shrink-0 lg:w-56">
+  <nav class="lg:sticky lg:top-8">
+    <h3
+      class="text-fg-muted mb-3 text-xs font-semibold tracking-wider uppercase"
+    >
+      Documentation
+    </h3>
+    <ul class="space-y-1">
+      {
+        docs.map((doc) => {
+          const isActive = currentSlug === doc.id;
+          return (
+            <li>
+              <a
+                href={`/docs/${doc.id}`}
+                class:list={[
+                  "block rounded-md px-3 py-1.5 text-sm transition-colors",
+                  isActive
+                    ? "bg-accent-purple/10 text-accent-purple font-medium"
+                    : "text-fg-secondary hover:text-fg-primary hover:bg-bg-tertiary",
+                ]}
+              >
+                {doc.data.title}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </nav>
+</aside>

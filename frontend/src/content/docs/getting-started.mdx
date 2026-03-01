@@ -8,33 +8,64 @@ order: 1
 
 ## Prerequisites
 
-- Node.js >= 22
-- pnpm >= 10
+- **Node.js** >= 22
+- **pnpm** >= 10
+- **.NET 10 SDK** (for backend and Aspire orchestration)
+- **Docker** (Aspire manages Postgres via Docker automatically)
 
-## Installation
+## Quick Start (Recommended)
+
+The fastest way to get the full stack running is with .NET Aspire. One command spins up Postgres, the .NET API, and the Astro frontend:
 
 ```bash
-# clone the template
-git clone https://github.com/your-org/shockstack.git my-project
+# clone and install
+git clone https://github.com/codywilliamson/shockstack.git my-project
 cd my-project
-
-# install dependencies
 pnpm install
 
-# build design tokens
+# build design tokens (required on first run)
 pnpm tokens:build
 
-# start development
-pnpm dev
+# start everything with aspire
+dotnet run --project backend/src/ShockStack.AppHost
 ```
 
-## Project structure
+Aspire will:
+- Start a **Postgres** container with pgAdmin
+- Launch the **.NET API** with service discovery and health checks
+- Start the **Astro frontend** dev server
+- Open the **Aspire dashboard** at `http://localhost:15888` for logs, traces, and metrics
+
+## Frontend-Only Development
+
+If you don't need the backend, you can run just the frontend:
+
+```bash
+pnpm install
+pnpm tokens:build
+pnpm --filter frontend dev
+```
+
+The frontend will start at `http://localhost:4321`. Auth and API features will gracefully degrade when the backend isn't available.
+
+## Project Structure
 
 ```
 shockstack/
-├── frontend/          # astro 5 application
-├── backend/           # optional .NET 10 API
-├── packages/tokens/   # design token system
-├── docker/            # docker compose configs
-└── docs/              # project documentation
+├── frontend/                          # astro 5 application
+├── backend/
+│   └── src/
+│       ├── ShockStack.Api/            # .NET 10 web API
+│       ├── ShockStack.AppHost/        # aspire orchestrator
+│       └── ShockStack.ServiceDefaults/ # shared service config
+├── packages/tokens/                   # design token system (style dictionary)
+├── docker/                            # docker compose configs
+└── docs/                              # project documentation
 ```
+
+## Next Steps
+
+- [Design Tokens](/docs/design-tokens) — customize the color palette and theme
+- [Frontend Guide](/docs/frontend-guide) — learn about Astro islands, Vue components, and routing
+- [Backend Guide](/docs/backend-guide) — explore the .NET clean architecture and API patterns
+- [Authentication](/docs/authentication) — set up Better Auth with email/password and OAuth
