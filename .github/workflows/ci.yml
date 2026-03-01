@@ -82,10 +82,10 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "10.x"
-      - run: dotnet restore backend/ShockStack.sln
+      - run: dotnet restore backend/ShockStack.slnx
       - if: ${{ matrix.task == 'build' }}
-        run: dotnet build backend/ShockStack.sln --no-restore --configuration Release
+        run: dotnet build backend/ShockStack.slnx --no-restore --configuration Release
       - if: ${{ matrix.task == 'test' }}
-        run: dotnet test backend/ShockStack.sln --no-restore --configuration Release
+        run: dotnet test backend/ShockStack.slnx --no-restore --configuration Release
       - if: ${{ matrix.task == 'build' }}
-        run: dotnet format backend/ShockStack.sln --verify-no-changes
+        run: dotnet format backend/ShockStack.slnx --verify-no-changes
