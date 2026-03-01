@@ -1,4 +1,4 @@
-@import "../../packages/tokens/dist/tokens.css";
+@import "../../../packages/tokens/dist/tokens.css";
 @import "tailwindcss";
 
 @theme {
