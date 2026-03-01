@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "lint": "eslint .",
     "typecheck": "astro check",
-    "test": "vitest run"
+    "test": "vitest run",
+    "db:seed": "npx tsx src/lib/db/seed.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.5.0",
