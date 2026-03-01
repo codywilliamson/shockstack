@@ -43,7 +43,7 @@ const { frontmatter } = Astro.props;
 </BaseLayout>
 ```
 
-The entire article renders as static HTML. Zero JavaScript. The only interactive piece is the `ThemeToggle`, which gets its own tiny Vue runtime.
+The entire article renders as static HTML. Zero JavaScript for content. The only interactive piece is the theme picker, which gets its own tiny Vue runtime.
 
 ## When to Use Vue Islands
 
@@ -58,33 +58,40 @@ ShockStack includes two Vue islands out of the box:
 
 ### ThemeToggle.vue
 
-The theme toggle reads from `localStorage`, updates the `data-theme` attribute on `<html>`, and persists the choice. This requires client-side JavaScript — there's no way to do it with static HTML.
+The theme picker reads from `localStorage`, validates the stored value against known themes, updates `data-theme` on `<html>`, and persists the user selection. This requires client-side JavaScript — there's no way to do it with static HTML.
 
 ```vue
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { THEME_OPTIONS, isThemeName, type ThemeName } from "../../lib/themes";
 
-const theme = ref<"dark" | "light">("dark");
+const theme = ref<ThemeName>("dark");
 
 onMounted(() => {
   const stored = localStorage.getItem("theme");
-  if (stored === "light" || stored === "dark") {
+  if (isThemeName(stored)) {
     theme.value = stored;
-  } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-    theme.value = "light";
   }
   document.documentElement.setAttribute("data-theme", theme.value);
 });
 
-function toggle() {
-  theme.value = theme.value === "dark" ? "light" : "dark";
+function setTheme(nextTheme: ThemeName) {
+  theme.value = nextTheme;
   document.documentElement.setAttribute("data-theme", theme.value);
   localStorage.setItem("theme", theme.value);
 }
 </script>
+
+<template>
+  <select v-model="theme" @change="setTheme(theme)">
+    <option v-for="option in THEME_OPTIONS" :key="option.value" :value="option.value">
+      {{ option.label }}
+    </option>
+  </select>
+</template>
 ```
 
-This is used with `client:load` because the theme toggle needs to be interactive immediately — users expect to click it as soon as they see it.
+This is used with `client:load` because theme selection needs to be interactive immediately — users expect to change it as soon as they see it.
 
 ### AuthForm.vue
 
@@ -146,7 +153,7 @@ Here's why this matters. A typical SPA (React, Vue SPA, Next.js with full hydrat
 With islands:
 
 - A blog post page ships **zero JS** for the content itself
-- Only the theme toggle (~2KB of Vue runtime + component) gets hydrated
+- Only the theme picker (~2KB of Vue runtime + component) gets hydrated
 - A page with no interactive components ships **no JavaScript at all**
 
 This translates to:

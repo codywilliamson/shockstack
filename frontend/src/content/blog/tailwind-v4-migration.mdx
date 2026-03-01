@@ -141,7 +141,7 @@ This is how ShockStack connects design tokens to Tailwind. The token pipeline ge
 }
 ```
 
-Because the `--ss-*` variables change when the `data-theme` attribute switches (dark tokens are on `:root`, light tokens are on `[data-theme="light"]`), every Tailwind utility automatically adapts to the current theme. No dark mode variant needed.
+Because the `--ss-*` variables change when `data-theme` switches (default tokens on `:root`, theme overrides on `[data-theme="..."]`), every Tailwind utility automatically adapts to the active palette. No dark mode variant needed.
 
 ## What Happened to `darkMode`?
 
@@ -161,13 +161,13 @@ Then use `dark:` variants everywhere:
 <div class="bg-white dark:bg-gray-900 text-black dark:text-white">
 ```
 
-ShockStack doesn't need this pattern at all. Since the design tokens change via CSS variables when the theme switches, a single class handles both modes:
+ShockStack doesn't need this pattern at all. Since design tokens change via CSS variables when the theme switches, a single class handles all built-in palettes:
 
 ```html
 <div class="bg-bg-primary text-fg-primary">
 ```
 
-No `dark:` prefix. The CSS variables resolve to the right values based on the active theme. This cuts the class count roughly in half on themed elements.
+No `dark:` prefix. The CSS variables resolve to the right values based on the active theme. The same markup works for Dracula, Alucard, Nord, Gruvbox, Midnight, and Dawn.
 
 ## No More `content` Array
 
