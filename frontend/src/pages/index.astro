@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import TerminalTabs from "../components/content/TerminalTabs.astro";
 
 export const prerender = true;
 ---
@@ -67,52 +68,90 @@ export const prerender = true;
       </div>
 
       <!-- terminal mockup -->
-      <div class="fade-in mx-auto mt-16 max-w-2xl text-left">
-        <div
-          class="bg-bg-tertiary border-border-default overflow-hidden rounded-xl border shadow-xl"
-        >
-          <div
-            class="border-border-default flex items-center gap-2 border-b px-4 py-3"
-          >
-            <span class="bg-accent-red inline-block h-3 w-3 rounded-full"
-            ></span>
-            <span class="bg-accent-yellow inline-block h-3 w-3 rounded-full"
-            ></span>
-            <span class="bg-accent-green inline-block h-3 w-3 rounded-full"
-            ></span>
-            <span class="text-fg-muted ml-2 font-mono text-xs">terminal</span>
-          </div>
-          <div class="p-5 font-mono text-sm leading-relaxed">
-            <p>
-              <span class="text-accent-green">$</span>
-              <span class="text-fg-primary">
-                git clone https://github.com/codywilliamson/shockstack my-app</span
-              >
-            </p>
-            <p>
-              <span class="text-accent-green">$</span>
-              <span class="text-fg-primary"> cd my-app && pnpm install</span>
-            </p>
-            <p>
-              <span class="text-accent-green">$</span>
-              <span class="text-fg-primary">
-                dotnet run --project backend/src/ShockStack.AppHost</span
-              >
-            </p>
-            <p class="text-fg-muted mt-2">
-              &#10148; postgres running on port 5432
-            </p>
-            <p class="text-fg-muted">
-              &#10148; api ready on https://localhost:7275
-            </p>
-            <p class="text-fg-muted">
-              &#10148; frontend ready on http://localhost:4321
-            </p>
-            <p class="text-accent-purple mt-2">
-              &#10003; aspire dashboard on http://localhost:15888
-            </p>
-          </div>
-        </div>
+      <div class="fade-in mx-auto mt-16 max-w-3xl text-left">
+        <TerminalTabs
+          title="Boot Sequence"
+          variants={{
+            linux: {
+              lines: [
+                {
+                  kind: "command",
+                  text: "git clone https://github.com/codywilliamson/shockstack my-app",
+                },
+                { kind: "command", text: "cd my-app && pnpm install" },
+                {
+                  kind: "command",
+                  text: "dotnet run --project backend/src/ShockStack.AppHost",
+                },
+                { kind: "output", text: "-> postgres running on port 5432" },
+                {
+                  kind: "output",
+                  text: "-> api ready on https://localhost:7275",
+                },
+                {
+                  kind: "output",
+                  text: "-> frontend ready on http://localhost:4321",
+                },
+                {
+                  kind: "success",
+                  text: "check aspire dashboard on http://localhost:15888",
+                },
+              ],
+            },
+            mac: {
+              lines: [
+                {
+                  kind: "command",
+                  text: "git clone https://github.com/codywilliamson/shockstack my-app",
+                },
+                { kind: "command", text: "cd my-app && pnpm install" },
+                {
+                  kind: "command",
+                  text: "dotnet run --project backend/src/ShockStack.AppHost",
+                },
+                { kind: "output", text: "-> postgres running on port 5432" },
+                {
+                  kind: "output",
+                  text: "-> api ready on https://localhost:7275",
+                },
+                {
+                  kind: "output",
+                  text: "-> frontend ready on http://localhost:4321",
+                },
+                {
+                  kind: "success",
+                  text: "check aspire dashboard on http://localhost:15888",
+                },
+              ],
+            },
+            windows: {
+              lines: [
+                {
+                  kind: "command",
+                  text: "git clone https://github.com/codywilliamson/shockstack my-app",
+                },
+                { kind: "command", text: "cd my-app; pnpm install" },
+                {
+                  kind: "command",
+                  text: "dotnet run --project backend\\src\\ShockStack.AppHost",
+                },
+                { kind: "output", text: "-> postgres running on port 5432" },
+                {
+                  kind: "output",
+                  text: "-> api ready on https://localhost:7275",
+                },
+                {
+                  kind: "output",
+                  text: "-> frontend ready on http://localhost:4321",
+                },
+                {
+                  kind: "success",
+                  text: "check aspire dashboard on http://localhost:15888",
+                },
+              ],
+            },
+          }}
+        />
       </div>
     </div>
   </section>
@@ -476,24 +515,77 @@ export const prerender = true;
 
         <!-- code block: quick start (full width) -->
         <div class="lg:col-span-2">
-          <div class="code-block">
-            <div class="code-header">
-              <span class="text-fg-muted font-mono text-xs">quick start</span>
-            </div>
-            <pre
-              class="code-body"><code><span class="text-fg-muted"># clone and install</span>
-<span class="text-accent-green">$</span> <span class="text-fg-primary">git clone https://github.com/codywilliamson/shockstack my-app</span>
-<span class="text-accent-green">$</span> <span class="text-fg-primary">cd my-app && pnpm install</span>
-
-<span class="text-fg-muted"># build design tokens</span>
-<span class="text-accent-green">$</span> <span class="text-fg-primary">pnpm tokens:build</span>
-
-<span class="text-fg-muted"># start everything with aspire (postgres, api, frontend, dashboard)</span>
-<span class="text-accent-green">$</span> <span class="text-fg-primary">dotnet run --project backend/src/ShockStack.AppHost</span>
-
-<span class="text-fg-muted"># or frontend-only development</span>
-<span class="text-accent-green">$</span> <span class="text-fg-primary">pnpm --filter frontend dev</span></code></pre>
-          </div>
+          <TerminalTabs
+            title="Quick Start"
+            variants={{
+              linux: {
+                lines: [
+                  { kind: "output", text: "# clone and install" },
+                  {
+                    kind: "command",
+                    text: "git clone https://github.com/codywilliamson/shockstack my-app",
+                  },
+                  { kind: "command", text: "cd my-app && pnpm install" },
+                  { kind: "output", text: "# build design tokens" },
+                  { kind: "command", text: "pnpm tokens:build" },
+                  {
+                    kind: "output",
+                    text: "# start full stack (postgres, api, frontend, dashboard)",
+                  },
+                  {
+                    kind: "command",
+                    text: "dotnet run --project backend/src/ShockStack.AppHost",
+                  },
+                  { kind: "output", text: "# frontend-only development" },
+                  { kind: "command", text: "pnpm --filter frontend dev" },
+                ],
+              },
+              mac: {
+                lines: [
+                  { kind: "output", text: "# clone and install" },
+                  {
+                    kind: "command",
+                    text: "git clone https://github.com/codywilliamson/shockstack my-app",
+                  },
+                  { kind: "command", text: "cd my-app && pnpm install" },
+                  { kind: "output", text: "# build design tokens" },
+                  { kind: "command", text: "pnpm tokens:build" },
+                  {
+                    kind: "output",
+                    text: "# start full stack (postgres, api, frontend, dashboard)",
+                  },
+                  {
+                    kind: "command",
+                    text: "dotnet run --project backend/src/ShockStack.AppHost",
+                  },
+                  { kind: "output", text: "# frontend-only development" },
+                  { kind: "command", text: "pnpm --filter frontend dev" },
+                ],
+              },
+              windows: {
+                lines: [
+                  { kind: "output", text: "# clone and install" },
+                  {
+                    kind: "command",
+                    text: "git clone https://github.com/codywilliamson/shockstack my-app",
+                  },
+                  { kind: "command", text: "cd my-app; pnpm install" },
+                  { kind: "output", text: "# build design tokens" },
+                  { kind: "command", text: "pnpm tokens:build" },
+                  {
+                    kind: "output",
+                    text: "# start full stack (postgres, api, frontend, dashboard)",
+                  },
+                  {
+                    kind: "command",
+                    text: "dotnet run --project backend\\src\\ShockStack.AppHost",
+                  },
+                  { kind: "output", text: "# frontend-only development" },
+                  { kind: "command", text: "pnpm --filter frontend dev" },
+                ],
+              },
+            }}
+          />
         </div>
       </div>
     </div>

@@ -4,6 +4,8 @@ description: Get up and running with ShockStack quickly.
 order: 1
 ---
 
+import TerminalTabs from "../../components/content/TerminalTabs.astro";
+
 # Getting Started
 
 ## Prerequisites
@@ -15,23 +17,87 @@ order: 1
 
 ## Quick Start
 
-```bash
-git clone https://github.com/codywilliamson/shockstack.git my-project
-cd my-project
-pnpm install
-pnpm tokens:build
-dotnet run --project backend/src/ShockStack.AppHost
-```
+<TerminalTabs
+  title="Quick Start"
+  variants={{
+    linux: {
+      lines: [
+        {
+          kind: "command",
+          text: "git clone https://github.com/codywilliamson/shockstack.git my-project",
+        },
+        { kind: "command", text: "cd my-project" },
+        { kind: "command", text: "pnpm install" },
+        { kind: "command", text: "pnpm tokens:build" },
+        {
+          kind: "command",
+          text: "dotnet run --project backend/src/ShockStack.AppHost",
+        },
+      ],
+    },
+    mac: {
+      lines: [
+        {
+          kind: "command",
+          text: "git clone https://github.com/codywilliamson/shockstack.git my-project",
+        },
+        { kind: "command", text: "cd my-project" },
+        { kind: "command", text: "pnpm install" },
+        { kind: "command", text: "pnpm tokens:build" },
+        {
+          kind: "command",
+          text: "dotnet run --project backend/src/ShockStack.AppHost",
+        },
+      ],
+    },
+    windows: {
+      lines: [
+        {
+          kind: "command",
+          text: "git clone https://github.com/codywilliamson/shockstack.git my-project",
+        },
+        { kind: "command", text: "cd my-project" },
+        { kind: "command", text: "pnpm install" },
+        { kind: "command", text: "pnpm tokens:build" },
+        {
+          kind: "command",
+          text: "dotnet run --project backend\\src\\ShockStack.AppHost",
+        },
+      ],
+    },
+  }}
+/>
 
 This starts a full local stack with frontend, backend, and supporting services.
 
 ## Frontend-Only Mode
 
-```bash
-pnpm install
-pnpm tokens:build
-pnpm --filter frontend dev
-```
+<TerminalTabs
+  title="Frontend Only"
+  variants={{
+    linux: {
+      lines: [
+        { kind: "command", text: "pnpm install" },
+        { kind: "command", text: "pnpm tokens:build" },
+        { kind: "command", text: "pnpm --filter frontend dev" },
+      ],
+    },
+    mac: {
+      lines: [
+        { kind: "command", text: "pnpm install" },
+        { kind: "command", text: "pnpm tokens:build" },
+        { kind: "command", text: "pnpm --filter frontend dev" },
+      ],
+    },
+    windows: {
+      lines: [
+        { kind: "command", text: "pnpm install" },
+        { kind: "command", text: "pnpm tokens:build" },
+        { kind: "command", text: "pnpm --filter frontend dev" },
+      ],
+    },
+  }}
+/>
 
 Use this mode when you only need UI/content development.
 

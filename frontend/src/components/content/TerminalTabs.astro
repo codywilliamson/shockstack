@@ -1,0 +1,555 @@
+---
+const VARIANT_ORDER = ["linux", "mac", "windows"] as const;
+
+type TerminalVariantId = (typeof VARIANT_ORDER)[number];
+type TerminalLineKind = "command" | "output" | "success";
+
+interface TerminalLine {
+  text: string;
+  kind?: TerminalLineKind;
+}
+
+interface TerminalVariant {
+  label?: string;
+  shellLabel?: string;
+  prompt?: string;
+  lines: Array<TerminalLine | string>;
+}
+
+interface Props {
+  title?: string;
+  variants: Partial<Record<TerminalVariantId, TerminalVariant>>;
+  defaultVariant?: TerminalVariantId;
+  syncGroup?: string;
+  class?: string;
+}
+
+const {
+  title,
+  variants,
+  defaultVariant = "linux",
+  syncGroup = "terminal-os",
+  class: className,
+} = Astro.props;
+
+const defaultLabels: Record<TerminalVariantId, string> = {
+  linux: "Linux",
+  mac: "Mac",
+  windows: "Windows",
+};
+
+const defaultShellLabels: Record<TerminalVariantId, string> = {
+  linux: "bash",
+  mac: "zsh",
+  windows: "PowerShell",
+};
+
+const defaultPrompts: Record<TerminalVariantId, string> = {
+  linux: "$",
+  mac: "%",
+  windows: "PS C:\\>",
+};
+
+const chromeStyle: Record<TerminalVariantId, "linux" | "mac" | "windows"> = {
+  linux: "linux",
+  mac: "mac",
+  windows: "windows",
+};
+
+const availableVariants = VARIANT_ORDER.filter((id) => {
+  const variant = variants[id];
+  return variant && Array.isArray(variant.lines) && variant.lines.length > 0;
+});
+
+if (availableVariants.length === 0) {
+  throw new Error("TerminalTabs requires at least one variant with lines.");
+}
+
+const selectedDefault = availableVariants.includes(defaultVariant)
+  ? defaultVariant
+  : availableVariants[0];
+
+const normalizedVariants = availableVariants.map((id) => {
+  const variant = variants[id]!;
+  const lines = variant.lines.map((line) =>
+    typeof line === "string" ? { text: line, kind: "command" as const } : line,
+  );
+
+  return {
+    id,
+    label: variant.label ?? defaultLabels[id],
+    shellLabel: variant.shellLabel ?? defaultShellLabels[id],
+    prompt: variant.prompt ?? defaultPrompts[id],
+    chrome: chromeStyle[id],
+    lines,
+  };
+});
+---
+
+<div
+  class:list={["terminal-tabs not-prose", className]}
+  data-terminal-tabs
+  data-terminal-group={syncGroup}
+  data-terminal-default={selectedDefault}
+>
+  <div
+    class="terminal-tabs-row"
+    role="tablist"
+    aria-label={title ? `${title} shell selector` : "Shell selector"}
+  >
+    {
+      normalizedVariants.map((variant) => (
+        <button
+          type="button"
+          class:list={[
+            "terminal-tab",
+            variant.id === selectedDefault && "is-active",
+          ]}
+          role="tab"
+          aria-selected={variant.id === selectedDefault ? "true" : "false"}
+          tabindex={variant.id === selectedDefault ? "0" : "-1"}
+          data-terminal-tab={variant.id}
+        >
+          {variant.label}
+        </button>
+      ))
+    }
+  </div>
+
+  {
+    title ? (
+      <p class="terminal-title">
+        <span>{title}</span>
+      </p>
+    ) : null
+  }
+
+  {
+    normalizedVariants.map((variant) => (
+      <section
+        class:list={["terminal-panel", `terminal-panel-${variant.chrome}`]}
+        role="tabpanel"
+        data-terminal-panel={variant.id}
+        hidden={variant.id !== selectedDefault}
+      >
+        <div class="terminal-header">
+          {variant.chrome === "windows" ? (
+            <span class="terminal-shell">{variant.shellLabel}</span>
+          ) : (
+            <div class="terminal-controls unix-controls" aria-hidden="true">
+              <span class="terminal-dot dot-red" />
+              <span class="terminal-dot dot-yellow" />
+              <span class="terminal-dot dot-green" />
+            </div>
+          )}
+          {variant.chrome === "windows" ? (
+            <div
+              class="terminal-controls terminal-controls-right windows-controls"
+              aria-hidden="true"
+            >
+              <span class="windows-control windows-control-minimize" />
+              <span class="windows-control windows-control-maximize" />
+              <span class="windows-control windows-control-close" />
+            </div>
+          ) : (
+            <span class="terminal-shell">{variant.shellLabel}</span>
+          )}
+        </div>
+
+        <div class="terminal-body">
+          {variant.lines.map((line) => (
+            <p
+              class:list={[
+                "terminal-line",
+                line.kind === "output" && "terminal-line-output",
+                line.kind === "success" && "terminal-line-success",
+              ]}
+            >
+              {line.kind === "command" ? (
+                <span>
+                  <span class="terminal-prompt">{variant.prompt}</span>
+                  <span class="terminal-command"> {line.text}</span>
+                </span>
+              ) : (
+                <span>{line.text}</span>
+              )}
+            </p>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+</div>
+
+<script is:inline>
+  (() => {
+    if (window.__shockstackTerminalTabsInitialized) {
+      document.dispatchEvent(new Event("shockstack:terminal-tabs:scan"));
+      return;
+    }
+
+    window.__shockstackTerminalTabsInitialized = true;
+
+    const ROOT_SELECTOR = "[data-terminal-tabs]";
+    const TAB_SELECTOR = "[data-terminal-tab]";
+    const PANEL_SELECTOR = "[data-terminal-panel]";
+    const INIT_ATTR = "data-terminal-initialized";
+    const STORAGE_PREFIX = "shockstack:terminal-tabs:";
+
+    const getRoots = () =>
+      Array.from(document.querySelectorAll(ROOT_SELECTOR)).filter(
+        (node) => node instanceof HTMLElement,
+      );
+
+    const getGroupRoots = (group) =>
+      getRoots().filter(
+        (root) => (root.dataset.terminalGroup || "terminal-os") === group,
+      );
+
+    const getFirstVariant = (root) => {
+      const firstTab = root.querySelector(TAB_SELECTOR);
+      return firstTab instanceof HTMLElement
+        ? firstTab.dataset.terminalTab
+        : undefined;
+    };
+
+    const setRootVariant = (root, variant) => {
+      let matched = false;
+      const tabs = root.querySelectorAll(TAB_SELECTOR);
+      const panels = root.querySelectorAll(PANEL_SELECTOR);
+
+      tabs.forEach((tab) => {
+        if (!(tab instanceof HTMLElement)) return;
+        const isActive = tab.dataset.terminalTab === variant;
+        tab.classList.toggle("is-active", isActive);
+        tab.setAttribute("aria-selected", isActive ? "true" : "false");
+        tab.setAttribute("tabindex", isActive ? "0" : "-1");
+        if (isActive) matched = true;
+      });
+
+      panels.forEach((panel) => {
+        if (!(panel instanceof HTMLElement)) return;
+        panel.hidden = panel.dataset.terminalPanel !== variant;
+      });
+
+      if (!matched) {
+        const fallback = getFirstVariant(root);
+        if (fallback && fallback !== variant) {
+          setRootVariant(root, fallback);
+        }
+      }
+    };
+
+    const applyGroupVariant = (group, variant) => {
+      const roots = getGroupRoots(group);
+      if (roots.length === 0) return;
+
+      roots.forEach((root) => setRootVariant(root, variant));
+
+      try {
+        localStorage.setItem(`${STORAGE_PREFIX}${group}`, variant);
+      } catch {
+        // noop when localStorage is unavailable
+      }
+    };
+
+    const getStoredVariant = (group) => {
+      try {
+        return localStorage.getItem(`${STORAGE_PREFIX}${group}`);
+      } catch {
+        return null;
+      }
+    };
+
+    const initRoot = (root) => {
+      if (root.getAttribute(INIT_ATTR) === "true") return;
+      root.setAttribute(INIT_ATTR, "true");
+
+      const tabs = root.querySelectorAll(TAB_SELECTOR);
+      tabs.forEach((tab) => {
+        if (!(tab instanceof HTMLElement)) return;
+        tab.addEventListener("click", () => {
+          const group = root.dataset.terminalGroup || "terminal-os";
+          const variant = tab.dataset.terminalTab;
+          if (!variant) return;
+          applyGroupVariant(group, variant);
+        });
+      });
+    };
+
+    const syncGroups = () => {
+      const roots = getRoots();
+      const groups = new Set(
+        roots.map((root) => root.dataset.terminalGroup || "terminal-os"),
+      );
+
+      groups.forEach((group) => {
+        const groupRoots = getGroupRoots(group);
+        const firstRoot = groupRoots[0];
+        if (!firstRoot) return;
+
+        const fallback =
+          firstRoot.dataset.terminalDefault || getFirstVariant(firstRoot);
+        const preferred = getStoredVariant(group) || fallback;
+        if (!preferred) return;
+        applyGroupVariant(group, preferred);
+      });
+    };
+
+    const initialize = () => {
+      getRoots().forEach(initRoot);
+      syncGroups();
+    };
+
+    document.addEventListener("DOMContentLoaded", initialize);
+    document.addEventListener("astro:page-load", initialize);
+    document.addEventListener("shockstack:terminal-tabs:scan", initialize);
+  })();
+</script>
+
+<style>
+  .terminal-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .terminal-tabs-row {
+    display: inline-flex;
+    width: fit-content;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-secondary);
+    padding: 0.3rem;
+  }
+
+  .terminal-tab {
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    padding: 0.35rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.2;
+    color: var(--color-fg-secondary);
+    background: transparent;
+    cursor: pointer;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .terminal-tab:hover {
+    color: var(--color-fg-primary);
+    border-color: var(--color-border-default);
+  }
+
+  .terminal-tab.is-active {
+    color: var(--color-fg-primary);
+    border-color: color-mix(
+      in srgb,
+      var(--color-accent-purple) 35%,
+      transparent
+    );
+    background-color: color-mix(
+      in srgb,
+      var(--color-accent-purple) 10%,
+      transparent
+    );
+  }
+
+  .terminal-title {
+    margin: 0;
+    padding-inline: 0.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+  }
+
+  .terminal-panel {
+    overflow: hidden;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    background: var(--color-bg-tertiary);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .terminal-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-bottom: 1px solid var(--color-border-default);
+    background: color-mix(in srgb, var(--color-bg-secondary) 92%, transparent);
+    padding: 0.65rem 0.9rem;
+  }
+
+  .terminal-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .terminal-controls-right {
+    margin-left: auto;
+  }
+
+  .terminal-dot {
+    display: inline-block;
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 999px;
+    opacity: 0.9;
+  }
+
+  .dot-red {
+    background-color: var(--color-accent-red);
+  }
+
+  .dot-yellow {
+    background-color: var(--color-accent-yellow);
+  }
+
+  .dot-green {
+    background-color: var(--color-accent-green);
+  }
+
+  .windows-control {
+    position: relative;
+    display: inline-block;
+    width: 1rem;
+    height: 0.85rem;
+    border: 1px solid transparent;
+    border-radius: 0.15rem;
+    color: var(--color-fg-muted);
+    background-color: color-mix(
+      in srgb,
+      var(--color-bg-primary) 30%,
+      transparent
+    );
+  }
+
+  .windows-control::before,
+  .windows-control::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .windows-control-minimize::before {
+    width: 0.45rem;
+    height: 1px;
+    top: 62%;
+    background-color: currentColor;
+  }
+
+  .windows-control-maximize::before {
+    width: 0.42rem;
+    height: 0.34rem;
+    border: 1px solid currentColor;
+    background: transparent;
+  }
+
+  .windows-control-close::before,
+  .windows-control-close::after {
+    width: 0.5rem;
+    height: 1px;
+    background-color: currentColor;
+  }
+
+  .windows-control-close::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .windows-control-close::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  .windows-control-close {
+    color: color-mix(
+      in srgb,
+      var(--color-accent-red) 75%,
+      var(--color-fg-primary)
+    );
+    border-color: color-mix(
+      in srgb,
+      var(--color-accent-red) 45%,
+      var(--color-border-muted)
+    );
+    background-color: color-mix(
+      in srgb,
+      var(--color-accent-red) 14%,
+      transparent
+    );
+  }
+
+  .terminal-panel-mac .terminal-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-accent-cyan) 9%, transparent),
+      color-mix(in srgb, var(--color-bg-secondary) 94%, transparent)
+    );
+  }
+
+  .terminal-shell {
+    margin-left: 0.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--color-fg-muted);
+  }
+
+  .terminal-body {
+    padding: 1rem 1rem 1.15rem;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.7;
+  }
+
+  .terminal-line {
+    margin: 0;
+    color: var(--color-fg-primary);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .terminal-line + .terminal-line {
+    margin-top: 0.1rem;
+  }
+
+  .terminal-line-output {
+    color: var(--color-fg-muted);
+  }
+
+  .terminal-line-success {
+    color: var(--color-accent-purple);
+  }
+
+  .terminal-prompt {
+    color: var(--color-accent-green);
+  }
+
+  .terminal-command {
+    color: var(--color-fg-primary);
+  }
+
+  @media (max-width: 640px) {
+    .terminal-tabs-row {
+      width: 100%;
+    }
+
+    .terminal-tab {
+      flex: 1;
+      text-align: center;
+      padding-inline: 0.45rem;
+    }
+
+    .terminal-body {
+      font-size: 0.78rem;
+    }
+  }
+</style>
