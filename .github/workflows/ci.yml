@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      backend: ${{ steps.filter.outputs.backend }}
+      tokens: ${{ steps.filter.outputs.tokens }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+              - 'packages/**'
+            backend:
+              - 'backend/**'
+            tokens:
+              - 'packages/tokens/**'
+
+  tokens:
+    needs: changes
+    if: ${{ needs.changes.outputs.tokens == 'true' || needs.changes.outputs.frontend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @shockstack/tokens build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: token-dist
+          path: packages/tokens/dist/
+
+  frontend:
+    needs: [changes, tokens]
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        task: [lint, typecheck, test, build]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          name: token-dist
+          path: packages/tokens/dist/
+      - run: pnpm --filter frontend ${{ matrix.task }}
+
+  backend:
+    needs: changes
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        task: [build, test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.x"
+      - run: dotnet restore backend/ShockStack.sln
+      - if: ${{ matrix.task == 'build' }}
+        run: dotnet build backend/ShockStack.sln --no-restore --configuration Release
+      - if: ${{ matrix.task == 'test' }}
+        run: dotnet test backend/ShockStack.sln --no-restore --configuration Release
+      - if: ${{ matrix.task == 'build' }}
+        run: dotnet format backend/ShockStack.sln --verify-no-changes
