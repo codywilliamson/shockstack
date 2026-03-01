@@ -39,3 +39,21 @@ const fullTitle = title === "ShockStack" ? title : `${title} | ShockStack`;
 <meta name="twitter:title" content={fullTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImageURL} />
+
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title="ShockStack"
+  href="/rss.xml"
+/>
+
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": type === "article" ? "Article" : "WebSite",
+    name: fullTitle,
+    description,
+    url: canonicalURL,
+  })}
+/>

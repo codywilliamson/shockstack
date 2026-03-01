@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shockstack.dev/sitemap-index.xml
