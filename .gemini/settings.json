@@ -1,0 +1,5 @@
+{
+  "codeAssist": {
+    "projectContext": "ShockStack is a convention-first monorepo template using Astro 5, Vue 3, Tailwind 4, with an optional .NET 10 backend. Uses pnpm workspaces and Turborepo. See docs/system/ for detailed docs."
+  }
+}
