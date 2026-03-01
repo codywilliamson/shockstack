@@ -1,0 +1,29 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export const prerender = true;
+
+const docs = (await getCollection("docs")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout title="Docs" description="ShockStack documentation.">
+  <h1 class="mb-8 text-3xl font-bold">Documentation</h1>
+  <nav class="grid gap-4">
+    {
+      docs.map((doc) => (
+        <a
+          href={`/docs/${doc.id}`}
+          class="border-border-default hover:border-accent-purple rounded-lg border p-4 transition-colors"
+        >
+          <h2 class="text-fg-primary font-semibold">{doc.data.title}</h2>
+          {doc.data.description && (
+            <p class="text-fg-secondary mt-1 text-sm">{doc.data.description}</p>
+          )}
+        </a>
+      ))
+    }
+  </nav>
+</BaseLayout>

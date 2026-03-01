@@ -1,0 +1,47 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+export const prerender = true;
+
+const releases = (await getCollection("changelog")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const rendered = await Promise.all(
+  releases.map(async (release) => ({
+    ...release,
+    rendered: await render(release),
+  })),
+);
+---
+
+<BaseLayout title="Changelog" description="ShockStack release history.">
+  <h1 class="mb-8 text-3xl font-bold">Changelog</h1>
+  <div class="space-y-8">
+    {
+      rendered.map(({ data, rendered: { Content } }) => (
+        <div class="border-accent-purple border-l-2 pl-6">
+          <div class="mb-2 flex items-center gap-3">
+            <span class="bg-accent-purple text-bg-primary rounded-full px-3 py-1 text-sm font-semibold">
+              v{data.version}
+            </span>
+            <time
+              class="text-fg-muted text-sm"
+              datetime={data.date.toISOString()}
+            >
+              {data.date.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </time>
+          </div>
+          <div class="prose-invert prose">
+            <Content />
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</BaseLayout>
