@@ -3,7 +3,7 @@ import { defineMiddleware } from "astro:middleware";
 const protectedRoutes = ["/dashboard"];
 
 // static/prerendered routes that should skip auth
-const staticRoutes = ["/blog", "/docs", "/changelog", "/rss.xml"];
+const staticRoutes = ["/blog", "/docs", "/changelog", "/theme", "/rss.xml"];
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const pathname = context.url.pathname;
@@ -38,7 +38,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     pathname.startsWith(route),
   );
 
-  if (isProtected && !session) {
+  if (isProtected && !context.locals.session) {
     return context.redirect("/login");
   }
 
