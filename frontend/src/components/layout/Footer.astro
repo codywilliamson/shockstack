@@ -39,9 +39,10 @@ const links = {
       <div>
         <a
           href="/"
-          class="text-accent-purple mb-3 inline-block text-lg font-bold"
+          class="mb-3 inline-flex items-center gap-2 text-lg font-bold"
         >
-          ShockStack
+          <img src="/logo.svg" alt="" width="20" height="20" />
+          <span class="text-accent-purple">ShockStack</span>
         </a>
         <p class="text-fg-muted text-sm leading-relaxed">
           Convention-first monorepo template. Astro 5 + Vue 3 + Tailwind 4 with
@@ -143,8 +144,14 @@ const links = {
       class="border-border-default text-fg-muted mt-10 flex flex-col items-center justify-between gap-3 border-t pt-8 text-sm sm:flex-row"
     >
       <p>&copy; {year} ShockStack. All rights reserved.</p>
-      <p class="text-fg-muted font-mono text-xs">
-        built with <span class="text-accent-purple">ShockStack</span>
+      <p class="text-fg-muted text-xs">
+        built by <a
+          href="https://spectaclesoftware.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-accent-purple hover:text-accent-pink transition-colors"
+          >Spectacle Software</a
+        >
       </p>
     </div>
   </div>

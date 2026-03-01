@@ -499,7 +499,63 @@ export const prerender = true;
     </div>
   </section>
 
-  <!-- cta -->
+  <!-- about -->
+  <section class="reveal bg-bg-secondary/50 px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-4xl">
+      <div class="mb-12 text-center">
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">About this project</h2>
+      </div>
+      <div class="grid gap-8 md:grid-cols-2">
+        <div class="about-card">
+          <div class="mb-4 flex items-center gap-3">
+            <img src="/logo.svg" alt="" width="28" height="28" />
+            <h3 class="text-lg font-semibold">Why ShockStack?</h3>
+          </div>
+          <p class="text-fg-secondary text-sm leading-relaxed">
+            ShockStack was born from years of building production apps and
+            wanting a single, opinionated starting point that actually works. No
+            starter-kit bloat, no half-baked integrations &mdash; just the
+            patterns that have proven themselves in real projects, wired
+            together with sensible defaults.
+          </p>
+        </div>
+        <div class="about-card">
+          <div class="mb-4 flex items-center gap-3">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="text-accent-cyan"
+            >
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5"></path>
+              <path d="M2 12l10 5 10-5"></path>
+            </svg>
+            <h3 class="text-lg font-semibold">Built by Spectacle</h3>
+          </div>
+          <p class="text-fg-secondary text-sm leading-relaxed">
+            ShockStack was developed by
+            <a
+              href="https://spectaclesoftware.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-accent-purple hover:text-accent-pink transition-colors"
+              >Spectacle Software</a
+            > for use across client projects and internal tools. It represents the
+            distilled best practices from building modern full-stack applications
+            for businesses of all sizes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- cta: open source -->
   <section class="reveal px-4 py-20 md:py-28">
     <div class="mx-auto max-w-3xl text-center">
       <h2 class="mb-4 text-3xl font-bold md:text-4xl">
@@ -525,6 +581,31 @@ export const prerender = true;
           Star on GitHub
         </a>
       </div>
+    </div>
+  </section>
+
+  <!-- cta: spectacle -->
+  <section class="reveal border-border-default border-t px-4 py-16 md:py-20">
+    <div class="mx-auto max-w-2xl text-center">
+      <p class="text-fg-muted mb-2 font-mono text-xs tracking-wider uppercase">
+        Need a team to build it for you?
+      </p>
+      <h3 class="mb-4 text-2xl font-bold md:text-3xl">
+        Let <span class="text-accent-cyan">Spectacle Software</span> handle it
+      </h3>
+      <p class="text-fg-secondary mx-auto mb-8 max-w-lg text-base">
+        The team behind ShockStack builds custom web applications, APIs, and
+        full-stack platforms for businesses. Same stack, same quality &mdash;
+        tailored to your needs.
+      </p>
+      <a
+        href="https://spectaclesoftware.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="border-accent-cyan text-accent-cyan hover:bg-accent-cyan hover:text-bg-primary inline-block rounded-lg border-2 px-8 py-3.5 font-semibold transition-all hover:-translate-y-0.5"
+      >
+        Get in Touch
+      </a>
     </div>
   </section>
 </BaseLayout>
@@ -648,6 +729,14 @@ export const prerender = true;
     color: var(--color-fg-primary);
     font-size: 0.8125rem;
     font-weight: 500;
+  }
+
+  /* about cards */
+  .about-card {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
   }
 
   /* code blocks */
