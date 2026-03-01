@@ -1,0 +1,23 @@
+import { defineMiddleware } from "astro:middleware";
+import { auth } from "./lib/auth";
+
+const protectedRoutes = ["/dashboard"];
+
+export const onRequest = defineMiddleware(async (context, next) => {
+  const session = await auth.api.getSession({
+    headers: context.request.headers,
+  });
+
+  context.locals.user = session?.user ?? null;
+  context.locals.session = session?.session ?? null;
+
+  const isProtected = protectedRoutes.some((route) =>
+    context.url.pathname.startsWith(route),
+  );
+
+  if (isProtected && !session) {
+    return context.redirect("/login");
+  }
+
+  return next();
+});
