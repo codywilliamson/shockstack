@@ -1,3 +1,9 @@
+## [1.6.1](https://github.com/codywilliamson/shockstack/compare/v1.6.0...v1.6.1) (2026-03-01)
+
+### Bug Fixes
+
+- resolve auth and db connection issues for aspire dev ([bd28234](https://github.com/codywilliamson/shockstack/commit/bd28234d530aab713fde5fde06275e7cf91da2e6))
+
 # [1.6.0](https://github.com/codywilliamson/shockstack/compare/v1.5.0...v1.6.0) (2026-03-01)
 
 ### Bug Fixes
