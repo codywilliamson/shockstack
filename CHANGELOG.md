@@ -1,3 +1,27 @@
+# [1.6.0](https://github.com/codywilliamson/shockstack/compare/v1.5.0...v1.6.0) (2026-03-01)
+
+### Bug Fixes
+
+- resolve typecheck errors in storage adapters ([8d114a2](https://github.com/codywilliamson/shockstack/commit/8d114a22442b9697d7591b9d02b539c22e3cce5b))
+
+### Features
+
+- add avatar upload API endpoint ([58b73e3](https://github.com/codywilliamson/shockstack/commit/58b73e3fb7cd45014cd4c03141e3ac7671a067c4))
+- add demo credentials hint to login page ([4da1a1e](https://github.com/codywilliamson/shockstack/commit/4da1a1ecaeb3ed4efb9348ff53880fb1c67955de))
+- add demo user seed script ([2c86d2e](https://github.com/codywilliamson/shockstack/commit/2c86d2ef68b3f6acc010683990fb8e4d4781edf7))
+- add profile settings component ([ac26159](https://github.com/codywilliamson/shockstack/commit/ac2615936e965cb052deea9e4e9f3f9e70a425c4))
+- add security settings component ([e7d35c2](https://github.com/codywilliamson/shockstack/commit/e7d35c2a2d50ce3aefe598c56632fa99bec353e1))
+- add settings index redirect ([499c070](https://github.com/codywilliamson/shockstack/commit/499c070566fba54968f82e565f845d3febdcd16b))
+- add settings layout with sidebar ([e8d0186](https://github.com/codywilliamson/shockstack/commit/e8d01866310aba13f55a57430b756a9fea0e1194))
+- add settings profile and security pages ([b0e57aa](https://github.com/codywilliamson/shockstack/commit/b0e57aacd33cb22dabed03353a9f42e80dffdc8b))
+- add settings sidebar component ([4109b83](https://github.com/codywilliamson/shockstack/commit/4109b830301418e547427d4fdfaafc66feb76d1e))
+- add storage adapter with R2 and local implementations ([8507072](https://github.com/codywilliamson/shockstack/commit/8507072be2b764ac70b9e36defeec4d937614f3e))
+- add user menu dropdown component ([5e0bbab](https://github.com/codywilliamson/shockstack/commit/5e0bbab4e1bc321c9f1a165154ffc20e5ee16517))
+- **auth:** enable change email support ([3ac17fc](https://github.com/codywilliamson/shockstack/commit/3ac17fc032d96cd2eff1bb05f2d1d1f3e9e2a63c))
+- **auth:** protect /settings routes ([02164a2](https://github.com/codywilliamson/shockstack/commit/02164a2361ddeb883fb624737c478b11f01b838a))
+- **frontend:** add synced linux/mac/windows terminal variants ([2a4f63e](https://github.com/codywilliamson/shockstack/commit/2a4f63e9629c22400f28182c66bbbc28b02dd911))
+- wire user menu into header ([95a883a](https://github.com/codywilliamson/shockstack/commit/95a883af6c117ec8fd2a8300dd8b8f1e86bef284))
+
 # [1.5.0](https://github.com/codywilliamson/shockstack/compare/v1.4.0...v1.5.0) (2026-03-01)
 
 ### Features
