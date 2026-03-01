@@ -4,5 +4,11 @@
   "main": "./dist/_worker.js",
   "assets": {
     "directory": "./dist/client"
-  }
+  },
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "shockstack-uploads"
+    }
+  ]
 }
