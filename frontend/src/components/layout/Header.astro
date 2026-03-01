@@ -1,5 +1,8 @@
 ---
 import ThemeToggle from "../ui/ThemeToggle.vue";
+import UserMenu from "../ui/UserMenu.vue";
+
+const user = Astro.locals.user ?? null;
 ---
 
 <header class="border-border-default border-b">
@@ -25,6 +28,7 @@ import ThemeToggle from "../ui/ThemeToggle.vue";
         >Theme</a
       >
       <ThemeToggle client:load />
+      <UserMenu user={user} client:load />
     </div>
   </nav>
 </header>
