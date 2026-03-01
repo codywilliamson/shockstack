@@ -12,7 +12,6 @@ var api = builder.AddProject<Projects.ShockStack_Api>("api")
 
 builder.AddViteApp("frontend", "../../frontend")
     .WithPnpm()
-    .WithHttpEndpoint(port: 4321, env: "PORT")
     .WithReference(api)
     .WaitFor(api);
 
