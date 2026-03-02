@@ -1,0 +1,67 @@
+---
+import UseCaseIcon from "./UseCaseIcon.astro";
+import { stackOptions, type StackUseCase } from "../../lib/use-cases";
+
+interface Props {
+  useCase: StackUseCase;
+  compact?: boolean;
+}
+
+const { useCase, compact = false } = Astro.props;
+const includeOptions = useCase.include.map((id) => stackOptions[id]);
+const skipOptions = useCase.skip.map((id) => stackOptions[id]);
+const outcomes = compact ? useCase.outcomes.slice(0, 2) : useCase.outcomes;
+---
+
+<article
+  class:list={[
+    "bg-bg-secondary border-border-default rounded-xl border p-5",
+    "hover:border-accent-purple transition-colors",
+  ]}
+>
+  <header class="mb-3 flex items-start gap-3">
+    <UseCaseIcon id={useCase.id} />
+    <div>
+      <h3 class="text-fg-primary text-lg font-semibold">{useCase.title}</h3>
+      <p class="text-fg-secondary mt-1 text-sm leading-relaxed">
+        {useCase.summary}
+      </p>
+    </div>
+  </header>
+
+  <ul class="text-fg-secondary mb-4 list-disc space-y-1 pl-5 text-sm">
+    {outcomes.map((outcome) => <li>{outcome}</li>)}
+  </ul>
+
+  <div class="space-y-3">
+    <div>
+      <p class="text-fg-muted mb-2 text-xs tracking-wide uppercase">Include</p>
+      <div class="flex flex-wrap gap-2">
+        {
+          includeOptions.map((option) => (
+            <span class="bg-bg-tertiary border-border-default rounded-full border px-2.5 py-1 text-xs">
+              {option.label}
+            </span>
+          ))
+        }
+      </div>
+    </div>
+
+    {
+      !compact && skipOptions.length > 0 && (
+        <div>
+          <p class="text-fg-muted mb-2 text-xs tracking-wide uppercase">
+            Can Skip
+          </p>
+          <div class="flex flex-wrap gap-2">
+            {skipOptions.map((option) => (
+              <span class="border-border-muted text-fg-muted rounded-full border px-2.5 py-1 text-xs">
+                {option.label}
+              </span>
+            ))}
+          </div>
+        </div>
+      )
+    }
+  </div>
+</article>

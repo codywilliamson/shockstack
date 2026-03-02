@@ -1,8 +1,11 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import TerminalTabs from "../components/content/TerminalTabs.astro";
+import UseCaseCard from "../components/content/UseCaseCard.astro";
+import { stackUseCases } from "../lib/use-cases";
 
 export const prerender = true;
+const featuredUseCases = stackUseCases.slice(0, 3);
 ---
 
 <BaseLayout
@@ -438,6 +441,40 @@ export const prerender = true;
             <span class="stack-badge">Postgres</span>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- use cases preview -->
+  <section
+    class="reveal border-border-default bg-bg-secondary/30 border-y px-4 py-20"
+  >
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-10 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p
+            class="text-accent-green mb-2 font-mono text-xs tracking-wider uppercase"
+          >
+            Planning Use Cases
+          </p>
+          <h2 class="text-3xl font-bold md:text-4xl">
+            Pick the setup you actually need
+          </h2>
+        </div>
+        <a
+          href="/use-cases"
+          class="text-accent-purple hover:text-accent-pink text-sm font-medium transition-colors"
+        >
+          See all use cases &rarr;
+        </a>
+      </div>
+
+      <div class="grid gap-5 lg:grid-cols-3">
+        {
+          featuredUseCases.map((useCase) => (
+            <UseCaseCard useCase={useCase} compact />
+          ))
+        }
       </div>
     </div>
   </section>

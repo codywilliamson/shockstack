@@ -1,0 +1,68 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import UseCaseCard from "../components/content/UseCaseCard.astro";
+import { stackOptionIds, stackOptions, stackUseCases } from "../lib/use-cases";
+
+export const prerender = true;
+
+const options = stackOptionIds.map((id) => stackOptions[id]);
+---
+
+<BaseLayout
+  title="Use Cases"
+  description="Where ShockStack fits best, plus which stack options to include or skip."
+>
+  <section class="mb-12">
+    <p
+      class="text-accent-green mb-3 font-mono text-xs tracking-wider uppercase"
+    >
+      Planning Guide
+    </p>
+    <h1 class="mb-3 text-4xl font-bold">What You Can Build With ShockStack</h1>
+    <p class="text-fg-secondary max-w-3xl text-lg">
+      Start with the smallest setup that solves the problem. Add backend and
+      orchestration options when your product needs them.
+    </p>
+  </section>
+
+  <section class="mb-14">
+    <div class="mb-4 flex items-center justify-between gap-4">
+      <h2 class="text-2xl font-semibold">Use Cases</h2>
+      <a
+        href="/docs/getting-started"
+        class="text-accent-purple hover:text-accent-pink text-sm font-medium transition-colors"
+      >
+        Setup Guide &rarr;
+      </a>
+    </div>
+
+    <div class="grid gap-5 lg:grid-cols-2">
+      {stackUseCases.map((useCase) => <UseCaseCard useCase={useCase} />)}
+    </div>
+  </section>
+
+  <section>
+    <h2 class="mb-4 text-2xl font-semibold">Option Picker: Include vs Skip</h2>
+    <p class="text-fg-secondary mb-6 max-w-3xl">
+      Keep what helps now. Skip what adds complexity you do not need yet.
+    </p>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      {
+        options.map((option) => (
+          <article class="bg-bg-secondary border-border-default rounded-lg border p-4">
+            <h3 class="text-fg-primary mb-2 font-semibold">{option.label}</h3>
+            <p class="text-fg-secondary mb-2 text-sm">
+              <span class="text-accent-green font-medium">Include when:</span>{" "}
+              {option.includeWhen}
+            </p>
+            <p class="text-fg-secondary text-sm">
+              <span class="text-accent-orange font-medium">Skip when:</span>{" "}
+              {option.skipWhen}
+            </p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
