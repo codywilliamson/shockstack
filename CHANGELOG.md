@@ -1,3 +1,9 @@
+# [1.7.0](https://github.com/codywilliamson/shockstack/compare/v1.6.1...v1.7.0) (2026-03-04)
+
+### Features
+
+- **frontend:** add use case guide with stack option picks ([d36c4b4](https://github.com/codywilliamson/shockstack/commit/d36c4b438ef47fb0fcc09681e12dc1c4dcd77fd5))
+
 ## [1.6.1](https://github.com/codywilliamson/shockstack/compare/v1.6.0...v1.6.1) (2026-03-01)
 
 ### Bug Fixes
