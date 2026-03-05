@@ -14,6 +14,7 @@ const program = new Command()
   .description("ShockStack developer experience CLI")
   .version(pkg.version);
 
-// commands registered here as they're built
+import { registerDoctor } from "./commands/doctor.js";
+registerDoctor(program);
 
 program.parse();
