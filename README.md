@@ -45,6 +45,7 @@ pnpm --filter frontend dev
 shockstack/
 ├── frontend/           # astro 5 + vue 3 application
 ├── backend/            # .NET web api (optional)
+├── bin/                # ss CLI (developer experience tooling)
 ├── packages/tokens/    # style dictionary design tokens
 ├── docker/             # compose files + dockerfiles
 ├── docs/system/        # modular system documentation
@@ -115,6 +116,25 @@ This repo ships context files for multiple AI coding assistants:
 - `.gemini/settings.json` — Gemini Code Assist
 
 Detailed system docs live in `docs/system/`.
+
+## CLI (`ss`)
+
+ShockStack includes a developer experience CLI. Run commands with `pnpm ss` or `npx tsx bin/ss.ts`.
+
+| Command                   | Description                                                                 |
+| ------------------------- | --------------------------------------------------------------------------- |
+| `ss init`                 | interactive project setup wizard (identity, features, env, install, doctor) |
+| `ss dev`                  | start dev server — auto-detects full-stack (Aspire) or frontend-only        |
+| `ss doctor`               | check prerequisites (Node, pnpm, .NET, Docker) and project health           |
+| `ss info`                 | show project state, active features, and token/theme status                 |
+| `ss add page <name>`      | scaffold an Astro page (optional auth guard)                                |
+| `ss add component <name>` | scaffold a Vue component                                                    |
+| `ss add api <name>`       | scaffold a .NET API controller                                              |
+| `ss strip`                | interactively remove unused features (backend, auth, blog)                  |
+| `ss db migrate`           | run Drizzle migrations                                                      |
+| `ss db seed`              | run the database seed script                                                |
+| `ss db reset`             | drop all tables, migrate, and seed (with confirmation)                      |
+| `ss db studio`            | launch Drizzle Studio                                                       |
 
 ## Conventions
 
