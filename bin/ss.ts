@@ -20,11 +20,13 @@ import { registerDev } from "./commands/dev.js";
 import { registerDb } from "./commands/db.js";
 import { registerAdd } from "./commands/add.js";
 import { registerStrip } from "./commands/strip.js";
+import { registerInit } from "./commands/init.js";
 registerDoctor(program);
 registerInfo(program);
 registerDev(program);
 registerDb(program);
 registerAdd(program);
 registerStrip(program);
+registerInit(program);
 
 program.parse();
