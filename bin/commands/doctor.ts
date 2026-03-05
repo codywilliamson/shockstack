@@ -19,7 +19,7 @@ function getVersion(cmd: string, args: string[]): string | null {
   }
 }
 
-function semverGte(version: string, min: string): boolean {
+export function semverGte(version: string, min: string): boolean {
   const parse = (v: string) => v.replace(/^v/, "").split(".").map(Number);
   const [aMaj, aMin = 0] = parse(version);
   const [bMaj, bMin = 0] = parse(min);

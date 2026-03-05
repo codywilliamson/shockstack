@@ -25,7 +25,7 @@ function writeFile(path: string, content: string, dryRun: boolean): void {
   log.success(`created: ${path}`);
 }
 
-function toPascalCase(str: string): string {
+export function toPascalCase(str: string): string {
   return str
     .replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ""))
     .replace(/^(.)/, (_, c) => c.toUpperCase());

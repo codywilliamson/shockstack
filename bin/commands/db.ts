@@ -11,7 +11,7 @@ function run(cmd: string, args: string[], cwd: string): Promise<number> {
   });
 }
 
-function looksLikeProduction(url: string): boolean {
+export function looksLikeProduction(url: string): boolean {
   const lower = url.toLowerCase();
   return (
     !lower.includes("localhost") &&
