@@ -1,0 +1,15 @@
+using Microsoft.AspNetCore.Mvc;
+using ShockStack.Api.Models;
+
+namespace ShockStack.Api.Controllers;
+
+[ApiController]
+[Route("api/v1/[controller]")]
+public class {{name}}Controller : ControllerBase
+{
+    [{{method}}("")]
+    public IActionResult {{methodName}}()
+    {
+        return Ok(ApiResponse<object>.Ok(new { message = "{{name}} endpoint" }));
+    }
+}

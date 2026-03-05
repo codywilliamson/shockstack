@@ -18,9 +18,11 @@ import { registerDoctor } from "./commands/doctor.js";
 import { registerInfo } from "./commands/info.js";
 import { registerDev } from "./commands/dev.js";
 import { registerDb } from "./commands/db.js";
+import { registerAdd } from "./commands/add.js";
 registerDoctor(program);
 registerInfo(program);
 registerDev(program);
 registerDb(program);
+registerAdd(program);
 
 program.parse();
