@@ -1,3 +1,20 @@
+# [1.8.0](https://github.com/codywilliamson/shockstack/compare/v1.7.0...v1.8.0) (2026-03-05)
+
+### Features
+
+- **cli:** add guard utilities for safety checks ([af355b4](https://github.com/codywilliamson/shockstack/commit/af355b460ae758965f871f1e9a01249fe14a98e6))
+- **cli:** add project detection and context utilities ([f626a56](https://github.com/codywilliamson/shockstack/commit/f626a56885d62e34fc76901a6f2598cc8f0892aa))
+- **cli:** add ss add command with page/component/api scaffolding ([b5a3ae2](https://github.com/codywilliamson/shockstack/commit/b5a3ae2d70dc435fa548dd1b16bdd94171138d5b))
+- **cli:** add ss db commands (seed, reset, migrate, studio) ([cb9afe9](https://github.com/codywilliamson/shockstack/commit/cb9afe99bd5ed41f822ce120e7be8f0457ba9c58))
+- **cli:** add ss dev command with auto-detection ([bbb31a3](https://github.com/codywilliamson/shockstack/commit/bbb31a3a4b9ac54553360355311315bcc586eaea))
+- **cli:** add ss doctor command ([0cd542f](https://github.com/codywilliamson/shockstack/commit/0cd542f793459360a474bbde80a136da9f1f450b))
+- **cli:** add ss entry point with commander wiring ([ad9915d](https://github.com/codywilliamson/shockstack/commit/ad9915d0df68c888834b5fdb8451fb3009dcb4eb))
+- **cli:** add ss info command ([0faa0c4](https://github.com/codywilliamson/shockstack/commit/0faa0c4a50e528c07cdcde4a4d158be3e7b78ace))
+- **cli:** add ss init wizard with phased setup ([a84a932](https://github.com/codywilliamson/shockstack/commit/a84a932c627522649756a93587e4581f33017464))
+- **cli:** add ss strip command for feature removal ([3c07e98](https://github.com/codywilliamson/shockstack/commit/3c07e9863dfd27d0b6f1929205feb911f2d8b97f))
+- **cli:** add styled log utilities ([25cb1e9](https://github.com/codywilliamson/shockstack/commit/25cb1e97005117baf3bbdb6be3fddc1d54546fac))
+- **cli:** complete ss CLI v1 with all commands wired ([6aa5755](https://github.com/codywilliamson/shockstack/commit/6aa5755a6e74ec67496f1dd90da0454bd6dded5e))
+
 # [1.7.0](https://github.com/codywilliamson/shockstack/compare/v1.6.1...v1.7.0) (2026-03-04)
 
 ### Features
