@@ -17,8 +17,10 @@ const program = new Command()
 import { registerDoctor } from "./commands/doctor.js";
 import { registerInfo } from "./commands/info.js";
 import { registerDev } from "./commands/dev.js";
+import { registerDb } from "./commands/db.js";
 registerDoctor(program);
 registerInfo(program);
 registerDev(program);
+registerDb(program);
 
 program.parse();
