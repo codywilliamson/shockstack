@@ -15,6 +15,8 @@ const program = new Command()
   .version(pkg.version);
 
 import { registerDoctor } from "./commands/doctor.js";
+import { registerInfo } from "./commands/info.js";
 registerDoctor(program);
+registerInfo(program);
 
 program.parse();
