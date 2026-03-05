@@ -1,3 +1,9 @@
+# [1.9.0](https://github.com/codywilliamson/shockstack/compare/v1.8.0...v1.9.0) (2026-03-05)
+
+### Features
+
+- **frontend:** add design components, mobile nav, and gradient utilities ([8f954a2](https://github.com/codywilliamson/shockstack/commit/8f954a25023e63d080e98f0ed28154936fc737e3))
+
 # [1.8.0](https://github.com/codywilliamson/shockstack/compare/v1.7.0...v1.8.0) (2026-03-05)
 
 ### Features
