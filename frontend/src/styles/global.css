@@ -126,6 +126,151 @@ body {
   }
 }
 
+/* gradient text utilities */
+.gradient-text-purple-pink {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-purple),
+    var(--color-accent-pink)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-cyan-green {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-cyan),
+    var(--color-accent-green)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-orange-yellow {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-orange),
+    var(--color-accent-yellow)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-pink-orange {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-pink),
+    var(--color-accent-orange)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-green-cyan {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-green),
+    var(--color-accent-cyan)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* gradient background sections */
+.gradient-bg-subtle {
+  background: linear-gradient(
+    180deg,
+    var(--color-bg-primary),
+    color-mix(in srgb, var(--color-accent-purple) 4%, var(--color-bg-primary))
+      50%,
+    var(--color-bg-primary)
+  );
+}
+
+.gradient-bg-mesh {
+  background:
+    radial-gradient(
+      ellipse at 20% 0%,
+      color-mix(in srgb, var(--color-accent-purple) 8%, transparent) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 80% 100%,
+      color-mix(in srgb, var(--color-accent-pink) 6%, transparent) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 50% 50%,
+      color-mix(in srgb, var(--color-accent-cyan) 3%, transparent) 0%,
+      transparent 60%
+    ),
+    var(--color-bg-primary);
+}
+
+.gradient-bg-radial {
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    color-mix(in srgb, var(--color-accent-purple) 10%, var(--color-bg-primary)),
+    var(--color-bg-primary) 60%
+  );
+}
+
+/* gradient border utility */
+.gradient-border {
+  position: relative;
+  border-radius: var(--radius-xl);
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-purple),
+    var(--color-accent-pink)
+  );
+}
+
+.gradient-border > * {
+  background-color: var(--color-bg-primary);
+  border-radius: calc(var(--radius-xl) - 1px);
+}
+
+/* stagger animations for lists */
+.stagger-in > * {
+  opacity: 0;
+  transform: translateY(0.75rem);
+  animation: stagger-fade-in 0.4s ease-out forwards;
+}
+
+.stagger-in > *:nth-child(1) {
+  animation-delay: 0s;
+}
+.stagger-in > *:nth-child(2) {
+  animation-delay: 0.08s;
+}
+.stagger-in > *:nth-child(3) {
+  animation-delay: 0.16s;
+}
+.stagger-in > *:nth-child(4) {
+  animation-delay: 0.24s;
+}
+.stagger-in > *:nth-child(5) {
+  animation-delay: 0.32s;
+}
+.stagger-in > *:nth-child(6) {
+  animation-delay: 0.4s;
+}
+
+@keyframes stagger-fade-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

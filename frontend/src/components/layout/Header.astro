@@ -1,17 +1,20 @@
 ---
 import ThemeToggle from "../ui/ThemeToggle.vue";
 import UserMenu from "../ui/UserMenu.vue";
+import MobileNav from "../ui/MobileNav.vue";
 
 const user = Astro.locals.user ?? null;
 ---
 
-<header class="border-border-default border-b">
+<header class="header-root">
   <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
     <a href="/" class="flex items-center gap-2 text-xl font-bold">
       <img src="/logo.svg" alt="" width="24" height="24" class="inline-block" />
       <span class="text-accent-purple">ShockStack</span>
     </a>
-    <div class="flex items-center gap-6">
+
+    <!-- desktop nav -->
+    <div class="hidden items-center gap-6 md:flex">
       <a
         href="/blog"
         class="text-fg-secondary hover:text-fg-primary transition-colors"
@@ -35,5 +38,24 @@ const user = Astro.locals.user ?? null;
       <ThemeToggle client:load />
       <UserMenu user={user} client:load />
     </div>
+
+    <!-- mobile nav -->
+    <MobileNav client:load />
   </nav>
 </header>
+
+<style>
+  .header-root {
+    border-bottom: 1px solid var(--color-border-default);
+    background-color: color-mix(
+      in srgb,
+      var(--color-bg-primary) 85%,
+      transparent
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+</style>

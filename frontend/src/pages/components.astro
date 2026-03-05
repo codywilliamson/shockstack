@@ -1,0 +1,481 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import FeatureCardGradient from "../components/content/FeatureCardGradient.astro";
+import TestimonialCard from "../components/content/TestimonialCard.astro";
+import PricingCard from "../components/content/PricingCard.astro";
+import StatsCard from "../components/content/StatsCard.astro";
+
+export const prerender = true;
+---
+
+<BaseLayout
+  title="Components — ShockStack"
+  description="Design component showcase built with ShockStack design tokens."
+  fullWidth
+>
+  <!-- hero with mesh gradient bg -->
+  <section
+    class="gradient-bg-mesh relative overflow-hidden px-4 pt-20 pb-16 md:pt-28 md:pb-24"
+  >
+    <div class="relative mx-auto max-w-5xl text-center">
+      <p
+        class="fade-in text-accent-cyan mb-4 font-mono text-sm font-medium tracking-wider uppercase"
+      >
+        design system
+      </p>
+      <h1
+        class="fade-in mb-6 text-5xl leading-tight font-extrabold md:text-7xl"
+      >
+        Token-powered
+        <span class="gradient-text-purple-pink">components</span>
+      </h1>
+      <p
+        class="fade-in text-fg-secondary mx-auto mb-10 max-w-2xl text-lg md:text-xl"
+      >
+        Every component adapts to all 14 themes automatically. Built with CSS
+        custom properties, zero JavaScript animation dependencies.
+      </p>
+    </div>
+  </section>
+
+  <!-- gradient feature cards -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-green mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          gradient cards
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Feature cards with <span class="gradient-text-purple-pink"
+            >gradient borders</span
+          >
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Cards with token-based gradient borders that glow on hover. Every
+          gradient pair uses accent colors from the active theme.
+        </p>
+      </div>
+
+      <div class="stagger-in grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <FeatureCardGradient
+          title="Island Architecture"
+          description="Ship zero JavaScript by default. Interactive Vue components hydrate only when needed, keeping your pages fast."
+          gradient="purple-pink"
+        >
+          <svg
+            slot="icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--color-accent-purple)"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </FeatureCardGradient>
+
+        <FeatureCardGradient
+          title="14 Built-in Themes"
+          description="Dracula, Nord, Gruvbox, Catppuccin, Tokyo Night, and more. Switch themes with a single attribute change."
+          gradient="cyan-green"
+        >
+          <svg
+            slot="icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--color-accent-cyan)"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="13.5" cy="6.5" r="2.5"></circle>
+            <circle cx="6" cy="12" r="2.5"></circle>
+            <circle cx="18" cy="12" r="2.5"></circle>
+            <circle cx="13.5" cy="17.5" r="2.5"></circle>
+          </svg>
+        </FeatureCardGradient>
+
+        <FeatureCardGradient
+          title="Type-Safe Tokens"
+          description="Style Dictionary generates CSS variables, Tailwind config, and TypeScript constants from a single token source."
+          gradient="orange-yellow"
+        >
+          <svg
+            slot="icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--color-accent-orange)"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+        </FeatureCardGradient>
+
+        <FeatureCardGradient
+          title="Auth Built In"
+          description="Better Auth handles email/password and OAuth. JWT tokens are shared with the .NET backend for seamless cross-stack auth."
+          gradient="pink-orange"
+        >
+          <svg
+            slot="icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--color-accent-pink)"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0110 0v4"></path>
+          </svg>
+        </FeatureCardGradient>
+
+        <FeatureCardGradient
+          title="Full-Stack Ready"
+          description="Optional .NET 10 backend with clean architecture, EF Core, and Aspire orchestration. Strip it if you don't need it."
+          gradient="green-cyan"
+        >
+          <svg
+            slot="icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--color-accent-green)"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+        </FeatureCardGradient>
+
+        <FeatureCardGradient
+          title="CI/CD Pipeline"
+          description="GitHub Actions with semantic-release, commitlint, path filtering, and automated deploys to Cloudflare and Docker."
+          gradient="purple-pink"
+        >
+          <svg
+            slot="icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--color-accent-purple)"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </FeatureCardGradient>
+      </div>
+    </div>
+  </section>
+
+  <!-- stats section with radial gradient bg -->
+  <section class="reveal gradient-bg-radial px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12 text-center">
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Numbers that <span class="gradient-text-cyan-green">speak</span>
+        </h2>
+      </div>
+
+      <div class="stagger-in grid grid-cols-2 gap-6 md:grid-cols-4">
+        <StatsCard value="14" label="Built-in themes" gradient="purple-pink" />
+        <StatsCard
+          value="8+"
+          label="Scaffolding commands"
+          gradient="cyan-green"
+        />
+        <StatsCard
+          value="0"
+          label="JS animation deps"
+          gradient="orange-yellow"
+        />
+        <StatsCard value="100%" label="Token coverage" gradient="pink-orange" />
+      </div>
+    </div>
+  </section>
+
+  <!-- testimonials -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-pink mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          testimonials
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          What developers <span class="gradient-text-pink-orange"
+            >are saying</span
+          >
+        </h2>
+      </div>
+
+      <div class="stagger-in grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <TestimonialCard
+          quote="ShockStack saved me weeks of setup. The design token system alone is worth it — switch themes and everything just works."
+          name="Alex Chen"
+          title="Senior Frontend Engineer"
+          accent="purple"
+        />
+        <TestimonialCard
+          quote="Finally a monorepo template that actually has opinions. No more bikeshedding about project structure or tooling choices."
+          name="Sarah Kim"
+          title="Full-Stack Developer"
+          accent="cyan"
+        />
+        <TestimonialCard
+          quote="The Aspire integration is chef's kiss. One command to spin up Postgres, the API, and the frontend. Onboarding new devs is trivial now."
+          name="Marcus Johnson"
+          title="Engineering Lead"
+          accent="green"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- pricing cards -->
+  <section class="reveal gradient-bg-subtle px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12 text-center">
+        <p
+          class="text-accent-purple mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          pricing
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Simple, <span class="gradient-text-purple-pink">transparent</span> pricing
+        </h2>
+        <p class="text-fg-secondary mx-auto max-w-2xl text-lg">
+          ShockStack is open source. These cards showcase the pricing component.
+        </p>
+      </div>
+
+      <div class="stagger-in mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
+        <PricingCard
+          name="Starter"
+          price="Free"
+          description="For personal projects and learning"
+          features={[
+            "Full monorepo template",
+            "All 14 themes",
+            "Community support",
+            "MIT license",
+          ]}
+          cta="Get Started"
+          href="/docs"
+        />
+        <PricingCard
+          name="Pro"
+          price="$29"
+          description="For teams shipping production apps"
+          features={[
+            "Everything in Starter",
+            "Priority support",
+            "Private Discord access",
+            "Early access to updates",
+            "Custom theme builder",
+          ]}
+          cta="Start Free Trial"
+          href="/docs"
+          featured
+        />
+        <PricingCard
+          name="Enterprise"
+          price="Custom"
+          description="For organizations at scale"
+          features={[
+            "Everything in Pro",
+            "Dedicated support",
+            "Custom integrations",
+            "SLA guarantee",
+            "Team onboarding",
+          ]}
+          cta="Contact Sales"
+          href="/docs"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- gradient text showcase -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-orange mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          typography
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Gradient <span class="gradient-text-orange-yellow"
+            >text utilities</span
+          >
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Five gradient text presets that adapt to every theme. Use them on
+          headings, stats, or any text that needs emphasis.
+        </p>
+      </div>
+
+      <div class="space-y-6">
+        <div class="gradient-showcase-row">
+          <code class="gradient-showcase-label">.gradient-text-purple-pink</code
+          >
+          <p
+            class="gradient-text-purple-pink text-4xl font-extrabold md:text-5xl"
+          >
+            The quick brown fox
+          </p>
+        </div>
+        <div class="gradient-showcase-row">
+          <code class="gradient-showcase-label">.gradient-text-cyan-green</code>
+          <p
+            class="gradient-text-cyan-green text-4xl font-extrabold md:text-5xl"
+          >
+            The quick brown fox
+          </p>
+        </div>
+        <div class="gradient-showcase-row">
+          <code class="gradient-showcase-label"
+            >.gradient-text-orange-yellow</code
+          >
+          <p
+            class="gradient-text-orange-yellow text-4xl font-extrabold md:text-5xl"
+          >
+            The quick brown fox
+          </p>
+        </div>
+        <div class="gradient-showcase-row">
+          <code class="gradient-showcase-label">.gradient-text-pink-orange</code
+          >
+          <p
+            class="gradient-text-pink-orange text-4xl font-extrabold md:text-5xl"
+          >
+            The quick brown fox
+          </p>
+        </div>
+        <div class="gradient-showcase-row">
+          <code class="gradient-showcase-label">.gradient-text-green-cyan</code>
+          <p
+            class="gradient-text-green-cyan text-4xl font-extrabold md:text-5xl"
+          >
+            The quick brown fox
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- gradient backgrounds showcase -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-cyan mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          backgrounds
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Gradient <span class="gradient-text-cyan-green">backgrounds</span>
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Subtle gradient backgrounds that add depth without overwhelming
+          content.
+        </p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-3">
+        <div class="gradient-bg-preview">
+          <div class="gradient-bg-subtle gradient-bg-preview-inner">
+            <code class="text-fg-muted font-mono text-xs"
+              >.gradient-bg-subtle</code
+            >
+            <p class="text-fg-secondary mt-2 text-sm">
+              Vertical fade through accent
+            </p>
+          </div>
+        </div>
+        <div class="gradient-bg-preview">
+          <div class="gradient-bg-mesh gradient-bg-preview-inner">
+            <code class="text-fg-muted font-mono text-xs"
+              >.gradient-bg-mesh</code
+            >
+            <p class="text-fg-secondary mt-2 text-sm">
+              Multi-point mesh gradient
+            </p>
+          </div>
+        </div>
+        <div class="gradient-bg-preview">
+          <div class="gradient-bg-radial gradient-bg-preview-inner">
+            <code class="text-fg-muted font-mono text-xs"
+              >.gradient-bg-radial</code
+            >
+            <p class="text-fg-secondary mt-2 text-sm">
+              Top-down radial spotlight
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .gradient-showcase-row {
+    padding: 1.5rem;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    background-color: var(--color-bg-secondary);
+  }
+
+  .gradient-showcase-label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-fg-muted);
+    margin-bottom: 0.75rem;
+    background-color: var(--color-bg-tertiary);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .gradient-bg-preview {
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+  }
+
+  .gradient-bg-preview-inner {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    min-height: 10rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+</style>

@@ -1,0 +1,89 @@
+---
+interface Props {
+  value: string;
+  label: string;
+  gradient?:
+    | "purple-pink"
+    | "cyan-green"
+    | "orange-yellow"
+    | "pink-orange"
+    | "green-cyan";
+}
+
+const { value, label, gradient = "purple-pink" } = Astro.props;
+
+const gradientMap: Record<string, string> = {
+  "purple-pink": "stats-gradient-purple-pink",
+  "cyan-green": "stats-gradient-cyan-green",
+  "orange-yellow": "stats-gradient-orange-yellow",
+  "pink-orange": "stats-gradient-pink-orange",
+  "green-cyan": "stats-gradient-green-cyan",
+};
+---
+
+<div class="stats-card">
+  <div class={`stats-value ${gradientMap[gradient]}`}>
+    {value}
+  </div>
+  <p class="stats-label">{label}</p>
+</div>
+
+<style>
+  .stats-card {
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+
+  .stats-value {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stats-gradient-purple-pink {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-purple),
+      var(--color-accent-pink)
+    );
+  }
+  .stats-gradient-cyan-green {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-cyan),
+      var(--color-accent-green)
+    );
+  }
+  .stats-gradient-orange-yellow {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-orange),
+      var(--color-accent-yellow)
+    );
+  }
+  .stats-gradient-pink-orange {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-pink),
+      var(--color-accent-orange)
+    );
+  }
+  .stats-gradient-green-cyan {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-green),
+      var(--color-accent-cyan)
+    );
+  }
+
+  .stats-label {
+    color: var(--color-fg-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+</style>

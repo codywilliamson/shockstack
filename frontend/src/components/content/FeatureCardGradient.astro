@@ -1,0 +1,166 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  gradient:
+    | "purple-pink"
+    | "cyan-green"
+    | "orange-yellow"
+    | "pink-orange"
+    | "green-cyan";
+  icon?: string;
+}
+
+const { title, description, gradient } = Astro.props;
+
+const gradientMap: Record<string, string> = {
+  "purple-pink": "gradient-purple-pink",
+  "cyan-green": "gradient-cyan-green",
+  "orange-yellow": "gradient-orange-yellow",
+  "pink-orange": "gradient-pink-orange",
+  "green-cyan": "gradient-green-cyan",
+};
+---
+
+<div class={`gradient-card ${gradientMap[gradient]}`}>
+  <div class="gradient-card-glow" aria-hidden="true"></div>
+  <div class="gradient-card-content">
+    <div class="gradient-card-icon">
+      <slot name="icon" />
+    </div>
+    <h3 class="gradient-card-title">{title}</h3>
+    <p class="gradient-card-desc">{description}</p>
+  </div>
+</div>
+
+<style>
+  .gradient-card {
+    position: relative;
+    border-radius: var(--radius-xl);
+    padding: 1px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  /* gradient border via background on the wrapper */
+  .gradient-purple-pink {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-purple),
+      var(--color-accent-pink)
+    );
+  }
+  .gradient-cyan-green {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-cyan),
+      var(--color-accent-green)
+    );
+  }
+  .gradient-orange-yellow {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-orange),
+      var(--color-accent-yellow)
+    );
+  }
+  .gradient-pink-orange {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-pink),
+      var(--color-accent-orange)
+    );
+  }
+  .gradient-green-cyan {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-green),
+      var(--color-accent-cyan)
+    );
+  }
+
+  .gradient-card-glow {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    filter: blur(40px);
+    pointer-events: none;
+  }
+
+  .gradient-purple-pink .gradient-card-glow {
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      color-mix(in srgb, var(--color-accent-purple) 20%, transparent),
+      transparent 70%
+    );
+  }
+  .gradient-cyan-green .gradient-card-glow {
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      color-mix(in srgb, var(--color-accent-cyan) 20%, transparent),
+      transparent 70%
+    );
+  }
+  .gradient-orange-yellow .gradient-card-glow {
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      color-mix(in srgb, var(--color-accent-orange) 20%, transparent),
+      transparent 70%
+    );
+  }
+  .gradient-pink-orange .gradient-card-glow {
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      color-mix(in srgb, var(--color-accent-pink) 20%, transparent),
+      transparent 70%
+    );
+  }
+  .gradient-green-cyan .gradient-card-glow {
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      color-mix(in srgb, var(--color-accent-green) 20%, transparent),
+      transparent 70%
+    );
+  }
+
+  .gradient-card:hover .gradient-card-glow {
+    opacity: 1;
+  }
+
+  .gradient-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .gradient-card-content {
+    position: relative;
+    background-color: var(--color-bg-primary);
+    border-radius: calc(var(--radius-xl) - 1px);
+    padding: 1.75rem;
+    height: 100%;
+  }
+
+  .gradient-card-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .gradient-card-title {
+    color: var(--color-fg-primary);
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .gradient-card-desc {
+    color: var(--color-fg-muted);
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+</style>

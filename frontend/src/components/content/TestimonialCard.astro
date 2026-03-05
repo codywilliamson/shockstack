@@ -1,0 +1,192 @@
+---
+interface Props {
+  quote: string;
+  name: string;
+  title: string;
+  accent?: "purple" | "pink" | "cyan" | "green" | "orange";
+}
+
+const { quote, name, title, accent = "purple" } = Astro.props;
+
+const accentClasses: Record<string, string> = {
+  purple: "testimonial-accent-purple",
+  pink: "testimonial-accent-pink",
+  cyan: "testimonial-accent-cyan",
+  green: "testimonial-accent-green",
+  orange: "testimonial-accent-orange",
+};
+---
+
+<div class={`testimonial-card ${accentClasses[accent]}`}>
+  <div class="testimonial-quote-mark" aria-hidden="true">"</div>
+  <blockquote class="testimonial-quote">
+    {quote}
+  </blockquote>
+  <div class="testimonial-author">
+    <div class="testimonial-avatar">
+      {
+        name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .slice(0, 2)
+      }
+    </div>
+    <div>
+      <p class="testimonial-name">{name}</p>
+      <p class="testimonial-title">{title}</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .testimonial-card {
+    position: relative;
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+
+  .testimonial-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  }
+
+  .testimonial-accent-purple::before {
+    background: linear-gradient(
+      90deg,
+      var(--color-accent-purple),
+      var(--color-accent-pink)
+    );
+  }
+  .testimonial-accent-pink::before {
+    background: linear-gradient(
+      90deg,
+      var(--color-accent-pink),
+      var(--color-accent-orange)
+    );
+  }
+  .testimonial-accent-cyan::before {
+    background: linear-gradient(
+      90deg,
+      var(--color-accent-cyan),
+      var(--color-accent-green)
+    );
+  }
+  .testimonial-accent-green::before {
+    background: linear-gradient(
+      90deg,
+      var(--color-accent-green),
+      var(--color-accent-yellow)
+    );
+  }
+  .testimonial-accent-orange::before {
+    background: linear-gradient(
+      90deg,
+      var(--color-accent-orange),
+      var(--color-accent-yellow)
+    );
+  }
+
+  .testimonial-card:hover {
+    border-color: color-mix(
+      in srgb,
+      var(--color-accent-purple) 40%,
+      var(--color-border-default)
+    );
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .testimonial-quote-mark {
+    font-family: var(--font-sans);
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-bg-tertiary);
+    position: absolute;
+    top: 0.75rem;
+    right: 1.25rem;
+    user-select: none;
+  }
+
+  .testimonial-quote {
+    color: var(--color-fg-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .testimonial-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-full);
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-purple),
+      var(--color-accent-pink)
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .testimonial-accent-cyan .testimonial-avatar {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-cyan),
+      var(--color-accent-green)
+    );
+  }
+  .testimonial-accent-green .testimonial-avatar {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-green),
+      var(--color-accent-cyan)
+    );
+  }
+  .testimonial-accent-orange .testimonial-avatar {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-orange),
+      var(--color-accent-yellow)
+    );
+  }
+  .testimonial-accent-pink .testimonial-avatar {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-pink),
+      var(--color-accent-purple)
+    );
+  }
+
+  .testimonial-name {
+    color: var(--color-fg-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .testimonial-title {
+    color: var(--color-fg-muted);
+    font-size: 0.8125rem;
+  }
+</style>
