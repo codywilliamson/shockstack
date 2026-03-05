@@ -14,19 +14,20 @@ const program = new Command()
   .description("ShockStack developer experience CLI")
   .version(pkg.version);
 
+import { registerInit } from "./commands/init.js";
 import { registerDoctor } from "./commands/doctor.js";
 import { registerInfo } from "./commands/info.js";
 import { registerDev } from "./commands/dev.js";
 import { registerDb } from "./commands/db.js";
 import { registerAdd } from "./commands/add.js";
 import { registerStrip } from "./commands/strip.js";
-import { registerInit } from "./commands/init.js";
+
+registerInit(program);
 registerDoctor(program);
 registerInfo(program);
 registerDev(program);
-registerDb(program);
 registerAdd(program);
 registerStrip(program);
-registerInit(program);
+registerDb(program);
 
 program.parse();
