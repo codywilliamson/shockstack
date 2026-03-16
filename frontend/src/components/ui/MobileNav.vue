@@ -77,15 +77,6 @@ function navigate(href: string) {
         <span class="text-fg-muted text-sm">Theme</span>
         <ThemeToggle />
       </div>
-
-      <div class="border-border-default my-3 border-t" />
-
-      <button
-        class="mobile-nav-cta"
-        @click="navigate('/login')"
-      >
-        Sign In
-      </button>
     </nav>
   </Sheet>
 </template>
@@ -111,24 +102,5 @@ function navigate(href: string) {
 .mobile-nav-link:hover {
   background-color: var(--color-bg-secondary);
   color: var(--color-fg-primary);
-}
-
-.mobile-nav-cta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.625rem 1rem;
-  border-radius: var(--radius-md);
-  background-color: var(--color-accent-purple);
-  color: var(--color-bg-primary);
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: opacity 0.15s ease;
-}
-
-.mobile-nav-cta:hover {
-  opacity: 0.9;
 }
 </style>

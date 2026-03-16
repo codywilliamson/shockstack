@@ -1,39 +1,27 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import AuthForm from "../components/ui/AuthForm.vue";
-
-if (Astro.locals.user) {
-  return Astro.redirect("/dashboard");
-}
 ---
 
 <BaseLayout title="Login" noindex>
   <div class="flex flex-col items-center py-16">
     <h1 class="mb-8 text-3xl font-bold">Sign In</h1>
-    <AuthForm mode="login" client:load />
-    <p class="text-fg-secondary mt-4 text-sm">
-      Don't have an account?
-      <a href="/register" class="text-accent-purple hover:underline">
-        Create one
-      </a>
-    </p>
     <div
-      class="border-border-default bg-bg-secondary mt-6 max-w-sm rounded-lg border p-4 text-center"
+      class="border-border-default bg-bg-secondary max-w-md rounded-lg border p-6 text-center"
     >
-      <p
-        class="text-fg-muted mb-1 text-xs font-medium tracking-wider uppercase"
+      <div class="text-fg-muted mb-3 text-4xl">🔒</div>
+      <h2 class="text-fg-primary mb-2 text-lg font-semibold">
+        Authentication Disabled
+      </h2>
+      <p class="text-fg-secondary text-sm leading-relaxed">
+        Auth is not available in this deployment. ShockStack is a template —
+        connect your own database and API backend to enable authentication.
+      </p>
+      <a
+        href="/docs/authentication"
+        class="bg-accent-purple text-bg-primary mt-4 inline-block rounded-md px-4 py-2 text-sm font-medium transition-opacity hover:opacity-90"
       >
-        Demo Account
-      </p>
-      <p class="text-fg-secondary text-sm">
-        <code class="bg-bg-tertiary rounded px-1 py-0.5 text-xs"
-          >demo@shockstack.dev</code
-        >
-        /
-        <code class="bg-bg-tertiary rounded px-1 py-0.5 text-xs"
-          >password123</code
-        >
-      </p>
+        View Auth Docs
+      </a>
     </div>
   </div>
 </BaseLayout>
