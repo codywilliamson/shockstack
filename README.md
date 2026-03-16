@@ -1,6 +1,10 @@
 # ShockStack
 
+[![CI](https://github.com/codywilliamson/shockstack/actions/workflows/ci.yml/badge.svg)](https://github.com/codywilliamson/shockstack/actions/workflows/ci.yml) [![Release](https://github.com/codywilliamson/shockstack/actions/workflows/release.yml/badge.svg)](https://github.com/codywilliamson/shockstack/actions/workflows/release.yml) [![Deploy](https://github.com/codywilliamson/shockstack/actions/workflows/deploy.yml/badge.svg)](https://github.com/codywilliamson/shockstack/actions/workflows/deploy.yml)
+
 Convention-first monorepo template: Astro + optional .NET backend, ready for Cloudflare Workers or Docker deployment.
+
+🔗 **[shockstack.dev](https://shockstack.dev)**
 
 ## Tech Stack
 
