@@ -1,3 +1,9 @@
+## [1.9.4](https://github.com/codywilliamson/shockstack/compare/v1.9.3...v1.9.4) (2026-03-16)
+
+### Bug Fixes
+
+- add prerendered routes to middleware static routes list ([c684a75](https://github.com/codywilliamson/shockstack/commit/c684a758cc07e46dbd7315299ebb2c54b91daad6))
+
 ## [1.9.3](https://github.com/codywilliamson/shockstack/compare/v1.9.2...v1.9.3) (2026-03-16)
 
 ### Bug Fixes
