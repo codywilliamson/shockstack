@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && echo '_worker.js' > dist/.assetsignore",
     "preview": "astro preview",
     "lint": "eslint .",
     "typecheck": "astro check",
