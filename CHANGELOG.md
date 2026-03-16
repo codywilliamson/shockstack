@@ -1,3 +1,9 @@
+## [1.10.1](https://github.com/codywilliamson/shockstack/compare/v1.10.0...v1.10.1) (2026-03-16)
+
+### Bug Fixes
+
+- prevent terminal/code block overflow on mobile in DX section ([92866c8](https://github.com/codywilliamson/shockstack/commit/92866c8d81d1631d01609e4ff8db243781f98b1d))
+
 # [1.10.0](https://github.com/codywilliamson/shockstack/compare/v1.9.4...v1.10.0) (2026-03-16)
 
 ### Features
