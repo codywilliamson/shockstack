@@ -1,3 +1,9 @@
+# [1.10.0](https://github.com/codywilliamson/shockstack/compare/v1.9.4...v1.10.0) (2026-03-16)
+
+### Features
+
+- disable auth UI for template deployment ([7fa6128](https://github.com/codywilliamson/shockstack/commit/7fa6128dfce4ba93e475c7fdda92287678827241))
+
 ## [1.9.4](https://github.com/codywilliamson/shockstack/compare/v1.9.3...v1.9.4) (2026-03-16)
 
 ### Bug Fixes
