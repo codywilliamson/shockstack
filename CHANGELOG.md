@@ -1,3 +1,9 @@
+## [1.9.2](https://github.com/codywilliamson/shockstack/compare/v1.9.1...v1.9.2) (2026-03-16)
+
+### Bug Fixes
+
+- add nodejs_compat flag for better-auth and postgres runtime support ([81d6053](https://github.com/codywilliamson/shockstack/commit/81d6053338140617cee33cc577f3d389b30932f0))
+
 ## [1.9.1](https://github.com/codywilliamson/shockstack/compare/v1.9.0...v1.9.1) (2026-03-16)
 
 ### Bug Fixes
