@@ -1,3 +1,9 @@
+## [1.9.1](https://github.com/codywilliamson/shockstack/compare/v1.9.0...v1.9.1) (2026-03-16)
+
+### Bug Fixes
+
+- update wrangler assets directory to match astro cf adapter v12 output ([4d7da59](https://github.com/codywilliamson/shockstack/commit/4d7da59aafd5597481cd98077a839be24f6a88bf))
+
 # [1.9.0](https://github.com/codywilliamson/shockstack/compare/v1.8.0...v1.9.0) (2026-03-05)
 
 ### Features
