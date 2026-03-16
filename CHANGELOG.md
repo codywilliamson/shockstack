@@ -1,3 +1,9 @@
+## [1.9.3](https://github.com/codywilliamson/shockstack/compare/v1.9.2...v1.9.3) (2026-03-16)
+
+### Bug Fixes
+
+- generate assetsignore in frontend build script ([2e41e39](https://github.com/codywilliamson/shockstack/commit/2e41e393e04b063a4d6b195bcacd3968882d3dc6))
+
 ## [1.9.2](https://github.com/codywilliamson/shockstack/compare/v1.9.1...v1.9.2) (2026-03-16)
 
 ### Bug Fixes
