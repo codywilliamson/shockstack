@@ -16,7 +16,7 @@
     "@astrojs/cloudflare": "^12.5.0",
     "@astrojs/mdx": "^4.2.0",
     "@astrojs/rss": "^4.0.15",
-    "@astrojs/sitemap": "^3.3.0",
+    "@astrojs/sitemap": "^3.7.1",
     "@astrojs/vue": "^5.1.0",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.1",
