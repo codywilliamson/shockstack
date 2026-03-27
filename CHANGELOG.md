@@ -1,3 +1,9 @@
+# [1.11.0](https://github.com/codywilliamson/shockstack/compare/v1.10.1...v1.11.0) (2026-03-27)
+
+### Features
+
+- **frontend:** add reusable dialog and operation queue components ([8a22fa3](https://github.com/codywilliamson/shockstack/commit/8a22fa31c246aa3bcbf43b4f0d270dbbfcf797bf))
+
 ## [1.10.1](https://github.com/codywilliamson/shockstack/compare/v1.10.0...v1.10.1) (2026-03-16)
 
 ### Bug Fixes
