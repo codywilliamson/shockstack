@@ -20,27 +20,32 @@ const featuredUseCases = stackUseCases.slice(0, 3);
 
     <div class="relative mx-auto max-w-5xl text-center">
       <p
-        class="fade-in text-accent-green mb-4 font-mono text-sm font-medium tracking-wider uppercase"
+        class="animate-in text-accent-green mb-4 font-mono text-sm font-medium tracking-wider uppercase"
       >
+        <span
+          class="pulse-soft bg-accent-green mr-2 inline-block h-2 w-2 rounded-full align-middle"
+        ></span>
         v0 &mdash; convention-first monorepo
       </p>
 
       <h1
-        class="fade-in mb-6 text-5xl leading-tight font-extrabold md:text-7xl"
+        class="animate-in animate-in-delay-1 mb-6 text-5xl leading-tight font-extrabold md:text-7xl"
       >
         Build full-stack apps
-        <span class="hero-gradient">at lightning speed</span>
+        <span class="gradient-text-animated">at lightning speed</span>
       </h1>
 
       <p
-        class="fade-in text-fg-secondary mx-auto mb-10 max-w-2xl text-lg md:text-xl"
+        class="animate-in animate-in-delay-2 text-fg-secondary mx-auto mb-10 max-w-2xl text-lg md:text-xl"
       >
         Astro 5 SSR, Vue 3 islands, Tailwind 4, design tokens, Better Auth, and
         an optional .NET 10 backend &mdash; all wired together with sensible
         defaults so you can focus on shipping.
       </p>
 
-      <div class="fade-in flex flex-wrap items-center justify-center gap-4">
+      <div
+        class="animate-in animate-in-delay-3 flex flex-wrap items-center justify-center gap-4"
+      >
         <a
           href="/docs"
           class="bg-accent-purple text-bg-primary rounded-lg px-7 py-3.5 font-semibold shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
@@ -71,7 +76,9 @@ const featuredUseCases = stackUseCases.slice(0, 3);
       </div>
 
       <!-- terminal mockup -->
-      <div class="fade-in mx-auto mt-16 max-w-3xl text-left">
+      <div
+        class="animate-in animate-in-delay-4 mx-auto mt-16 max-w-3xl text-left"
+      >
         <TerminalTabs
           title="Boot Sequence"
           variants={{
@@ -173,7 +180,7 @@ const featuredUseCases = stackUseCases.slice(0, 3);
       </div>
 
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <div class="feature-card group">
+        <div class="glass hover-lift feature-card group">
           <div class="feature-icon text-accent-orange">
             <svg
               width="28"
@@ -197,7 +204,7 @@ const featuredUseCases = stackUseCases.slice(0, 3);
           </p>
         </div>
 
-        <div class="feature-card group">
+        <div class="glass hover-lift feature-card group">
           <div class="feature-icon text-accent-green">
             <svg
               width="28"
@@ -222,7 +229,7 @@ const featuredUseCases = stackUseCases.slice(0, 3);
           </p>
         </div>
 
-        <div class="feature-card group">
+        <div class="glass hover-lift feature-card group">
           <div class="feature-icon text-accent-purple">
             <svg
               width="28"
@@ -247,7 +254,7 @@ const featuredUseCases = stackUseCases.slice(0, 3);
           </p>
         </div>
 
-        <div class="feature-card group">
+        <div class="glass hover-lift feature-card group">
           <div class="feature-icon text-accent-pink">
             <svg
               width="28"
@@ -270,7 +277,7 @@ const featuredUseCases = stackUseCases.slice(0, 3);
           </p>
         </div>
 
-        <div class="feature-card group">
+        <div class="glass hover-lift feature-card group">
           <div class="feature-icon text-accent-cyan">
             <svg
               width="28"
@@ -294,7 +301,7 @@ const featuredUseCases = stackUseCases.slice(0, 3);
           </p>
         </div>
 
-        <div class="feature-card group">
+        <div class="glass hover-lift feature-card group">
           <div class="feature-icon text-accent-yellow">
             <svg
               width="28"
@@ -318,7 +325,7 @@ const featuredUseCases = stackUseCases.slice(0, 3);
           </p>
         </div>
 
-        <div class="feature-card group">
+        <div class="glass hover-lift feature-card group">
           <div class="feature-icon text-accent-green">
             <svg
               width="28"
@@ -341,7 +348,7 @@ const featuredUseCases = stackUseCases.slice(0, 3);
           </p>
         </div>
 
-        <div class="feature-card group">
+        <div class="glass hover-lift feature-card group">
           <div class="feature-icon text-accent-orange">
             <svg
               width="28"
@@ -384,7 +391,7 @@ const featuredUseCases = stackUseCases.slice(0, 3);
 
       <div class="mx-auto max-w-3xl space-y-4">
         <!-- layer: frontend -->
-        <div class="stack-layer">
+        <div class="glass hover-lift stack-layer">
           <div class="stack-layer-label text-accent-orange">Frontend</div>
           <div class="stack-layer-items">
             <span class="stack-badge">Astro 5</span>
@@ -400,7 +407,7 @@ const featuredUseCases = stackUseCases.slice(0, 3);
         </div>
 
         <!-- layer: shared -->
-        <div class="stack-layer">
+        <div class="glass hover-lift stack-layer">
           <div class="stack-layer-label text-accent-purple">Shared</div>
           <div class="stack-layer-items">
             <span class="stack-badge">Design Tokens</span>
@@ -416,7 +423,7 @@ const featuredUseCases = stackUseCases.slice(0, 3);
         </div>
 
         <!-- layer: backend -->
-        <div class="stack-layer">
+        <div class="glass hover-lift stack-layer">
           <div class="stack-layer-label text-accent-cyan">Backend</div>
           <div class="stack-layer-items">
             <span class="stack-badge">.NET 10</span>
@@ -432,7 +439,7 @@ const featuredUseCases = stackUseCases.slice(0, 3);
         </div>
 
         <!-- layer: infra -->
-        <div class="stack-layer">
+        <div class="glass hover-lift stack-layer">
           <div class="stack-layer-label text-accent-green">Infra</div>
           <div class="stack-layer-items">
             <span class="stack-badge">Docker</span>
@@ -635,7 +642,7 @@ const featuredUseCases = stackUseCases.slice(0, 3);
         <h2 class="mb-4 text-3xl font-bold md:text-4xl">About this project</h2>
       </div>
       <div class="grid gap-8 md:grid-cols-2">
-        <div class="about-card">
+        <div class="glass about-card">
           <div class="mb-4 flex items-center gap-3">
             <img src="/logo.svg" alt="" width="28" height="28" />
             <h3 class="text-lg font-semibold">Why ShockStack?</h3>
@@ -648,7 +655,7 @@ const featuredUseCases = stackUseCases.slice(0, 3);
             together with sensible defaults.
           </p>
         </div>
-        <div class="about-card">
+        <div class="glass about-card">
           <div class="mb-4 flex items-center gap-3">
             <svg
               width="28"
@@ -740,19 +747,6 @@ const featuredUseCases = stackUseCases.slice(0, 3);
 </BaseLayout>
 
 <style>
-  /* hero gradient text */
-  .hero-gradient {
-    background: linear-gradient(
-      135deg,
-      var(--color-accent-purple),
-      var(--color-accent-pink),
-      var(--color-accent-cyan)
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
   /* hero background glow effect */
   .hero-glow {
     position: absolute;
@@ -773,17 +767,8 @@ const featuredUseCases = stackUseCases.slice(0, 3);
 
   /* feature cards */
   .feature-card {
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border-default);
     border-radius: var(--radius-xl);
     padding: 1.5rem;
-    transition: all 0.2s ease;
-  }
-
-  .feature-card:hover {
-    border-color: var(--color-accent-purple);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
   }
 
   .feature-icon {
@@ -803,15 +788,8 @@ const featuredUseCases = stackUseCases.slice(0, 3);
     flex-direction: column;
     align-items: center;
     gap: 0.75rem;
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border-default);
     border-radius: var(--radius-xl);
     padding: 1.25rem 1.5rem;
-    transition: all 0.2s ease;
-  }
-
-  .stack-layer:hover {
-    border-color: var(--color-accent-purple);
   }
 
   @media (min-width: 640px) {
@@ -862,8 +840,6 @@ const featuredUseCases = stackUseCases.slice(0, 3);
 
   /* about cards */
   .about-card {
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border-default);
     border-radius: var(--radius-xl);
     padding: 1.5rem;
   }
