@@ -1,3 +1,9 @@
+# [1.13.0](https://github.com/codywilliamson/shockstack/compare/v1.12.0...v1.13.0) (2026-03-30)
+
+### Features
+
+- integrate new animation utilities into landing page ([433a20c](https://github.com/codywilliamson/shockstack/commit/433a20c299a40b17b247977bb90ed109ecc5db25))
+
 # [1.12.0](https://github.com/codywilliamson/shockstack/compare/v1.11.0...v1.12.0) (2026-03-30)
 
 ### Features
