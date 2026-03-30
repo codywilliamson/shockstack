@@ -1,3 +1,9 @@
+# [1.12.0](https://github.com/codywilliamson/shockstack/compare/v1.11.0...v1.12.0) (2026-03-30)
+
+### Features
+
+- add reusable animation utilities from reposweep ([ce7525a](https://github.com/codywilliamson/shockstack/commit/ce7525a3afe92a8364674ffb94ae2c1ac723c83f))
+
 # [1.11.0](https://github.com/codywilliamson/shockstack/compare/v1.10.1...v1.11.0) (2026-03-27)
 
 ### Features
