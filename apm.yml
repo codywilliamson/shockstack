@@ -1,0 +1,16 @@
+name: shockstack
+version: 1.13.1
+description: Convention-first monorepo template — Astro 5 + Vue 3 + Tailwind 4, optional .NET 10 backend
+author: Cody Williamson
+license: MIT
+
+dependencies:
+  apm: []
+  mcp: []
+
+scripts:
+  dev: "pnpm dev"
+  build: "pnpm build"
+  test: "pnpm test"
+  lint: "pnpm lint"
+  tokens: "pnpm tokens:build"
