@@ -1,3 +1,9 @@
+## [1.13.2](https://github.com/codywilliamson/shockstack/compare/v1.13.1...v1.13.2) (2026-04-02)
+
+### Bug Fixes
+
+- use --force for corepack install to handle existing yarn bin ([05e8388](https://github.com/codywilliamson/shockstack/commit/05e83888e18e971dc7c2d3200f49658328394c55))
+
 ## [1.13.1](https://github.com/codywilliamson/shockstack/compare/v1.13.0...v1.13.1) (2026-04-02)
 
 ### Bug Fixes
