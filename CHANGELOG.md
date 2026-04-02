@@ -1,3 +1,9 @@
+## [1.13.1](https://github.com/codywilliamson/shockstack/compare/v1.13.0...v1.13.1) (2026-04-02)
+
+### Bug Fixes
+
+- install corepack in dockerfile for node 25 compat ([88b1c86](https://github.com/codywilliamson/shockstack/commit/88b1c86b7617878b46f9740a4afe7137ac64f45d))
+
 # [1.13.0](https://github.com/codywilliamson/shockstack/compare/v1.12.0...v1.13.0) (2026-03-30)
 
 ### Features
