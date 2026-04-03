@@ -161,7 +161,7 @@ The `0.01ms` duration (instead of `0s`) ensures animation events still fire — 
 
 Astro's View Transitions API provides page-level transitions. When you navigate between pages, the browser morphs the old page into the new one. ShockStack combines this with CSS animations:
 
-1. **Between pages** — Astro's `<ViewTransitions />` component handles the cross-fade
+1. **Between pages** — Astro's `<ClientRouter />` component handles the cross-fade
 2. **On page load** — `.fade-in` on the main content area provides a subtle entry
 3. **As you scroll** — `.reveal` on sections creates the "content appears as you explore" effect
 

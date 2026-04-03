@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import SEO from "../components/ui/SEO.astro";
 import Header from "../components/layout/Header.astro";
 import Footer from "../components/layout/Footer.astro";
@@ -52,7 +52,7 @@ const themeBootstrapScript = `
       type={type}
       noindex={noindex}
     />
-    <ViewTransitions />
+    <ClientRouter />
     <script is:inline set:html={themeBootstrapScript} />
   </head>
   <body class="bg-bg-primary text-fg-primary flex min-h-screen flex-col">
