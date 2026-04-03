@@ -1,3 +1,9 @@
+# [1.14.0](https://github.com/codywilliamson/shockstack/compare/v1.13.2...v1.14.0) (2026-04-03)
+
+### Features
+
+- upgrade astro 5 to astro 6 ([f95044d](https://github.com/codywilliamson/shockstack/commit/f95044d22220aca3a00320b68bba58174c1a2411))
+
 ## [1.13.2](https://github.com/codywilliamson/shockstack/compare/v1.13.1...v1.13.2) (2026-04-02)
 
 ### Bug Fixes
