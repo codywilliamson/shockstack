@@ -9,5 +9,7 @@ RUN dotnet publish src/ShockStack.Api -c Release -o /out
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-preview AS production
 WORKDIR /app
 COPY --from=build /out .
+RUN addgroup --gid 1001 --system appgroup && adduser --uid 1001 --system --ingroup appgroup appuser && chown -R appuser:appgroup /app
+USER appuser
 EXPOSE 8080
 ENTRYPOINT ["dotnet", "ShockStack.Api.dll"]
