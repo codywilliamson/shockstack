@@ -5,6 +5,7 @@ import TestimonialCard from "../components/content/TestimonialCard.astro";
 import PricingCard from "../components/content/PricingCard.astro";
 import StatsCard from "../components/content/StatsCard.astro";
 import Badge from "../components/content/Badge.astro";
+import Alert from "../components/content/Alert.astro";
 
 export const prerender = true;
 ---
@@ -380,6 +381,40 @@ export const prerender = true;
             <Badge variant="outline" color="neutral">Neutral</Badge>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- alerts -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-yellow mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          alerts
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Inline <span class="gradient-text-orange-yellow">callouts</span>
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Four semantic variants with accent-matched borders and icons.
+        </p>
+      </div>
+
+      <div class="mx-auto max-w-2xl space-y-3">
+        <Alert variant="info" title="Heads up">
+          A new version of ShockStack is available. Run <code>pnpm up</code> to upgrade.
+        </Alert>
+        <Alert variant="success" title="Deploy complete">
+          Your changes are live on production.
+        </Alert>
+        <Alert variant="warning" title="Token limit">
+          You're using 80% of your monthly quota.
+        </Alert>
+        <Alert variant="error" title="Build failed" dismissible>
+          TypeScript reported 3 errors. Review the log to continue.
+        </Alert>
       </div>
     </div>
   </section>
