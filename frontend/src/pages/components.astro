@@ -7,6 +7,7 @@ import StatsCard from "../components/content/StatsCard.astro";
 import Badge from "../components/content/Badge.astro";
 import Alert from "../components/content/Alert.astro";
 import Kbd from "../components/content/Kbd.astro";
+import Avatar from "../components/content/Avatar.astro";
 
 export const prerender = true;
 ---
@@ -463,6 +464,61 @@ export const prerender = true;
     </div>
   </section>
 
+  <!-- avatars -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-pink mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          avatars
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          User <span class="gradient-text-pink-orange">avatars</span>
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Initial-based fallbacks with gradient backgrounds across five sizes.
+          Use the <code>src</code> prop when an image is available.
+        </p>
+      </div>
+
+      <div class="mx-auto max-w-3xl space-y-6">
+        <div class="avatar-row">
+          <code class="badge-row-label">sizes</code>
+          <div class="avatar-row-items">
+            <Avatar name="Alex Chen" size="xs" />
+            <Avatar name="Alex Chen" size="sm" />
+            <Avatar name="Alex Chen" size="md" />
+            <Avatar name="Alex Chen" size="lg" />
+            <Avatar name="Alex Chen" size="xl" />
+          </div>
+        </div>
+
+        <div class="avatar-row">
+          <code class="badge-row-label">gradients</code>
+          <div class="avatar-row-items">
+            <Avatar name="Alex Chen" gradient="purple-pink" size="lg" />
+            <Avatar name="Sarah Kim" gradient="cyan-green" size="lg" />
+            <Avatar name="Marcus Johnson" gradient="orange-yellow" size="lg" />
+            <Avatar name="Priya Patel" gradient="pink-orange" size="lg" />
+            <Avatar name="Jordan Lee" gradient="green-cyan" size="lg" />
+          </div>
+        </div>
+
+        <div class="avatar-row">
+          <code class="badge-row-label">stacked group</code>
+          <div class="avatar-stack">
+            <Avatar name="Alex Chen" gradient="purple-pink" />
+            <Avatar name="Sarah Kim" gradient="cyan-green" />
+            <Avatar name="Marcus Johnson" gradient="orange-yellow" />
+            <Avatar name="Priya Patel" gradient="pink-orange" />
+            <span class="avatar-more">+4</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- gradient text showcase -->
   <section class="reveal px-4 py-20 md:py-28">
     <div class="mx-auto max-w-6xl">
@@ -659,5 +715,48 @@ export const prerender = true;
   .kbd-example-label {
     color: var(--color-fg-secondary);
     font-size: 0.875rem;
+  }
+
+  .avatar-row {
+    padding: 1.25rem;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    background-color: var(--color-bg-secondary);
+  }
+
+  .avatar-row-items {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .avatar-stack {
+    display: flex;
+    align-items: center;
+  }
+
+  .avatar-stack :global(.avatar) {
+    border: 2px solid var(--color-bg-secondary);
+    margin-left: -0.5rem;
+  }
+
+  .avatar-stack :global(.avatar:first-child) {
+    margin-left: 0;
+  }
+
+  .avatar-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-left: -0.5rem;
+    border-radius: var(--radius-full);
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-fg-secondary);
+    border: 2px solid var(--color-bg-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
   }
 </style>
