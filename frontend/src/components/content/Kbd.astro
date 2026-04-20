@@ -1,0 +1,77 @@
+---
+interface Props {
+  keys: string[];
+  size?: "sm" | "md";
+}
+
+const { keys, size = "md" } = Astro.props;
+
+// show ⌘ when the client is on mac, Ctrl otherwise
+const normalize = (k: string) => (k === "Mod" ? "⌘" : k);
+---
+
+<span class:list={["kbd-group", `kbd-${size}`]} data-kbd-group>
+  {
+    keys.map((key, i) => (
+      <>
+        {i > 0 && <span class="kbd-plus">+</span>}
+        <kbd class="kbd" data-key={key}>
+          {normalize(key)}
+        </kbd>
+      </>
+    ))
+  }
+</span>
+
+<script>
+  // swap ⌘ → Ctrl on non-mac clients
+  const isMac = /Mac|iPhone|iPad/i.test(navigator.platform);
+  if (!isMac) {
+    document
+      .querySelectorAll("[data-kbd-group] [data-key='Mod']")
+      .forEach((el) => {
+        el.textContent = "Ctrl";
+      });
+  }
+</script>
+
+<style>
+  .kbd-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-family: var(--font-mono);
+  }
+
+  .kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-fg-primary);
+    border: 1px solid var(--color-border-default);
+    border-bottom-width: 2px;
+    border-radius: var(--radius-sm);
+    min-width: 1.5em;
+    text-align: center;
+  }
+
+  .kbd-sm .kbd {
+    font-size: 0.6875rem;
+    padding: 0.0625rem 0.375rem;
+    line-height: 1.2;
+  }
+
+  .kbd-md .kbd {
+    font-size: 0.75rem;
+    padding: 0.125rem 0.5rem;
+    line-height: 1.3;
+  }
+
+  .kbd-plus {
+    color: var(--color-fg-muted);
+    font-size: 0.75rem;
+  }
+</style>

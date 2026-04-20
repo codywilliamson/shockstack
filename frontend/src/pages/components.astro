@@ -6,6 +6,7 @@ import PricingCard from "../components/content/PricingCard.astro";
 import StatsCard from "../components/content/StatsCard.astro";
 import Badge from "../components/content/Badge.astro";
 import Alert from "../components/content/Alert.astro";
+import Kbd from "../components/content/Kbd.astro";
 
 export const prerender = true;
 ---
@@ -419,6 +420,49 @@ export const prerender = true;
     </div>
   </section>
 
+  <!-- keyboard shortcuts -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-cyan mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          keyboard
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Keyboard <span class="gradient-text-cyan-green">shortcuts</span>
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Platform-aware key chips. The <code>Mod</code> key renders as ⌘ on macOS
+          and Ctrl elsewhere.
+        </p>
+      </div>
+
+      <div class="mx-auto grid max-w-2xl gap-3">
+        <div class="kbd-example-row">
+          <span class="kbd-example-label">Open command palette</span>
+          <Kbd keys={["Mod", "K"]} />
+        </div>
+        <div class="kbd-example-row">
+          <span class="kbd-example-label">Search</span>
+          <Kbd keys={["/"]} />
+        </div>
+        <div class="kbd-example-row">
+          <span class="kbd-example-label">Toggle theme</span>
+          <Kbd keys={["Mod", "Shift", "L"]} />
+        </div>
+        <div class="kbd-example-row">
+          <span class="kbd-example-label">Close dialog</span>
+          <Kbd keys={["Esc"]} />
+        </div>
+        <div class="kbd-example-row">
+          <span class="kbd-example-label">Submit form</span>
+          <Kbd keys={["Mod", "Enter"]} />
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- gradient text showcase -->
   <section class="reveal px-4 py-20 md:py-28">
     <div class="mx-auto max-w-6xl">
@@ -599,5 +643,21 @@ export const prerender = true;
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+  }
+
+  .kbd-example-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.875rem 1.25rem;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-secondary);
+  }
+
+  .kbd-example-label {
+    color: var(--color-fg-secondary);
+    font-size: 0.875rem;
   }
 </style>
