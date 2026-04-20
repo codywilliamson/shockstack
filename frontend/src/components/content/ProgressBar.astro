@@ -1,0 +1,175 @@
+---
+interface Props {
+  value?: number;
+  max?: number;
+  label?: string;
+  showValue?: boolean;
+  gradient?:
+    | "purple-pink"
+    | "cyan-green"
+    | "orange-yellow"
+    | "pink-orange"
+    | "green-cyan";
+  indeterminate?: boolean;
+  size?: "sm" | "md" | "lg";
+}
+
+const {
+  value = 0,
+  max = 100,
+  label,
+  showValue = false,
+  gradient = "purple-pink",
+  indeterminate = false,
+  size = "md",
+} = Astro.props;
+
+const pct = Math.max(0, Math.min(100, (value / max) * 100));
+---
+
+<div class="progress-wrap">
+  {
+    (label || showValue) && (
+      <div class="progress-meta">
+        {label && <span class="progress-label">{label}</span>}
+        {showValue && !indeterminate && (
+          <span class="progress-value">{Math.round(pct)}%</span>
+        )}
+      </div>
+    )
+  }
+
+  <div
+    class:list={["progress-track", `progress-${size}`]}
+    role="progressbar"
+    aria-valuemin="0"
+    aria-valuemax={max}
+    aria-valuenow={indeterminate ? undefined : value}
+    aria-label={label}
+  >
+    {
+      indeterminate ? (
+        <div
+          class={`progress-fill progress-indeterminate progress-${gradient}`}
+        />
+      ) : (
+        <div
+          class={`progress-fill progress-${gradient}`}
+          style={`width: ${pct}%`}
+        />
+      )
+    }
+  </div>
+</div>
+
+<style>
+  .progress-wrap {
+    width: 100%;
+  }
+
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+    gap: 1rem;
+  }
+
+  .progress-label {
+    color: var(--color-fg-secondary);
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+
+  .progress-value {
+    color: var(--color-fg-muted);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .progress-track {
+    position: relative;
+    width: 100%;
+    background-color: var(--color-bg-tertiary);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+  }
+
+  .progress-sm {
+    height: 0.25rem;
+  }
+  .progress-md {
+    height: 0.5rem;
+  }
+  .progress-lg {
+    height: 0.75rem;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+    transition: width 0.3s ease;
+  }
+
+  .progress-purple-pink {
+    background: linear-gradient(
+      90deg,
+      var(--color-accent-purple),
+      var(--color-accent-pink)
+    );
+  }
+  .progress-cyan-green {
+    background: linear-gradient(
+      90deg,
+      var(--color-accent-cyan),
+      var(--color-accent-green)
+    );
+  }
+  .progress-orange-yellow {
+    background: linear-gradient(
+      90deg,
+      var(--color-accent-orange),
+      var(--color-accent-yellow)
+    );
+  }
+  .progress-pink-orange {
+    background: linear-gradient(
+      90deg,
+      var(--color-accent-pink),
+      var(--color-accent-orange)
+    );
+  }
+  .progress-green-cyan {
+    background: linear-gradient(
+      90deg,
+      var(--color-accent-green),
+      var(--color-accent-cyan)
+    );
+  }
+
+  .progress-indeterminate {
+    width: 40%;
+    animation: progress-slide 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  @keyframes progress-slide {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(350%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .progress-fill {
+      transition: none;
+    }
+    .progress-indeterminate {
+      animation: none;
+      width: 100%;
+      opacity: 0.6;
+    }
+  }
+</style>
