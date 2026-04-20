@@ -9,6 +9,7 @@ import Alert from "../components/content/Alert.astro";
 import Kbd from "../components/content/Kbd.astro";
 import Avatar from "../components/content/Avatar.astro";
 import AccordionPanel from "../components/ui/AccordionPanel.vue";
+import TooltipHover from "../components/ui/TooltipHover.vue";
 
 const faqItems = [
   {
@@ -571,6 +572,57 @@ export const prerender = true;
     </div>
   </section>
 
+  <!-- tooltips -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-green mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          tooltips
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Hover <span class="gradient-text-green-cyan">tooltips</span>
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Positioned on all four sides, portaled to body, respects motion
+          preferences.
+        </p>
+      </div>
+
+      <div class="tooltip-demo">
+        <TooltipHover
+          client:load
+          content="Tooltip on top — the default position"
+          side="top"
+        >
+          <button type="button" class="tooltip-trigger-btn">Top</button>
+        </TooltipHover>
+        <TooltipHover
+          client:load
+          content="Tooltip on the right side"
+          side="right"
+        >
+          <button type="button" class="tooltip-trigger-btn">Right</button>
+        </TooltipHover>
+        <TooltipHover
+          client:load
+          content="Tooltip below the trigger"
+          side="bottom"
+        >
+          <button type="button" class="tooltip-trigger-btn">Bottom</button>
+        </TooltipHover>
+        <TooltipHover
+          client:load
+          content="Tooltip on the left side"
+          side="left"
+        >
+          <button type="button" class="tooltip-trigger-btn">Left</button>
+        </TooltipHover>
+      </div>
+    </div>
+  </section>
+
   <!-- gradient text showcase -->
   <section class="reveal px-4 py-20 md:py-28">
     <div class="mx-auto max-w-6xl">
@@ -810,5 +862,35 @@ export const prerender = true;
     border: 2px solid var(--color-bg-secondary);
     font-size: 0.75rem;
     font-weight: 600;
+  }
+
+  .tooltip-demo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    padding: 3rem 1rem;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    background-color: var(--color-bg-secondary);
+  }
+
+  .tooltip-trigger-btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-fg-primary);
+    border: 1px solid var(--color-border-default);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .tooltip-trigger-btn:hover {
+    border-color: var(--color-accent-green);
+    color: var(--color-accent-green);
   }
 </style>
