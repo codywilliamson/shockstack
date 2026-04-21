@@ -1,3 +1,9 @@
+## [1.15.2](https://github.com/codywilliamson/shockstack/compare/v1.15.1...v1.15.2) (2026-04-21)
+
+### Bug Fixes
+
+- **security:** remediate all open Trivy/CodeQL findings ([bab8048](https://github.com/codywilliamson/shockstack/commit/bab8048c977476a82948c0c8d6a9c8a51cd53997)), closes [#45](https://github.com/codywilliamson/shockstack/issues/45) [#46](https://github.com/codywilliamson/shockstack/issues/46) [#47](https://github.com/codywilliamson/shockstack/issues/47) [#48](https://github.com/codywilliamson/shockstack/issues/48) [#49](https://github.com/codywilliamson/shockstack/issues/49) [#50](https://github.com/codywilliamson/shockstack/issues/50) [#51](https://github.com/codywilliamson/shockstack/issues/51) [#52](https://github.com/codywilliamson/shockstack/issues/52) [#53](https://github.com/codywilliamson/shockstack/issues/53) [#54](https://github.com/codywilliamson/shockstack/issues/54) [#55](https://github.com/codywilliamson/shockstack/issues/55) [#56](https://github.com/codywilliamson/shockstack/issues/56) [#57](https://github.com/codywilliamson/shockstack/issues/57) [#58](https://github.com/codywilliamson/shockstack/issues/58) [#59](https://github.com/codywilliamson/shockstack/issues/59) [#60](https://github.com/codywilliamson/shockstack/issues/60)
+
 ## [1.15.1](https://github.com/codywilliamson/shockstack/compare/v1.15.0...v1.15.1) (2026-04-21)
 
 ### Bug Fixes
