@@ -1,3 +1,9 @@
+## [1.15.1](https://github.com/codywilliamson/shockstack/compare/v1.15.0...v1.15.1) (2026-04-21)
+
+### Bug Fixes
+
+- **frontend:** source /changelog from root CHANGELOG.md ([d08e706](https://github.com/codywilliamson/shockstack/commit/d08e7067ec3c51e67a9d451411a9bab8caf9ac0d))
+
 # [1.15.0](https://github.com/codywilliamson/shockstack/compare/v1.14.0...v1.15.0) (2026-04-21)
 
 ### Bug Fixes
