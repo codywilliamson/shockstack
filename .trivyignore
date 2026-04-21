@@ -1,0 +1,16 @@
+# .trivyignore — Accepted / deferred Trivy findings
+#
+# Each entry suppresses a specific CVE/GHSA across all scans.
+# All entries must include a rationale and a review date.
+
+# GHSA-67mh-4wv8-2f99 — esbuild <=0.24.2 dev-server binds 0.0.0.0
+# Root cause: drizzle-kit@0.31.10 (latest) → @esbuild-kit/esm-loader@2.6.5
+#             → @esbuild-kit/core-utils@3.3.2 → esbuild@0.18.20.
+#             drizzle-kit has no upstream release that drops @esbuild-kit.
+#             Forcibly overriding esbuild to >=0.25 breaks @esbuild-kit/core-utils
+#             because the package uses internal esbuild APIs that changed between
+#             0.18 and 0.25.
+# Risk: Dev-only; esbuild's dev server is never run in CI or production.
+#       The advisory affects the `serve` API, which drizzle-kit does not invoke.
+# Review: re-evaluate when drizzle-kit drops @esbuild-kit or publishes a fix.
+GHSA-67mh-4wv8-2f99
