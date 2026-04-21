@@ -1,3 +1,26 @@
+# [1.15.0](https://github.com/codywilliamson/shockstack/compare/v1.14.0...v1.15.0) (2026-04-21)
+
+### Bug Fixes
+
+- **deps:** regenerate pnpm-lockfile to clear dependabot merge artifacts ([fcf3256](https://github.com/codywilliamson/shockstack/commit/fcf325618b3c7b9ebe3ceb69b92bcedf0918000d))
+
+### Features
+
+- **frontend:** add about page with timeline, principles, team ([c422e12](https://github.com/codywilliamson/shockstack/commit/c422e129d9bd9d869d7fc2a0efba4d2a2ba19929))
+- **frontend:** add AccordionPanel component via reka-ui primitives ([616d9bb](https://github.com/codywilliamson/shockstack/commit/616d9bbafc96a1b05a5ba091729083cd92c43231))
+- **frontend:** add Alert component with 4 semantic variants ([faece44](https://github.com/codywilliamson/shockstack/commit/faece44b364bcd6013425244b489245e5166fde3))
+- **frontend:** add Avatar component with initials fallback + stack ([4484dd2](https://github.com/codywilliamson/shockstack/commit/4484dd2d0e0920cf4718c2cb3489d31c6c3cbfc1))
+- **frontend:** add Badge component with 8 colors × 3 variants ([7c83f95](https://github.com/codywilliamson/shockstack/commit/7c83f95991f7c7baaaf94aa41f11a66b05540e7c))
+- **frontend:** add components, pricing, about to header and mobile nav ([80406e9](https://github.com/codywilliamson/shockstack/commit/80406e9a4d8898b02b09ef069d0ba14c4b4e33bc))
+- **frontend:** add DemoBanner component for marking placeholder pages ([f260561](https://github.com/codywilliamson/shockstack/commit/f260561c3ae8a309b5fd892c241246da8b839c74))
+- **frontend:** add DemoBanner to pricing/about pages with placeholder team names ([5b9b6f4](https://github.com/codywilliamson/shockstack/commit/5b9b6f45d465158114124d1300aae7bea3540c07))
+- **frontend:** add Kbd component with platform-aware Mod key ([10e528b](https://github.com/codywilliamson/shockstack/commit/10e528b7053622d470113bb8a0abe51458f56490))
+- **frontend:** add pricing marketing page with tiers, comparison, FAQ ([3e78107](https://github.com/codywilliamson/shockstack/commit/3e78107301033bd5c369615c9630bd862adebe48))
+- **frontend:** add ProgressBar component with determinate + indeterminate modes ([2563c21](https://github.com/codywilliamson/shockstack/commit/2563c2106034f99125f7c62be511847557675572))
+- **frontend:** add Skeleton component with shimmer animation ([7cd8260](https://github.com/codywilliamson/shockstack/commit/7cd8260f910b678bbde34b65ca476cea35cd3f51))
+- **frontend:** add themed 404 not-found page ([123d4e3](https://github.com/codywilliamson/shockstack/commit/123d4e30baab35c5fdac287d5c56a96d2ab7e919))
+- **frontend:** add TooltipHover component with 4 sides ([39c5271](https://github.com/codywilliamson/shockstack/commit/39c5271bafdfa0b284ba83e7fc2b7a597699545f))
+
 # [1.14.0](https://github.com/codywilliamson/shockstack/compare/v1.13.2...v1.14.0) (2026-04-03)
 
 ### Features
