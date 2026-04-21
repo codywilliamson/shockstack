@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PricingCard from "../components/content/PricingCard.astro";
 import Badge from "../components/content/Badge.astro";
 import AccordionPanel from "../components/ui/AccordionPanel.vue";
+import DemoBanner from "../components/content/DemoBanner.astro";
 
 export const prerender = true;
 
@@ -39,6 +40,13 @@ const billingFaq = [
   description="Simple, transparent pricing for ShockStack. Free forever for personal projects, affordable for teams."
   fullWidth
 >
+  <DemoBanner
+    label="Demo page"
+    message="Pricing tiers are examples for template showcase. Real ShockStack is MIT-licensed and free."
+    href="/components"
+    ctaLabel="View components"
+  />
+
   <!-- hero -->
   <section
     class="gradient-bg-mesh relative overflow-hidden px-4 pt-20 pb-12 md:pt-28 md:pb-16"
