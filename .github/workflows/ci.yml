@@ -23,10 +23,14 @@ jobs:
             frontend:
               - 'frontend/**'
               - 'packages/**'
+              - 'pnpm-lock.yaml'
+              - 'package.json'
             backend:
               - 'backend/**'
             tokens:
               - 'packages/tokens/**'
+              - 'pnpm-lock.yaml'
+              - 'package.json'
             docs:
               - 'README.md'
               - 'docs/**'
