@@ -1,0 +1,145 @@
+---
+interface Props {
+  label?: string;
+  message?: string;
+  href?: string;
+  ctaLabel?: string;
+}
+
+const {
+  label = "Demo page",
+  message = "This page uses placeholder content to showcase components.",
+  href,
+  ctaLabel = "Learn more",
+} = Astro.props;
+---
+
+<aside class="demo-banner" role="note" aria-label="Demo page notice">
+  <div class="demo-banner-inner">
+    <span class="demo-banner-pill">
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      {label}
+    </span>
+    <p class="demo-banner-text">{message}</p>
+    {
+      href && (
+        <a class="demo-banner-cta" href={href}>
+          {ctaLabel}
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </a>
+      )
+    }
+  </div>
+</aside>
+
+<style>
+  .demo-banner {
+    position: relative;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-accent-orange) 12%, transparent),
+      color-mix(in srgb, var(--color-accent-pink) 12%, transparent)
+    );
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-accent-orange) 25%, transparent);
+    font-size: 0.8125rem;
+    color: var(--color-fg-secondary);
+  }
+
+  .demo-banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent 0 8px,
+      color-mix(in srgb, var(--color-accent-orange) 6%, transparent) 8px 9px
+    );
+    pointer-events: none;
+  }
+
+  .demo-banner-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.625rem 1rem;
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0.625rem 1rem;
+  }
+
+  .demo-banner-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--radius-full);
+    background-color: var(--color-accent-orange);
+    color: var(--color-bg-primary);
+    font-weight: 700;
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .demo-banner-text {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .demo-banner-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--color-accent-orange);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s ease;
+  }
+
+  .demo-banner-cta:hover {
+    color: var(--color-accent-pink);
+  }
+
+  @media (max-width: 640px) {
+    .demo-banner-text {
+      flex-basis: 100%;
+      order: 2;
+    }
+    .demo-banner-cta {
+      order: 3;
+    }
+  }
+</style>

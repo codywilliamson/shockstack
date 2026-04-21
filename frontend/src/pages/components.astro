@@ -12,6 +12,7 @@ import AccordionPanel from "../components/ui/AccordionPanel.vue";
 import TooltipHover from "../components/ui/TooltipHover.vue";
 import ProgressBar from "../components/content/ProgressBar.astro";
 import Skeleton from "../components/content/Skeleton.astro";
+import DemoBanner from "../components/content/DemoBanner.astro";
 
 const faqItems = [
   {
@@ -728,6 +729,40 @@ export const prerender = true;
     </div>
   </section>
 
+  <!-- demo banner -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-orange mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          demo banner
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Flag pages as <span class="gradient-text-orange-yellow">demos</span>
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Full-bleed banner that marks a page as placeholder content. Drop it at
+          the top of any showcase page so the content isn't mistaken for real.
+        </p>
+      </div>
+
+      <div class="demo-banner-stack">
+        <div class="demo-banner-wrap">
+          <DemoBanner />
+        </div>
+        <div class="demo-banner-wrap">
+          <DemoBanner
+            label="Placeholder"
+            message="The team below are fictional — these are template examples."
+            href="/components"
+            ctaLabel="See components"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- gradient text showcase -->
   <section class="reveal px-4 py-20 md:py-28">
     <div class="mx-auto max-w-6xl">
@@ -1040,5 +1075,17 @@ export const prerender = true;
     flex-direction: column;
     gap: 0.5rem;
     flex: 1;
+  }
+
+  .demo-banner-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .demo-banner-wrap {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    border: 1px solid var(--color-border-default);
   }
 </style>
