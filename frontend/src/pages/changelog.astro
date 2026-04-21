@@ -1,18 +1,69 @@
 ---
-import { getCollection, render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import source from "../../../CHANGELOG.md?raw";
 
 export const prerender = true;
 
-const releases = (await getCollection("changelog")).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
+type Entry = { html: string };
+type Section = { heading: string; entries: Entry[] };
+type Release = { version: string; date: Date; sections: Section[] };
 
-const rendered = await Promise.all(
-  releases.map(async (release) => ({
-    ...release,
-    rendered: await render(release),
-  })),
+const headingRe =
+  /^#{1,2} (?:\[([^\]]+)\]\([^)]+\)|(\d+\.\d+\.\d+)) \((\d{4}-\d{2}-\d{2})\)\s*$/;
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function renderInline(s: string): string {
+  let out = escapeHtml(s);
+  out = out.replace(
+    /\[([^\]]+)\]\(([^)]+)\)/g,
+    (_, text, href) =>
+      `<a href="${href}" class="text-accent-purple hover:underline" target="_blank" rel="noopener">${text}</a>`,
+  );
+  out = out.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  return out;
+}
+
+function parse(src: string): Release[] {
+  const releases: Release[] = [];
+  let current: Release | null = null;
+  let section: Section | null = null;
+
+  for (const rawLine of src.split("\n")) {
+    const line = rawLine.trimEnd();
+    const heading = line.match(headingRe);
+    if (heading) {
+      current = {
+        version: heading[1] ?? heading[2],
+        date: new Date(heading[3]),
+        sections: [],
+      };
+      section = null;
+      releases.push(current);
+      continue;
+    }
+    if (!current) continue;
+
+    const sub = line.match(/^### (.+)$/);
+    if (sub) {
+      section = { heading: sub[1], entries: [] };
+      current.sections.push(section);
+      continue;
+    }
+
+    const bullet = line.match(/^- (.+)$/);
+    if (bullet && section) {
+      section.entries.push({ html: renderInline(bullet[1]) });
+    }
+  }
+
+  return releases;
+}
+
+const releases = parse(source).sort(
+  (a, b) => b.date.valueOf() - a.date.valueOf(),
 );
 ---
 
@@ -20,26 +71,35 @@ const rendered = await Promise.all(
   <h1 class="mb-8 text-3xl font-bold">Changelog</h1>
   <div class="space-y-8">
     {
-      rendered.map(({ data, rendered: { Content } }) => (
+      releases.map((release) => (
         <div class="border-accent-purple border-l-2 pl-6">
           <div class="mb-2 flex items-center gap-3">
             <span class="bg-accent-purple text-bg-primary rounded-full px-3 py-1 text-sm font-semibold">
-              v{data.version}
+              v{release.version}
             </span>
             <time
               class="text-fg-muted text-sm"
-              datetime={data.date.toISOString()}
+              datetime={release.date.toISOString()}
             >
-              {data.date.toLocaleDateString("en-US", {
+              {release.date.toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
               })}
             </time>
           </div>
-          <div class="prose">
-            <Content />
-          </div>
+          {release.sections.map((section) => (
+            <div class="mt-4">
+              <h3 class="text-fg-primary mb-2 text-lg font-semibold">
+                {section.heading}
+              </h3>
+              <ul class="text-fg-muted list-disc space-y-1 pl-5">
+                {section.entries.map((entry) => (
+                  <li set:html={entry.html} />
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       ))
     }
