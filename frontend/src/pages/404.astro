@@ -1,0 +1,183 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+export const prerender = true;
+---
+
+<BaseLayout
+  title="404 — Not Found"
+  description="The page you're looking for doesn't exist."
+  fullWidth
+  noindex
+>
+  <section class="gradient-bg-mesh not-found">
+    <div class="not-found-inner">
+      <p class="not-found-eyebrow text-accent-pink">error 404</p>
+      <h1 class="not-found-code gradient-text-animated">404</h1>
+      <h2 class="not-found-title">Lost in the void</h2>
+      <p class="not-found-body">
+        The page you're looking for drifted off somewhere. It may have moved,
+        been renamed, or never existed at all.
+      </p>
+
+      <div class="not-found-actions">
+        <a href="/" class="not-found-cta not-found-cta-primary">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M3 12L12 3l9 9"></path>
+            <path d="M5 10v10h14V10"></path>
+          </svg>
+          Back home
+        </a>
+        <a href="/docs" class="not-found-cta">
+          Read the docs
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+
+      <ul class="not-found-quick">
+        <li><a href="/components">Components</a></li>
+        <li><a href="/theme">Theme</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/use-cases">Use Cases</a></li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: calc(100vh - 10rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.25rem;
+  }
+
+  .not-found-inner {
+    max-width: 38rem;
+    text-align: center;
+  }
+
+  .not-found-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .not-found-code {
+    font-size: clamp(6rem, 22vw, 12rem);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin-bottom: 1rem;
+  }
+
+  .not-found-title {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-weight: 700;
+    color: var(--color-fg-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  .not-found-body {
+    color: var(--color-fg-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 30rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .not-found-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .not-found-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--radius-lg);
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: 1px solid var(--color-border-default);
+    color: var(--color-fg-primary);
+    background-color: var(--color-bg-secondary);
+    text-decoration: none;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .not-found-cta:hover {
+    border-color: var(--color-accent-purple);
+    color: var(--color-accent-purple);
+  }
+
+  .not-found-cta-primary {
+    border: none;
+    color: var(--color-bg-primary);
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-purple),
+      var(--color-accent-pink)
+    );
+  }
+
+  .not-found-cta-primary:hover {
+    color: var(--color-bg-primary);
+    opacity: 0.9;
+  }
+
+  .not-found-quick {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem 1.25rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border-default);
+  }
+
+  .not-found-quick a {
+    color: var(--color-fg-muted);
+    font-size: 0.8125rem;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .not-found-quick a:hover {
+    color: var(--color-accent-pink);
+  }
+</style>

@@ -1,0 +1,102 @@
+---
+interface Props {
+  shape?: "text" | "circle" | "rect";
+  width?: string;
+  height?: string;
+  lines?: number;
+}
+
+const { shape = "text", width, height, lines = 1 } = Astro.props;
+
+const defaultHeight = shape === "text" ? "0.875rem" : undefined;
+const style = [
+  width ? `width: ${width}` : null,
+  (height ?? defaultHeight) ? `height: ${height ?? defaultHeight}` : null,
+]
+  .filter(Boolean)
+  .join("; ");
+---
+
+{
+  shape === "text" && lines > 1 ? (
+    <div class="skeleton-group">
+      {Array.from({ length: lines }).map((_, i) => (
+        <span
+          class="skeleton skeleton-text"
+          style={`${style}${i === lines - 1 ? "; width: 70%" : ""}`}
+          aria-hidden="true"
+        />
+      ))}
+    </div>
+  ) : (
+    <span
+      class:list={["skeleton", `skeleton-${shape}`]}
+      style={style}
+      aria-hidden="true"
+    />
+  )
+}
+
+<style>
+  .skeleton {
+    display: block;
+    background: linear-gradient(
+      90deg,
+      var(--color-bg-tertiary) 0%,
+      color-mix(in srgb, var(--color-fg-muted) 10%, var(--color-bg-tertiary))
+        50%,
+      var(--color-bg-tertiary) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.4s linear infinite;
+  }
+
+  .skeleton-text {
+    display: inline-block;
+    width: 100%;
+    border-radius: var(--radius-sm);
+  }
+
+  .skeleton-circle {
+    border-radius: var(--radius-full);
+    aspect-ratio: 1;
+    width: 3rem;
+  }
+
+  .skeleton-rect {
+    border-radius: var(--radius-md);
+    width: 100%;
+    height: 8rem;
+  }
+
+  .skeleton-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  @keyframes skeleton-shimmer {
+    from {
+      background-position: 200% 0;
+    }
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton {
+      animation: skeleton-pulse 1.6s ease-in-out infinite;
+      background: var(--color-bg-tertiary);
+    }
+    @keyframes skeleton-pulse {
+      0%,
+      100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.55;
+      }
+    }
+  }
+</style>

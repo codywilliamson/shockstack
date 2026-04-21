@@ -1,0 +1,130 @@
+---
+interface Props {
+  src?: string;
+  alt?: string;
+  name?: string;
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  gradient?:
+    | "purple-pink"
+    | "cyan-green"
+    | "orange-yellow"
+    | "pink-orange"
+    | "green-cyan";
+}
+
+const {
+  src,
+  alt = "",
+  name = "",
+  size = "md",
+  gradient = "purple-pink",
+} = Astro.props;
+
+// pick up to 2 letters from the name
+const initials = name
+  .split(/\s+/)
+  .filter(Boolean)
+  .slice(0, 2)
+  .map((w) => w[0]?.toUpperCase() ?? "")
+  .join("");
+---
+
+<span class:list={["avatar", `avatar-${size}`, `avatar-${gradient}`]}>
+  {
+    src ? (
+      <img src={src} alt={alt} class="avatar-img" loading="lazy" />
+    ) : (
+      <span class="avatar-initials" aria-hidden={!alt}>
+        {initials || "?"}
+      </span>
+    )
+  }
+</span>
+
+<style>
+  .avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    font-weight: 600;
+    color: var(--color-bg-primary);
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  .avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .avatar-initials {
+    line-height: 1;
+    letter-spacing: 0.015em;
+  }
+
+  .avatar-xs {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.625rem;
+  }
+  .avatar-sm {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.75rem;
+  }
+  .avatar-md {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.875rem;
+  }
+  .avatar-lg {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1rem;
+  }
+  .avatar-xl {
+    width: 4rem;
+    height: 4rem;
+    font-size: 1.25rem;
+  }
+
+  .avatar-purple-pink {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-purple),
+      var(--color-accent-pink)
+    );
+  }
+  .avatar-cyan-green {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-cyan),
+      var(--color-accent-green)
+    );
+  }
+  .avatar-orange-yellow {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-orange),
+      var(--color-accent-yellow)
+    );
+  }
+  .avatar-pink-orange {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-pink),
+      var(--color-accent-orange)
+    );
+  }
+  .avatar-green-cyan {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-green),
+      var(--color-accent-cyan)
+    );
+  }
+</style>

@@ -6,10 +6,13 @@ import ThemeToggle from "./ThemeToggle.vue";
 const open = ref(false);
 
 const navLinks = [
+  { label: "Components", href: "/components" },
+  { label: "Theme", href: "/theme" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "Use Cases", href: "/use-cases" },
   { label: "Blog", href: "/blog" },
   { label: "Docs", href: "/docs" },
-  { label: "Use Cases", href: "/use-cases" },
-  { label: "Theme", href: "/theme" },
+  { label: "About", href: "/about" },
 ];
 
 function navigate(href: string) {

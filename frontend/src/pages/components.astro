@@ -4,6 +4,42 @@ import FeatureCardGradient from "../components/content/FeatureCardGradient.astro
 import TestimonialCard from "../components/content/TestimonialCard.astro";
 import PricingCard from "../components/content/PricingCard.astro";
 import StatsCard from "../components/content/StatsCard.astro";
+import Badge from "../components/content/Badge.astro";
+import Alert from "../components/content/Alert.astro";
+import Kbd from "../components/content/Kbd.astro";
+import Avatar from "../components/content/Avatar.astro";
+import AccordionPanel from "../components/ui/AccordionPanel.vue";
+import TooltipHover from "../components/ui/TooltipHover.vue";
+import ProgressBar from "../components/content/ProgressBar.astro";
+import Skeleton from "../components/content/Skeleton.astro";
+import DemoBanner from "../components/content/DemoBanner.astro";
+
+const faqItems = [
+  {
+    value: "q1",
+    title: "Do I need the .NET backend?",
+    content:
+      "No. Delete the /backend directory and the frontend works standalone. The template auto-detects when the backend is absent and skips its build steps.",
+  },
+  {
+    value: "q2",
+    title: "How do I add a new theme?",
+    content:
+      "Duplicate one of the JSON files in packages/tokens/tokens/themes, adjust the colors, then run pnpm tokens:build. It becomes available under a new data-theme value automatically.",
+  },
+  {
+    value: "q3",
+    title: "Can I use a different database?",
+    content:
+      "The frontend is wired for Postgres via Drizzle. Swap the adapter in frontend/src/lib/db.ts. The .NET side uses EF Core — change the provider in Infrastructure.",
+  },
+  {
+    value: "q4",
+    title: "What's the deploy target?",
+    content:
+      "Cloudflare Workers for the frontend (via wrangler), Docker for the .NET API. Both are set up in the CI pipeline with semantic-release-driven versioning.",
+  },
+];
 
 export const prerender = true;
 ---
@@ -321,6 +357,412 @@ export const prerender = true;
     </div>
   </section>
 
+  <!-- badges -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-green mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          badges
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Labels & <span class="gradient-text-green-cyan">status chips</span>
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Three variants across every accent color. Great for tags, statuses,
+          and inline metadata.
+        </p>
+      </div>
+
+      <div class="space-y-6">
+        <div class="badge-row">
+          <code class="badge-row-label">.badge-subtle</code>
+          <div class="badge-row-items">
+            <Badge color="purple">Purple</Badge>
+            <Badge color="pink">Pink</Badge>
+            <Badge color="green">Green</Badge>
+            <Badge color="cyan">Cyan</Badge>
+            <Badge color="orange">Orange</Badge>
+            <Badge color="red">Red</Badge>
+            <Badge color="yellow">Yellow</Badge>
+            <Badge color="neutral">Neutral</Badge>
+          </div>
+        </div>
+        <div class="badge-row">
+          <code class="badge-row-label">.badge-solid</code>
+          <div class="badge-row-items">
+            <Badge variant="solid" color="purple">Purple</Badge>
+            <Badge variant="solid" color="pink">Pink</Badge>
+            <Badge variant="solid" color="green">Green</Badge>
+            <Badge variant="solid" color="cyan">Cyan</Badge>
+            <Badge variant="solid" color="orange">Orange</Badge>
+            <Badge variant="solid" color="red">Red</Badge>
+            <Badge variant="solid" color="yellow">Yellow</Badge>
+            <Badge variant="solid" color="neutral">Neutral</Badge>
+          </div>
+        </div>
+        <div class="badge-row">
+          <code class="badge-row-label">.badge-outline</code>
+          <div class="badge-row-items">
+            <Badge variant="outline" color="purple">Purple</Badge>
+            <Badge variant="outline" color="pink">Pink</Badge>
+            <Badge variant="outline" color="green">Green</Badge>
+            <Badge variant="outline" color="cyan">Cyan</Badge>
+            <Badge variant="outline" color="orange">Orange</Badge>
+            <Badge variant="outline" color="red">Red</Badge>
+            <Badge variant="outline" color="yellow">Yellow</Badge>
+            <Badge variant="outline" color="neutral">Neutral</Badge>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- alerts -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-yellow mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          alerts
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Inline <span class="gradient-text-orange-yellow">callouts</span>
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Four semantic variants with accent-matched borders and icons.
+        </p>
+      </div>
+
+      <div class="mx-auto max-w-2xl space-y-3">
+        <Alert variant="info" title="Heads up">
+          A new version of ShockStack is available. Run <code>pnpm up</code> to upgrade.
+        </Alert>
+        <Alert variant="success" title="Deploy complete">
+          Your changes are live on production.
+        </Alert>
+        <Alert variant="warning" title="Token limit">
+          You're using 80% of your monthly quota.
+        </Alert>
+        <Alert variant="error" title="Build failed" dismissible>
+          TypeScript reported 3 errors. Review the log to continue.
+        </Alert>
+      </div>
+    </div>
+  </section>
+
+  <!-- keyboard shortcuts -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-cyan mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          keyboard
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Keyboard <span class="gradient-text-cyan-green">shortcuts</span>
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Platform-aware key chips. The <code>Mod</code> key renders as ⌘ on macOS
+          and Ctrl elsewhere.
+        </p>
+      </div>
+
+      <div class="mx-auto grid max-w-2xl gap-3">
+        <div class="kbd-example-row">
+          <span class="kbd-example-label">Open command palette</span>
+          <Kbd keys={["Mod", "K"]} />
+        </div>
+        <div class="kbd-example-row">
+          <span class="kbd-example-label">Search</span>
+          <Kbd keys={["/"]} />
+        </div>
+        <div class="kbd-example-row">
+          <span class="kbd-example-label">Toggle theme</span>
+          <Kbd keys={["Mod", "Shift", "L"]} />
+        </div>
+        <div class="kbd-example-row">
+          <span class="kbd-example-label">Close dialog</span>
+          <Kbd keys={["Esc"]} />
+        </div>
+        <div class="kbd-example-row">
+          <span class="kbd-example-label">Submit form</span>
+          <Kbd keys={["Mod", "Enter"]} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- avatars -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-pink mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          avatars
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          User <span class="gradient-text-pink-orange">avatars</span>
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Initial-based fallbacks with gradient backgrounds across five sizes.
+          Use the <code>src</code> prop when an image is available.
+        </p>
+      </div>
+
+      <div class="mx-auto max-w-3xl space-y-6">
+        <div class="avatar-row">
+          <code class="badge-row-label">sizes</code>
+          <div class="avatar-row-items">
+            <Avatar name="Alex Chen" size="xs" />
+            <Avatar name="Alex Chen" size="sm" />
+            <Avatar name="Alex Chen" size="md" />
+            <Avatar name="Alex Chen" size="lg" />
+            <Avatar name="Alex Chen" size="xl" />
+          </div>
+        </div>
+
+        <div class="avatar-row">
+          <code class="badge-row-label">gradients</code>
+          <div class="avatar-row-items">
+            <Avatar name="Alex Chen" gradient="purple-pink" size="lg" />
+            <Avatar name="Sarah Kim" gradient="cyan-green" size="lg" />
+            <Avatar name="Marcus Johnson" gradient="orange-yellow" size="lg" />
+            <Avatar name="Priya Patel" gradient="pink-orange" size="lg" />
+            <Avatar name="Jordan Lee" gradient="green-cyan" size="lg" />
+          </div>
+        </div>
+
+        <div class="avatar-row">
+          <code class="badge-row-label">stacked group</code>
+          <div class="avatar-stack">
+            <Avatar name="Alex Chen" gradient="purple-pink" />
+            <Avatar name="Sarah Kim" gradient="cyan-green" />
+            <Avatar name="Marcus Johnson" gradient="orange-yellow" />
+            <Avatar name="Priya Patel" gradient="pink-orange" />
+            <span class="avatar-more">+4</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- accordion -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-purple mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          accordion
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Collapsible <span class="gradient-text-purple-pink">panels</span>
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Built on reka-ui primitives — accessible, keyboard-navigable, respects
+          <code>prefers-reduced-motion</code>.
+        </p>
+      </div>
+
+      <div class="mx-auto max-w-2xl">
+        <AccordionPanel client:load items={faqItems} />
+      </div>
+    </div>
+  </section>
+
+  <!-- tooltips -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-green mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          tooltips
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Hover <span class="gradient-text-green-cyan">tooltips</span>
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Positioned on all four sides, portaled to body, respects motion
+          preferences.
+        </p>
+      </div>
+
+      <div class="tooltip-demo">
+        <TooltipHover
+          client:load
+          content="Tooltip on top — the default position"
+          side="top"
+        >
+          <button type="button" class="tooltip-trigger-btn">Top</button>
+        </TooltipHover>
+        <TooltipHover
+          client:load
+          content="Tooltip on the right side"
+          side="right"
+        >
+          <button type="button" class="tooltip-trigger-btn">Right</button>
+        </TooltipHover>
+        <TooltipHover
+          client:load
+          content="Tooltip below the trigger"
+          side="bottom"
+        >
+          <button type="button" class="tooltip-trigger-btn">Bottom</button>
+        </TooltipHover>
+        <TooltipHover
+          client:load
+          content="Tooltip on the left side"
+          side="left"
+        >
+          <button type="button" class="tooltip-trigger-btn">Left</button>
+        </TooltipHover>
+      </div>
+    </div>
+  </section>
+
+  <!-- progress bars -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-orange mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          progress
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Progress <span class="gradient-text-orange-yellow">indicators</span>
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Determinate bars with gradient fills, plus an indeterminate slider for
+          background work.
+        </p>
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-example">
+          <ProgressBar
+            label="Uploading assets"
+            value={72}
+            showValue
+            gradient="purple-pink"
+          />
+        </div>
+        <div class="progress-example">
+          <ProgressBar
+            label="Running tests"
+            value={45}
+            showValue
+            gradient="cyan-green"
+          />
+        </div>
+        <div class="progress-example">
+          <ProgressBar
+            label="Building bundle"
+            value={90}
+            showValue
+            gradient="orange-yellow"
+            size="lg"
+          />
+        </div>
+        <div class="progress-example">
+          <ProgressBar
+            label="Syncing with server"
+            indeterminate
+            gradient="pink-orange"
+          />
+        </div>
+        <div class="progress-example">
+          <ProgressBar value={30} gradient="green-cyan" size="sm" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- skeleton loaders -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-purple mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          skeleton
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Loading <span class="gradient-text-purple-pink">placeholders</span>
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Shimmer animation for content that hasn't loaded yet. Pulses instead
+          when <code>prefers-reduced-motion</code> is set.
+        </p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <div class="skeleton-demo">
+          <code class="badge-row-label">profile card</code>
+          <div class="skeleton-demo-body">
+            <div class="skeleton-row">
+              <Skeleton shape="circle" />
+              <div class="skeleton-row-text">
+                <Skeleton shape="text" width="8rem" />
+                <Skeleton shape="text" width="5rem" height="0.6875rem" />
+              </div>
+            </div>
+            <Skeleton shape="text" lines={3} />
+          </div>
+        </div>
+
+        <div class="skeleton-demo">
+          <code class="badge-row-label">media card</code>
+          <div class="skeleton-demo-body">
+            <Skeleton shape="rect" height="10rem" />
+            <Skeleton shape="text" width="60%" height="1rem" />
+            <Skeleton shape="text" lines={2} />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- demo banner -->
+  <section class="reveal px-4 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-12">
+        <p
+          class="text-accent-orange mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          demo banner
+        </p>
+        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+          Flag pages as <span class="gradient-text-orange-yellow">demos</span>
+        </h2>
+        <p class="text-fg-secondary max-w-2xl text-lg">
+          Full-bleed banner that marks a page as placeholder content. Drop it at
+          the top of any showcase page so the content isn't mistaken for real.
+        </p>
+      </div>
+
+      <div class="demo-banner-stack">
+        <div class="demo-banner-wrap">
+          <DemoBanner />
+        </div>
+        <div class="demo-banner-wrap">
+          <DemoBanner
+            label="Placeholder"
+            message="The team below are fictional — these are template examples."
+            href="/components"
+            ctaLabel="See components"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- gradient text showcase -->
   <section class="reveal px-4 py-20 md:py-28">
     <div class="mx-auto max-w-6xl">
@@ -477,5 +919,173 @@ export const prerender = true;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+
+  .badge-row {
+    padding: 1.25rem;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    background-color: var(--color-bg-secondary);
+  }
+
+  .badge-row-label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-fg-muted);
+    margin-bottom: 0.75rem;
+    background-color: var(--color-bg-tertiary);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .badge-row-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .kbd-example-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.875rem 1.25rem;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-secondary);
+  }
+
+  .kbd-example-label {
+    color: var(--color-fg-secondary);
+    font-size: 0.875rem;
+  }
+
+  .avatar-row {
+    padding: 1.25rem;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    background-color: var(--color-bg-secondary);
+  }
+
+  .avatar-row-items {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .avatar-stack {
+    display: flex;
+    align-items: center;
+  }
+
+  .avatar-stack :global(.avatar) {
+    border: 2px solid var(--color-bg-secondary);
+    margin-left: -0.5rem;
+  }
+
+  .avatar-stack :global(.avatar:first-child) {
+    margin-left: 0;
+  }
+
+  .avatar-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-left: -0.5rem;
+    border-radius: var(--radius-full);
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-fg-secondary);
+    border: 2px solid var(--color-bg-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .tooltip-demo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    padding: 3rem 1rem;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    background-color: var(--color-bg-secondary);
+  }
+
+  .tooltip-trigger-btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-fg-primary);
+    border: 1px solid var(--color-border-default);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .tooltip-trigger-btn:hover {
+    border-color: var(--color-accent-green);
+    color: var(--color-accent-green);
+  }
+
+  .progress-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    background-color: var(--color-bg-secondary);
+  }
+
+  .progress-example {
+    width: 100%;
+  }
+
+  .skeleton-demo {
+    padding: 1.5rem;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    background-color: var(--color-bg-secondary);
+  }
+
+  .skeleton-demo-body {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .skeleton-row {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+  }
+
+  .skeleton-row-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+  }
+
+  .demo-banner-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .demo-banner-wrap {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    border: 1px solid var(--color-border-default);
   }
 </style>
