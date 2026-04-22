@@ -11,13 +11,17 @@ defineProps<{
   content: string;
   side?: "top" | "right" | "bottom" | "left";
   delayMs?: number;
+  triggerClass?: string;
 }>();
 </script>
 
 <template>
   <TooltipProvider :delay-duration="delayMs ?? 200">
     <TooltipRoot>
-      <TooltipTrigger as-child>
+      <TooltipTrigger
+        type="button"
+        :class="['tooltip-trigger', triggerClass]"
+      >
         <slot />
       </TooltipTrigger>
       <TooltipPortal>
@@ -34,6 +38,19 @@ defineProps<{
 </template>
 
 <style scoped>
+.tooltip-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  border: none;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
 .tooltip-content {
   background-color: var(--color-bg-tertiary);
   color: var(--color-fg-primary);
