@@ -1,0 +1,364 @@
+---
+const tiles = [
+  {
+    title: "Theme telemetry",
+    value: "14 live palettes",
+    body: "Swap the entire site tone in one move because the design system starts at tokens, not component overrides.",
+    accent: "purple",
+  },
+  {
+    title: "Auth signal",
+    value: "guards wired in",
+    body: "Session flow, protected routes, and API handoff stay visible from the very first demo.",
+    accent: "green",
+  },
+  {
+    title: "Deploy signal",
+    value: "frontend or full stack",
+    body: "Ship the Astro surface now, bring up the platform lane when the product asks for it.",
+    accent: "orange",
+  },
+  {
+    title: "Docs signal",
+    value: "spec stays close",
+    body: "The docs, theme showcase, and use-case pages make the stack explain itself instead of hiding behind marketing copy.",
+    accent: "cyan",
+  },
+];
+---
+
+<section class="signal-hero">
+  <div class="signal-hero__copy">
+    <p class="signal-hero__eyebrow">Platform Status</p>
+    <h1 class="signal-hero__title">
+      Let the stack feel alive before anyone reads the fine print.
+    </h1>
+    <p class="signal-hero__body">
+      Track the parts that matter: theming, auth, docs, and deployment all stay
+      visible, so the stack feels active and connected instead of frozen in a
+      generic landing page pose.
+    </p>
+
+    <div class="signal-hero__actions">
+      <a href="/theme" class="signal-hero__primary">Preview Themes</a>
+      <a href="/docs" class="signal-hero__secondary">Read the spec</a>
+    </div>
+  </div>
+
+  <div class="signal-hero__board">
+    <article class="signal-card signal-card--radar">
+      <div class="signal-card__top">
+        <span>stack signal</span>
+        <span>stable</span>
+      </div>
+
+      <div class="signal-radar">
+        <div class="signal-radar__ring signal-radar__ring--outer"></div>
+        <div class="signal-radar__ring signal-radar__ring--mid"></div>
+        <div class="signal-radar__ring signal-radar__ring--inner"></div>
+        <div class="signal-radar__core">
+          <strong>89%</strong>
+          <span>builder confidence</span>
+        </div>
+        <span class="signal-radar__node signal-radar__node--a"></span>
+        <span class="signal-radar__node signal-radar__node--b"></span>
+        <span class="signal-radar__node signal-radar__node--c"></span>
+      </div>
+    </article>
+
+    {
+      tiles.map((tile) => (
+        <article
+          class="signal-card signal-card--tile"
+          style={`--signal-accent: var(--color-accent-${tile.accent})`}
+        >
+          <div class="signal-card__title">{tile.title}</div>
+          <strong>{tile.value}</strong>
+          <p>{tile.body}</p>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .signal-hero {
+    display: grid;
+    gap: 1.5rem;
+    border-radius: var(--radius-2xl);
+    border: 1px solid
+      color-mix(in srgb, var(--color-border-default) 88%, transparent);
+    background:
+      radial-gradient(
+        circle at 100% 0%,
+        color-mix(in srgb, var(--color-accent-cyan) 14%, transparent),
+        transparent 30%
+      ),
+      radial-gradient(
+        circle at 0% 100%,
+        color-mix(in srgb, var(--color-accent-purple) 12%, transparent),
+        transparent 28%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-bg-secondary) 95%, transparent),
+        color-mix(in srgb, var(--color-bg-primary) 98%, transparent)
+      );
+    padding: clamp(1.5rem, 2vw + 1rem, 2.25rem);
+    box-shadow: 0 32px 80px -56px rgba(0, 0, 0, 0.6);
+  }
+
+  .signal-hero__eyebrow {
+    margin: 0;
+    color: var(--color-accent-cyan);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .signal-hero__title {
+    margin: 0.85rem 0 0;
+    max-width: 13ch;
+    font-size: clamp(2.55rem, 4.2vw, 4.05rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+  }
+
+  .signal-hero__body {
+    margin: 1.1rem 0 0;
+    max-width: 34rem;
+    color: var(--color-fg-secondary);
+    font-size: 1.05rem;
+    line-height: 1.75;
+  }
+
+  .signal-hero__actions {
+    margin-top: 1.55rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+  }
+
+  .signal-hero__primary,
+  .signal-hero__secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-lg);
+    padding: 0.9rem 1.3rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s ease,
+      background-color 0.25s ease;
+  }
+
+  .signal-hero__primary {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-cyan),
+      var(--color-accent-purple)
+    );
+    color: var(--color-bg-primary);
+  }
+
+  .signal-hero__secondary {
+    border: 1px solid var(--color-border-default);
+    background: color-mix(in srgb, var(--color-bg-primary) 68%, transparent);
+    color: var(--color-fg-primary);
+  }
+
+  .signal-hero__primary:hover,
+  .signal-hero__secondary:hover {
+    transform: translateY(-2px);
+  }
+
+  .signal-hero__board {
+    display: grid;
+    gap: 0.95rem;
+  }
+
+  .signal-card {
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    border: 1px solid
+      color-mix(in srgb, var(--color-border-default) 88%, transparent);
+    background: color-mix(in srgb, var(--color-bg-primary) 82%, transparent);
+  }
+
+  .signal-card__top {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-border-default) 88%, transparent);
+    padding: 0.8rem 0.95rem;
+    color: var(--color-fg-muted);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .signal-card--radar {
+    position: relative;
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--color-accent-cyan) 12%, transparent),
+        transparent 48%,
+        color-mix(in srgb, var(--color-accent-purple) 10%, transparent)
+      ),
+      color-mix(in srgb, var(--color-bg-primary) 86%, transparent);
+  }
+
+  .signal-radar {
+    position: relative;
+    margin: 1rem;
+    min-height: 15rem;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: calc(var(--radius-xl) - 0.15rem);
+    background:
+      linear-gradient(
+        color-mix(in srgb, var(--color-border-muted) 22%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-border-muted) 22%, transparent) 1px,
+        transparent 1px
+      ),
+      color-mix(in srgb, var(--color-bg-secondary) 74%, transparent);
+    background-size:
+      1.25rem 1.25rem,
+      1.25rem 1.25rem,
+      auto;
+  }
+
+  .signal-radar__ring {
+    position: absolute;
+    border-radius: 999px;
+    border: 1px solid
+      color-mix(in srgb, var(--color-accent-cyan) 30%, transparent);
+  }
+
+  .signal-radar__ring--outer {
+    inset: 16%;
+  }
+
+  .signal-radar__ring--mid {
+    inset: 28%;
+  }
+
+  .signal-radar__ring--inner {
+    inset: 40%;
+  }
+
+  .signal-radar__core {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 0.3rem;
+    place-items: center;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-bg-primary) 88%, transparent);
+    padding: 1.3rem;
+    text-align: center;
+  }
+
+  .signal-radar__core strong {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .signal-radar__core span {
+    color: var(--color-fg-muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .signal-radar__node {
+    position: absolute;
+    height: 0.85rem;
+    width: 0.85rem;
+    border-radius: 999px;
+    background: var(--color-accent-cyan);
+    box-shadow: 0 0 0 0.28rem
+      color-mix(in srgb, var(--color-accent-cyan) 18%, transparent);
+  }
+
+  .signal-radar__node--a {
+    top: 22%;
+    right: 24%;
+  }
+
+  .signal-radar__node--b {
+    bottom: 28%;
+    left: 20%;
+    background: var(--color-accent-purple);
+    box-shadow: 0 0 0 0.28rem
+      color-mix(in srgb, var(--color-accent-purple) 18%, transparent);
+  }
+
+  .signal-radar__node--c {
+    bottom: 18%;
+    right: 30%;
+    background: var(--color-accent-orange);
+    box-shadow: 0 0 0 0.28rem
+      color-mix(in srgb, var(--color-accent-orange) 18%, transparent);
+  }
+
+  .signal-card--tile {
+    border-color: color-mix(
+      in srgb,
+      var(--signal-accent) 24%,
+      var(--color-border-default)
+    );
+    padding: 1rem;
+  }
+
+  .signal-card__title {
+    color: var(--signal-accent);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .signal-card--tile strong {
+    display: block;
+    margin-top: 0.8rem;
+    font-size: 1.08rem;
+    line-height: 1.35;
+  }
+
+  .signal-card--tile p {
+    margin: 0.55rem 0 0;
+    color: var(--color-fg-secondary);
+    line-height: 1.65;
+  }
+
+  @media (min-width: 72rem) {
+    .signal-hero {
+      grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.04fr);
+      align-items: center;
+    }
+
+    .signal-hero__board {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .signal-card--radar {
+      grid-column: span 2;
+    }
+  }
+</style>

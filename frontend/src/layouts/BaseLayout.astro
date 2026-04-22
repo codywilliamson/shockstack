@@ -3,11 +3,7 @@ import { ClientRouter } from "astro:transitions";
 import SEO from "../components/ui/SEO.astro";
 import Header from "../components/layout/Header.astro";
 import Footer from "../components/layout/Footer.astro";
-import {
-  DEFAULT_THEME,
-  LIGHT_PREFERRED_THEME,
-  VALID_THEMES,
-} from "../lib/themes";
+import { DEFAULT_THEME, VALID_THEMES } from "../lib/themes";
 import "../styles/global.css";
 
 interface Props {
@@ -35,15 +31,13 @@ const themeBootstrapScript = `
   const resolvedTheme =
     storedTheme && validThemes.includes(storedTheme)
       ? storedTheme
-      : (window.matchMedia("(prefers-color-scheme: light)").matches
-        ? "${LIGHT_PREFERRED_THEME}"
-        : "${DEFAULT_THEME}");
+      : "${DEFAULT_THEME}";
   document.documentElement.setAttribute("data-theme", resolvedTheme);
 })();
 `;
 ---
 
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme={DEFAULT_THEME}>
   <head>
     <SEO
       title={title}

@@ -1,0 +1,370 @@
+---
+const deskStats = [
+  { label: "Review surface", value: "everything visible at once" },
+  { label: "Theme fit", value: "token-driven styling only" },
+  { label: "Interaction", value: "Astro shell with light Vue islands" },
+];
+
+const queue = [
+  "routes and content wired",
+  "theme tokens loaded",
+  "auth flow documented",
+  "deploy targets aligned",
+];
+
+const authStates = [
+  { label: "session cookies", status: "armed" },
+  { label: "middleware guards", status: "mapped" },
+  { label: "JWT handoff", status: "shared" },
+];
+---
+
+<section class="desk-hero">
+  <div class="desk-hero__copy">
+    <p class="desk-hero__eyebrow">Builder Workspace</p>
+    <h1 class="desk-hero__title">Give every moving part its own surface.</h1>
+    <p class="desk-hero__body">
+      Keep docs, routes, auth, tokens, and deployment in arm's reach so the repo
+      feels practical from day one and stays easy to reason about when the
+      product gets busier.
+    </p>
+
+    <div class="desk-hero__actions">
+      <a href="/about" class="desk-hero__primary">Why ShockStack?</a>
+      <a href="/blog" class="desk-hero__secondary">Read the journal</a>
+    </div>
+
+    <dl class="desk-hero__stats">
+      {
+        deskStats.map((stat) => (
+          <div class="desk-hero__stat">
+            <dt>{stat.label}</dt>
+            <dd>{stat.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+
+  <div class="desk-hero__workspace">
+    <article class="desk-window desk-window--queue">
+      <div class="desk-window__top">
+        <span>work queue</span>
+        <span>today</span>
+      </div>
+      <ul class="desk-window__list">
+        {queue.map((item) => <li>{item}</li>)}
+      </ul>
+    </article>
+
+    <article class="desk-window desk-window--tokens">
+      <div class="desk-window__top">
+        <span>token deck</span>
+        <span>midnight</span>
+      </div>
+      <div class="desk-swatch-row">
+        <span style="--swatch-color: var(--color-accent-cyan)"></span>
+        <span style="--swatch-color: var(--color-accent-purple)"></span>
+        <span style="--swatch-color: var(--color-accent-pink)"></span>
+        <span style="--swatch-color: var(--color-accent-orange)"></span>
+      </div>
+      <p>
+        Theme tokens shape the whole interface, so swapping palettes feels like
+        a system-level move instead of a cosmetic repaint.
+      </p>
+    </article>
+
+    <article class="desk-window desk-window--auth">
+      <div class="desk-window__top">
+        <span>auth gate</span>
+        <span>healthy</span>
+      </div>
+      <div class="desk-auth-grid">
+        {
+          authStates.map((item) => (
+            <div class="desk-auth-pill">
+              <span>{item.label}</span>
+              <strong>{item.status}</strong>
+            </div>
+          ))
+        }
+      </div>
+    </article>
+
+    <article class="desk-window desk-window--release">
+      <div class="desk-window__top">
+        <span>deploy strip</span>
+        <span>ready</span>
+      </div>
+      <div class="desk-release-row">
+        <span>frontend</span>
+        <span>docs</span>
+        <span>api</span>
+        <span>postgres</span>
+      </div>
+      <p>
+        One repo, one flow. Start with the frontend lane, then light up the rest
+        when the product needs it.
+      </p>
+    </article>
+  </div>
+</section>
+
+<style>
+  .desk-hero {
+    display: grid;
+    gap: 1.5rem;
+    border-radius: var(--radius-2xl);
+    border: 1px solid
+      color-mix(in srgb, var(--color-border-default) 88%, transparent);
+    background:
+      radial-gradient(
+        circle at 12% 0%,
+        color-mix(in srgb, var(--color-accent-pink) 12%, transparent),
+        transparent 30%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-bg-secondary) 95%, transparent),
+        color-mix(in srgb, var(--color-bg-primary) 98%, transparent)
+      );
+    padding: clamp(1.5rem, 2vw + 1rem, 2.25rem);
+    box-shadow: 0 32px 80px -56px rgba(0, 0, 0, 0.6);
+  }
+
+  .desk-hero__eyebrow {
+    margin: 0;
+    color: var(--color-accent-pink);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .desk-hero__title {
+    margin: 0.85rem 0 0;
+    max-width: 13ch;
+    font-size: clamp(2.55rem, 4.3vw, 4.15rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+  }
+
+  .desk-hero__body {
+    margin: 1.1rem 0 0;
+    max-width: 36rem;
+    color: var(--color-fg-secondary);
+    font-size: 1.05rem;
+    line-height: 1.75;
+  }
+
+  .desk-hero__actions {
+    margin-top: 1.55rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+  }
+
+  .desk-hero__primary,
+  .desk-hero__secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-lg);
+    padding: 0.9rem 1.3rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s ease,
+      background-color 0.25s ease;
+  }
+
+  .desk-hero__primary {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-pink),
+      var(--color-accent-orange)
+    );
+    color: var(--color-bg-primary);
+  }
+
+  .desk-hero__secondary {
+    border: 1px solid var(--color-border-default);
+    background: color-mix(in srgb, var(--color-bg-primary) 68%, transparent);
+    color: var(--color-fg-primary);
+  }
+
+  .desk-hero__primary:hover,
+  .desk-hero__secondary:hover {
+    transform: translateY(-2px);
+  }
+
+  .desk-hero__stats {
+    margin: 1.9rem 0 0;
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .desk-hero__stat {
+    border-left: 2px solid
+      color-mix(in srgb, var(--color-accent-pink) 45%, transparent);
+    padding-left: 0.95rem;
+  }
+
+  .desk-hero__stat dt {
+    color: var(--color-fg-muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .desk-hero__stat dd {
+    margin: 0.4rem 0 0;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .desk-hero__workspace {
+    display: grid;
+    gap: 0.95rem;
+  }
+
+  .desk-window {
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    border: 1px solid
+      color-mix(in srgb, var(--color-border-default) 88%, transparent);
+    background: color-mix(in srgb, var(--color-bg-primary) 82%, transparent);
+    box-shadow: inset 0 1px 0
+      color-mix(in srgb, var(--color-fg-primary) 4%, transparent);
+  }
+
+  .desk-window__top {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-border-default) 88%, transparent);
+    padding: 0.8rem 0.95rem;
+    color: var(--color-fg-muted);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .desk-window__list {
+    margin: 0;
+    padding: 1rem;
+    list-style: none;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .desk-window__list li {
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--color-bg-secondary) 68%, transparent);
+    padding: 0.85rem 0.9rem;
+    font-weight: 600;
+  }
+
+  .desk-window p {
+    margin: 0;
+    padding: 0 1rem 1rem;
+    color: var(--color-fg-secondary);
+    line-height: 1.65;
+  }
+
+  .desk-swatch-row {
+    display: flex;
+    gap: 0.55rem;
+    padding: 1rem 1rem 0.85rem;
+  }
+
+  .desk-swatch-row span {
+    height: 2rem;
+    flex: 1;
+    border-radius: var(--radius-md);
+    background: var(--swatch-color);
+  }
+
+  .desk-auth-grid {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .desk-auth-pill {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--color-bg-secondary) 68%, transparent);
+    padding: 0.8rem 0.9rem;
+  }
+
+  .desk-auth-pill span {
+    color: var(--color-fg-secondary);
+  }
+
+  .desk-auth-pill strong {
+    color: var(--color-accent-green);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .desk-release-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    padding: 1rem 1rem 0.85rem;
+  }
+
+  .desk-release-row span {
+    border-radius: var(--radius-full);
+    border: 1px solid
+      color-mix(
+        in srgb,
+        var(--color-accent-cyan) 18%,
+        var(--color-border-default)
+      );
+    padding: 0.45rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  @media (min-width: 72rem) {
+    .desk-hero {
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+      align-items: start;
+    }
+
+    .desk-hero__workspace {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .desk-window--queue {
+      grid-column: span 7;
+    }
+
+    .desk-window--tokens {
+      grid-column: span 5;
+    }
+
+    .desk-window--auth {
+      grid-column: span 5;
+    }
+
+    .desk-window--release {
+      grid-column: span 7;
+    }
+  }
+</style>

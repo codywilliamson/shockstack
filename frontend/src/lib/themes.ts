@@ -147,7 +147,7 @@ export const VALID_THEMES: ThemeName[] = THEME_OPTIONS.map(
   (theme) => theme.value,
 );
 
-export const DEFAULT_THEME: ThemeName = "dark";
+export const DEFAULT_THEME: ThemeName = "midnight";
 export const LIGHT_PREFERRED_THEME: ThemeName = "light";
 
 export function isThemeName(value: string | null): value is ThemeName {

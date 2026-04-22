@@ -3,7 +3,6 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import {
   THEME_OPTIONS,
   DEFAULT_THEME,
-  LIGHT_PREFERRED_THEME,
   isThemeName,
   type ThemeName,
 } from "../../lib/themes";
@@ -61,8 +60,6 @@ onMounted(() => {
   const stored = localStorage.getItem("theme");
   if (isThemeName(stored)) {
     theme.value = stored;
-  } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-    theme.value = LIGHT_PREFERRED_THEME;
   }
 
   applyTheme(theme.value);

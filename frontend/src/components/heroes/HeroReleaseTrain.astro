@@ -1,0 +1,329 @@
+---
+const manifest = [
+  { label: "Window", value: "first useful release in days, not weeks" },
+  { label: "Surface area", value: "frontend, auth, tokens, backend lanes" },
+  { label: "Confidence", value: "convention-first defaults reduce rewrites" },
+];
+
+const phases = [
+  {
+    label: "Hour 0",
+    title: "Bootstrap the repo",
+    body: "Clone once, install once, and the project already knows where routes, content, tokens, and infrastructure live.",
+  },
+  {
+    label: "Day 1",
+    title: "Shape the product",
+    body: "Swap themes, design components, and define the first real pages before the stack gets in your way.",
+  },
+  {
+    label: "Day 3",
+    title: "Bring in auth + data",
+    body: "The middleware and backend seam are already in the design, so features land without a second architecture pass.",
+  },
+  {
+    label: "Launch",
+    title: "Ship from one lane",
+    body: "Deploy the frontend by itself or light up the full platform when the product needs it.",
+  },
+];
+---
+
+<section class="release-hero">
+  <div class="release-hero__header">
+    <div class="release-hero__copy">
+      <p class="release-hero__eyebrow">Ship With A Plan</p>
+      <h1 class="release-hero__title">
+        Present the stack like a shipping plan, not a feature pile.
+      </h1>
+      <p class="release-hero__body">
+        Go from clone to first release on a predictable rhythm. Start with the
+        frontend lane, fold in auth and data when they matter, and keep the path
+        to launch obvious the whole way through.
+      </p>
+
+      <div class="release-hero__actions">
+        <a href="/use-cases" class="release-hero__primary">Explore Use Cases</a>
+        <a href="/pricing" class="release-hero__secondary">See Pricing</a>
+      </div>
+    </div>
+
+    <div class="release-hero__manifest">
+      <div class="release-hero__manifest-top">
+        <span>release manifest</span>
+        <span>v1 shipping lane</span>
+      </div>
+
+      <dl class="release-hero__manifest-list">
+        {
+          manifest.map((item) => (
+            <div class="release-hero__manifest-item">
+              <dt>{item.label}</dt>
+              <dd>{item.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+
+  <div class="release-hero__track">
+    {
+      phases.map((phase) => (
+        <article class="release-stop">
+          <span class="release-stop__label">{phase.label}</span>
+          <h2>{phase.title}</h2>
+          <p>{phase.body}</p>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .release-hero {
+    overflow: hidden;
+    border-radius: var(--radius-2xl);
+    border: 1px solid
+      color-mix(in srgb, var(--color-border-default) 88%, transparent);
+    background:
+      radial-gradient(
+        circle at 100% 100%,
+        color-mix(in srgb, var(--color-accent-orange) 16%, transparent),
+        transparent 28%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-bg-secondary) 95%, transparent),
+        color-mix(in srgb, var(--color-bg-primary) 98%, transparent)
+      );
+    padding: clamp(1.5rem, 2vw + 1rem, 2.25rem);
+    box-shadow: 0 32px 80px -56px rgba(0, 0, 0, 0.6);
+  }
+
+  .release-hero__header {
+    display: grid;
+    gap: 1.35rem;
+  }
+
+  .release-hero__eyebrow {
+    margin: 0;
+    color: var(--color-accent-orange);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .release-hero__title {
+    margin: 0.9rem 0 0;
+    max-width: 14ch;
+    font-size: clamp(2.5rem, 4.3vw, 4.15rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+  }
+
+  .release-hero__body {
+    margin: 1.1rem 0 0;
+    max-width: 38rem;
+    color: var(--color-fg-secondary);
+    font-size: 1.06rem;
+    line-height: 1.75;
+  }
+
+  .release-hero__actions {
+    margin-top: 1.55rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+  }
+
+  .release-hero__primary,
+  .release-hero__secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-lg);
+    padding: 0.9rem 1.3rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s ease,
+      background-color 0.25s ease;
+  }
+
+  .release-hero__primary {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-orange),
+      var(--color-accent-yellow)
+    );
+    color: var(--color-bg-primary);
+  }
+
+  .release-hero__secondary {
+    border: 1px solid var(--color-border-default);
+    background: color-mix(in srgb, var(--color-bg-primary) 68%, transparent);
+    color: var(--color-fg-primary);
+  }
+
+  .release-hero__primary:hover,
+  .release-hero__secondary:hover {
+    transform: translateY(-2px);
+  }
+
+  .release-hero__manifest {
+    overflow: hidden;
+    border-radius: var(--radius-2xl);
+    border: 1px solid
+      color-mix(in srgb, var(--color-border-default) 92%, transparent);
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--color-accent-orange) 10%, transparent),
+        transparent 38%
+      ),
+      color-mix(in srgb, var(--color-bg-primary) 92%, transparent);
+  }
+
+  .release-hero__manifest-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-border-default) 88%, transparent);
+    padding: 0.9rem 1rem;
+    color: var(--color-fg-muted);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .release-hero__manifest-list {
+    margin: 0;
+    display: grid;
+    gap: 0.9rem;
+    padding: 1rem;
+  }
+
+  .release-hero__manifest-item dt {
+    color: var(--color-fg-muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .release-hero__manifest-item dd {
+    margin: 0.4rem 0 0;
+    color: var(--color-fg-primary);
+    line-height: 1.65;
+  }
+
+  .release-hero__track {
+    position: relative;
+    margin-top: 1.6rem;
+    display: grid;
+    gap: 0.95rem;
+  }
+
+  .release-hero__track::before {
+    content: "";
+    position: absolute;
+    left: 0.8rem;
+    top: 0.6rem;
+    bottom: 0.6rem;
+    width: 1px;
+    background: linear-gradient(
+      180deg,
+      var(--color-accent-orange),
+      color-mix(in srgb, var(--color-accent-yellow) 24%, transparent)
+    );
+  }
+
+  .release-stop {
+    position: relative;
+    margin-left: 1.85rem;
+    border-radius: var(--radius-xl);
+    border: 1px solid
+      color-mix(in srgb, var(--color-border-default) 82%, transparent);
+    background: color-mix(in srgb, var(--color-bg-secondary) 76%, transparent);
+    padding: 1rem 1rem 1rem 1.1rem;
+  }
+
+  .release-stop::before {
+    content: "";
+    position: absolute;
+    left: -1.48rem;
+    top: 1.15rem;
+    height: 0.75rem;
+    width: 0.75rem;
+    border-radius: 999px;
+    border: 2px solid var(--color-bg-primary);
+    background: var(--color-accent-orange);
+    box-shadow: 0 0 0 0.22rem
+      color-mix(in srgb, var(--color-accent-orange) 18%, transparent);
+  }
+
+  .release-stop__label {
+    color: var(--color-accent-orange);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .release-stop h2 {
+    margin: 0.7rem 0 0;
+    font-size: 1.12rem;
+    line-height: 1.35;
+  }
+
+  .release-stop p {
+    margin: 0.55rem 0 0;
+    color: var(--color-fg-secondary);
+    line-height: 1.65;
+  }
+
+  @media (min-width: 72rem) {
+    .release-hero__header {
+      grid-template-columns: minmax(0, 1fr) minmax(22rem, 24rem);
+      align-items: start;
+    }
+
+    .release-hero__track {
+      margin-top: 2rem;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      align-items: stretch;
+    }
+
+    .release-hero__track::before {
+      left: 3rem;
+      right: 3rem;
+      top: 1.2rem;
+      bottom: auto;
+      height: 1px;
+      width: auto;
+      background: linear-gradient(
+        90deg,
+        var(--color-accent-orange),
+        color-mix(in srgb, var(--color-accent-yellow) 32%, transparent)
+      );
+    }
+
+    .release-stop {
+      margin-left: 0;
+      padding-top: 2.35rem;
+    }
+
+    .release-stop::before {
+      left: 1.1rem;
+      top: -0.42rem;
+    }
+  }
+</style>

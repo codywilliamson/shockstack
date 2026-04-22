@@ -1,0 +1,363 @@
+---
+const checks = [
+  "Tokens feed the visual language before components get duplicated.",
+  "Auth and middleware expectations are visible from the first page.",
+  "The backend stays optional, but the integration seams are already planned.",
+];
+
+const layers = [
+  {
+    label: "Experience",
+    note: "what the product feels like",
+    accent: "cyan",
+    parts: [
+      "Astro routes",
+      "Vue islands",
+      "content collections",
+      "accessible UI",
+    ],
+  },
+  {
+    label: "System",
+    note: "what keeps the app coherent",
+    accent: "purple",
+    parts: ["design tokens", "theme manifest", "shared auth", "docs"],
+  },
+  {
+    label: "Runtime",
+    note: "what gets it shipped",
+    accent: "orange",
+    parts: ["Cloudflare worker", "Docker", "Aspire lane", "Postgres"],
+  },
+];
+
+const notes = [
+  "Tokens first, then components. That is how the spec stays consistent.",
+  "Optional backend, not accidental backend. The seam is deliberate.",
+];
+---
+
+<section class="blueprint-hero">
+  <div class="blueprint-hero__copy">
+    <p class="blueprint-hero__eyebrow">Architecture Map</p>
+    <h1 class="blueprint-hero__title">
+      Design the system before the boilerplate starts multiplying.
+    </h1>
+    <p class="blueprint-hero__body">
+      Start from the system map: routes, tokens, auth, and infrastructure stay
+      connected from the first pass, so scaling the product feels like extension
+      instead of cleanup.
+    </p>
+
+    <div class="blueprint-hero__actions">
+      <a href="/theme" class="blueprint-hero__primary">Inspect the Theme</a>
+      <a href="/docs/project-structure" class="blueprint-hero__secondary">
+        See the structure
+      </a>
+    </div>
+
+    <ul class="blueprint-hero__checks">
+      {checks.map((check) => <li>{check}</li>)}
+    </ul>
+  </div>
+
+  <div class="blueprint-hero__sheet">
+    <div class="blueprint-hero__sheet-top">
+      <span>shockstack.system</span>
+      <span>token-aware build plan</span>
+    </div>
+
+    <div class="blueprint-hero__layers">
+      {
+        layers.map((layer) => (
+          <article
+            class="blueprint-layer"
+            style={`--blueprint-accent: var(--color-accent-${layer.accent})`}
+          >
+            <div class="blueprint-layer__header">
+              <strong>{layer.label}</strong>
+              <span>{layer.note}</span>
+            </div>
+            <div class="blueprint-layer__chips">
+              {layer.parts.map((part) => (
+                <span>{part}</span>
+              ))}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="blueprint-hero__notes">
+      {notes.map((note) => <aside class="blueprint-note">{note}</aside>)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .blueprint-hero {
+    display: grid;
+    gap: 1.5rem;
+    border-radius: var(--radius-2xl);
+    border: 1px solid
+      color-mix(in srgb, var(--color-border-default) 88%, transparent);
+    background:
+      radial-gradient(
+        circle at 100% 0%,
+        color-mix(in srgb, var(--color-accent-purple) 14%, transparent),
+        transparent 32%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-bg-secondary) 95%, transparent),
+        color-mix(in srgb, var(--color-bg-primary) 98%, transparent)
+      );
+    padding: clamp(1.5rem, 2vw + 1rem, 2.25rem);
+    box-shadow: 0 32px 80px -56px rgba(0, 0, 0, 0.6);
+  }
+
+  .blueprint-hero__eyebrow {
+    margin: 0;
+    color: var(--color-accent-purple);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .blueprint-hero__title {
+    margin: 0.85rem 0 0;
+    max-width: 13ch;
+    font-size: clamp(2.5rem, 4.4vw, 4.1rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+  }
+
+  .blueprint-hero__body {
+    margin: 1.15rem 0 0;
+    max-width: 35rem;
+    color: var(--color-fg-secondary);
+    font-size: 1.05rem;
+    line-height: 1.75;
+  }
+
+  .blueprint-hero__actions {
+    margin-top: 1.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+  }
+
+  .blueprint-hero__primary,
+  .blueprint-hero__secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-lg);
+    padding: 0.9rem 1.3rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s ease,
+      background-color 0.25s ease;
+  }
+
+  .blueprint-hero__primary {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-purple),
+      var(--color-accent-pink)
+    );
+    color: var(--color-bg-primary);
+  }
+
+  .blueprint-hero__secondary {
+    border: 1px solid var(--color-border-default);
+    background: color-mix(in srgb, var(--color-bg-primary) 68%, transparent);
+    color: var(--color-fg-primary);
+  }
+
+  .blueprint-hero__primary:hover,
+  .blueprint-hero__secondary:hover {
+    transform: translateY(-2px);
+  }
+
+  .blueprint-hero__checks {
+    margin: 1.9rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .blueprint-hero__checks li {
+    position: relative;
+    padding-left: 1.2rem;
+    color: var(--color-fg-secondary);
+    line-height: 1.65;
+  }
+
+  .blueprint-hero__checks li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.65rem;
+    height: 0.42rem;
+    width: 0.42rem;
+    border-radius: 999px;
+    background: var(--color-accent-purple);
+    box-shadow: 0 0 0 0.28rem
+      color-mix(in srgb, var(--color-accent-purple) 16%, transparent);
+  }
+
+  .blueprint-hero__sheet {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-2xl);
+    border: 1px solid
+      color-mix(in srgb, var(--color-border-default) 92%, transparent);
+    background:
+      linear-gradient(
+        color-mix(in srgb, var(--color-border-muted) 28%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-border-muted) 28%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-bg-primary) 96%, transparent),
+        color-mix(in srgb, var(--color-bg-secondary) 82%, transparent)
+      );
+    background-size:
+      1.6rem 1.6rem,
+      1.6rem 1.6rem,
+      auto;
+  }
+
+  .blueprint-hero__sheet::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-accent-cyan) 8%, transparent),
+      transparent 48%,
+      color-mix(in srgb, var(--color-accent-purple) 10%, transparent)
+    );
+    pointer-events: none;
+  }
+
+  .blueprint-hero__sheet-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-border-default) 88%, transparent);
+    padding: 0.9rem 1rem;
+    color: var(--color-fg-muted);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .blueprint-hero__layers {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 0.95rem;
+    padding: 1rem;
+  }
+
+  .blueprint-layer {
+    border-radius: var(--radius-xl);
+    border: 1px solid
+      color-mix(
+        in srgb,
+        var(--blueprint-accent) 35%,
+        var(--color-border-default)
+      );
+    background: color-mix(in srgb, var(--color-bg-secondary) 75%, transparent);
+    padding: 1rem;
+  }
+
+  .blueprint-layer__header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.6rem 1rem;
+    align-items: baseline;
+  }
+
+  .blueprint-layer__header strong {
+    color: var(--blueprint-accent);
+    font-size: 0.98rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .blueprint-layer__header span {
+    color: var(--color-fg-muted);
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .blueprint-layer__chips {
+    margin-top: 0.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .blueprint-layer__chips span {
+    border-radius: var(--radius-full);
+    border: 1px solid
+      color-mix(in srgb, var(--blueprint-accent) 18%, var(--color-border-muted));
+    background: color-mix(in srgb, var(--color-bg-primary) 74%, transparent);
+    padding: 0.45rem 0.75rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .blueprint-hero__notes {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 0.9rem;
+    padding: 0 1rem 1rem;
+  }
+
+  .blueprint-note {
+    border-radius: var(--radius-xl);
+    border: 1px dashed
+      color-mix(
+        in srgb,
+        var(--color-accent-yellow) 38%,
+        var(--color-border-default)
+      );
+    background: color-mix(in srgb, var(--color-bg-primary) 82%, transparent);
+    padding: 0.95rem 1rem;
+    color: var(--color-fg-secondary);
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  @media (min-width: 68rem) {
+    .blueprint-hero {
+      grid-template-columns: minmax(0, 1fr) minmax(24rem, 30rem);
+      align-items: start;
+    }
+
+    .blueprint-hero__notes {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

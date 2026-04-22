@@ -1,0 +1,393 @@
+---
+import HeroBlueprint from "./HeroBlueprint.astro";
+import HeroControlRoom from "./HeroControlRoom.astro";
+import HeroLaunchpad from "./HeroLaunchpad.astro";
+import HeroOperatorDesk from "./HeroOperatorDesk.astro";
+import HeroReleaseTrain from "./HeroReleaseTrain.astro";
+import HeroSignalGrid from "./HeroSignalGrid.astro";
+
+const heroOptions = [
+  {
+    id: "launchpad",
+    label: "Launchpad",
+    accent: "cyan",
+    panelClass: "hero-showcase__panel--launchpad",
+  },
+  {
+    id: "control-room",
+    label: "Control Room",
+    accent: "green",
+    panelClass: "hero-showcase__panel--control-room",
+  },
+  {
+    id: "blueprint",
+    label: "Blueprint",
+    accent: "purple",
+    panelClass: "hero-showcase__panel--blueprint",
+  },
+  {
+    id: "release-train",
+    label: "Release Train",
+    accent: "orange",
+    panelClass: "hero-showcase__panel--release-train",
+  },
+  {
+    id: "operator-desk",
+    label: "Operator Desk",
+    accent: "pink",
+    panelClass: "hero-showcase__panel--operator-desk",
+  },
+  {
+    id: "signal-grid",
+    label: "Signal Grid",
+    accent: "cyan",
+    panelClass: "hero-showcase__panel--signal-grid",
+  },
+] as const;
+
+const defaultHero = heroOptions[0].id;
+
+const heroBootstrapScript = `
+(() => {
+  const STORAGE_KEY = "shockstack:homepage-hero";
+  const HERO_IDS = ${JSON.stringify(heroOptions.map((option) => option.id))};
+  const DEFAULT_HERO = "${defaultHero}";
+  const ROOT_SELECTOR = "[data-hero-showcase]";
+  const INPUT_SELECTOR = 'input[name="homepage-hero"]';
+
+  function resolveInitialHero() {
+    const url = new URL(window.location.href);
+    const requested = url.searchParams.get("hero");
+    if (requested && HERO_IDS.includes(requested)) return requested;
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && HERO_IDS.includes(stored)) return stored;
+    return DEFAULT_HERO;
+  }
+
+  function syncUrl(value) {
+    const nextUrl = new URL(window.location.href);
+    if (value === DEFAULT_HERO) {
+      nextUrl.searchParams.delete("hero");
+    } else {
+      nextUrl.searchParams.set("hero", value);
+    }
+    window.history.replaceState(window.history.state, "", nextUrl);
+  }
+
+  function initHeroShowcase() {
+    const root = document.querySelector(ROOT_SELECTOR);
+    if (!(root instanceof HTMLElement)) return;
+
+    const inputs = Array.from(root.querySelectorAll(INPUT_SELECTOR)).filter(
+      (input) => input instanceof HTMLInputElement,
+    );
+
+    if (!inputs.length) return;
+
+    const applyHero = (value) => {
+      const nextInput =
+        inputs.find((input) => input.value === value) ?? inputs[0];
+      if (!nextInput) return;
+      nextInput.checked = true;
+      root.dataset.activeHero = nextInput.value;
+      localStorage.setItem(STORAGE_KEY, nextInput.value);
+      syncUrl(nextInput.value);
+    };
+
+    if (root.dataset.bound !== "true") {
+      for (const input of inputs) {
+        input.addEventListener("change", () => {
+          if (!input.checked) return;
+          applyHero(input.value);
+        });
+      }
+      root.dataset.bound = "true";
+    }
+
+    applyHero(resolveInitialHero());
+  }
+
+  initHeroShowcase();
+
+  if (!window.__shockstackHeroShowcaseBound) {
+    document.addEventListener("astro:page-load", initHeroShowcase);
+    window.__shockstackHeroShowcaseBound = true;
+  }
+})();
+`;
+---
+
+<section
+  class="gradient-bg-mesh hero-showcase px-4 pt-8 pb-24 md:pt-10 md:pb-28"
+  data-hero-showcase
+>
+  {
+    heroOptions.map((option, index) => (
+      <input
+        class="hero-showcase__input"
+        type="radio"
+        name="homepage-hero"
+        id={`hero-option-${option.id}`}
+        value={option.id}
+        checked={index === 0}
+      />
+    ))
+  }
+
+  <script is:inline set:html={heroBootstrapScript} />
+
+  <div class="hero-showcase__shell mx-auto max-w-6xl">
+    <div class="hero-showcase__toolbar">
+      <div class="hero-showcase__toolbar-copy">
+        <p id="hero-showcase-title" class="hero-showcase__eyebrow">
+          Homepage Intro
+        </p>
+        <span class="hero-showcase__meta">6 directions · saved locally</span>
+      </div>
+
+      <div
+        class="hero-showcase__controls"
+        role="radiogroup"
+        aria-labelledby="hero-showcase-title"
+      >
+        {
+          heroOptions.map((option) => (
+            <label
+              class="hero-showcase__option"
+              for={`hero-option-${option.id}`}
+              style={`--hero-option-accent: var(--color-accent-${option.accent})`}
+            >
+              <span class="hero-showcase__option-dot" />
+              <span class="hero-showcase__option-name">{option.label}</span>
+            </label>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="hero-showcase__panels">
+      <div class:list={["hero-showcase__panel", heroOptions[0].panelClass]}>
+        <HeroLaunchpad />
+      </div>
+      <div class:list={["hero-showcase__panel", heroOptions[1].panelClass]}>
+        <HeroControlRoom />
+      </div>
+      <div class:list={["hero-showcase__panel", heroOptions[2].panelClass]}>
+        <HeroBlueprint />
+      </div>
+      <div class:list={["hero-showcase__panel", heroOptions[3].panelClass]}>
+        <HeroReleaseTrain />
+      </div>
+      <div class:list={["hero-showcase__panel", heroOptions[4].panelClass]}>
+        <HeroOperatorDesk />
+      </div>
+      <div class:list={["hero-showcase__panel", heroOptions[5].panelClass]}>
+        <HeroSignalGrid />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-showcase {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-showcase__input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .hero-showcase__shell {
+    display: grid;
+    gap: 0.95rem;
+  }
+
+  .hero-showcase__toolbar {
+    display: grid;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .hero-showcase__toolbar-copy {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem 0.75rem;
+  }
+
+  .hero-showcase__eyebrow {
+    margin: 0;
+    color: var(--color-accent-cyan);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .hero-showcase__meta {
+    color: var(--color-fg-muted);
+    font-size: 0.84rem;
+    line-height: 1.4;
+  }
+
+  .hero-showcase__controls {
+    display: flex;
+    gap: 0.6rem;
+    overflow-x: auto;
+    padding: 0.05rem 0.05rem 0.35rem;
+    scrollbar-width: thin;
+  }
+
+  .hero-showcase__option {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    flex: 0 0 auto;
+    border-radius: var(--radius-full);
+    border: 1px solid
+      color-mix(in srgb, var(--color-border-default) 88%, transparent);
+    background: color-mix(in srgb, var(--color-bg-secondary) 76%, transparent);
+    padding: 0.62rem 0.9rem;
+    cursor: pointer;
+    transition:
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s ease,
+      box-shadow 0.25s ease,
+      background-color 0.25s ease;
+  }
+
+  .hero-showcase__option-dot {
+    display: inline-block;
+    height: 0.55rem;
+    width: 0.55rem;
+    border-radius: 999px;
+    background: var(--hero-option-accent);
+    box-shadow: 0 0 0 0.22rem
+      color-mix(in srgb, var(--hero-option-accent) 14%, transparent);
+  }
+
+  .hero-showcase__option:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(
+      in srgb,
+      var(--hero-option-accent) 28%,
+      var(--color-border-default)
+    );
+  }
+
+  .hero-showcase__option-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .hero-showcase__panels {
+    position: relative;
+  }
+
+  .hero-showcase__panel {
+    display: none;
+  }
+
+  #hero-option-launchpad:checked
+    ~ .hero-showcase__shell
+    label[for="hero-option-launchpad"],
+  #hero-option-control-room:checked
+    ~ .hero-showcase__shell
+    label[for="hero-option-control-room"],
+  #hero-option-blueprint:checked
+    ~ .hero-showcase__shell
+    label[for="hero-option-blueprint"],
+  #hero-option-release-train:checked
+    ~ .hero-showcase__shell
+    label[for="hero-option-release-train"],
+  #hero-option-operator-desk:checked
+    ~ .hero-showcase__shell
+    label[for="hero-option-operator-desk"],
+  #hero-option-signal-grid:checked
+    ~ .hero-showcase__shell
+    label[for="hero-option-signal-grid"] {
+    border-color: color-mix(
+      in srgb,
+      var(--hero-option-accent) 44%,
+      var(--color-border-default)
+    );
+    background: color-mix(in srgb, var(--color-bg-primary) 82%, transparent);
+    box-shadow: 0 12px 30px -22px
+      color-mix(in srgb, var(--hero-option-accent) 60%, transparent);
+  }
+
+  #hero-option-launchpad:focus-visible
+    ~ .hero-showcase__shell
+    label[for="hero-option-launchpad"],
+  #hero-option-control-room:focus-visible
+    ~ .hero-showcase__shell
+    label[for="hero-option-control-room"],
+  #hero-option-blueprint:focus-visible
+    ~ .hero-showcase__shell
+    label[for="hero-option-blueprint"],
+  #hero-option-release-train:focus-visible
+    ~ .hero-showcase__shell
+    label[for="hero-option-release-train"],
+  #hero-option-operator-desk:focus-visible
+    ~ .hero-showcase__shell
+    label[for="hero-option-operator-desk"],
+  #hero-option-signal-grid:focus-visible
+    ~ .hero-showcase__shell
+    label[for="hero-option-signal-grid"] {
+    outline: 2px solid var(--color-accent-cyan);
+    outline-offset: 3px;
+  }
+
+  #hero-option-launchpad:checked
+    ~ .hero-showcase__shell
+    .hero-showcase__panel--launchpad,
+  #hero-option-control-room:checked
+    ~ .hero-showcase__shell
+    .hero-showcase__panel--control-room,
+  #hero-option-blueprint:checked
+    ~ .hero-showcase__shell
+    .hero-showcase__panel--blueprint,
+  #hero-option-release-train:checked
+    ~ .hero-showcase__shell
+    .hero-showcase__panel--release-train,
+  #hero-option-operator-desk:checked
+    ~ .hero-showcase__shell
+    .hero-showcase__panel--operator-desk,
+  #hero-option-signal-grid:checked
+    ~ .hero-showcase__shell
+    .hero-showcase__panel--signal-grid {
+    display: block;
+    animation: hero-panel-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes hero-panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.7rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .hero-showcase__toolbar {
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 1rem;
+    }
+
+    .hero-showcase__controls {
+      justify-content: flex-end;
+      overflow: visible;
+      padding-bottom: 0;
+    }
+  }
+</style>

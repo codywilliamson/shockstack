@@ -1,0 +1,378 @@
+---
+const metrics = [
+  { label: "Live surfaces", value: "6 system views" },
+  { label: "Boot path", value: "frontend -> api -> infra" },
+  { label: "Docs drift", value: "kept low by default" },
+];
+
+const systems = [
+  {
+    label: "Frontend runtime",
+    state: "Ready",
+    value: "Astro SSR + Vue islands",
+    body: "Server-first pages with client islands only where interaction earns its keep.",
+    accent: "cyan",
+  },
+  {
+    label: "Auth surface",
+    state: "Synced",
+    value: "Better Auth + middleware",
+    body: "Protected routes, shared sessions, and guardrails that carry into the API lane.",
+    accent: "green",
+  },
+  {
+    label: "Token build",
+    state: "Watching",
+    value: "CSS vars + Tailwind theme",
+    body: "Theme values stay centralized, so redesigning the app never means chasing stray hex values.",
+    accent: "purple",
+  },
+  {
+    label: "Backend lane",
+    state: "Optional",
+    value: ".NET 10 + Aspire",
+    body: "Bring the API online when you need it, without re-architecting the frontend contract.",
+    accent: "orange",
+  },
+];
+
+const laneSteps = [
+  "git clone + pnpm install",
+  "run token build once",
+  "boot frontend or full stack",
+  "ship from one repo",
+];
+---
+
+<section class="command-hero">
+  <div class="command-hero__copy">
+    <p class="command-hero__eyebrow">Full-Stack Visibility</p>
+    <h1 class="command-hero__title">
+      Operate the whole stack without losing the plot.
+    </h1>
+    <p class="command-hero__body">
+      Keep the frontend, auth, token system, docs, and backend in one operating
+      view so the repo stays legible as pages, features, and services start to
+      stack up.
+    </p>
+
+    <div class="command-hero__actions">
+      <a href="/docs" class="command-hero__primary">Open the Docs</a>
+      <a href="/components" class="command-hero__secondary">Browse Components</a
+      >
+    </div>
+
+    <dl class="command-hero__metrics">
+      {
+        metrics.map((metric) => (
+          <div class="command-hero__metric">
+            <dt>{metric.label}</dt>
+            <dd>{metric.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+
+  <div class="command-hero__board">
+    <div class="command-hero__board-top">
+      <span>system control surface</span>
+      <span>channel 01</span>
+    </div>
+
+    <div class="command-hero__status-grid">
+      {
+        systems.map((system) => (
+          <article
+            class="command-card"
+            style={`--command-accent: var(--color-accent-${system.accent})`}
+          >
+            <div class="command-card__header">
+              <span>{system.label}</span>
+              <span class="command-card__state">{system.state}</span>
+            </div>
+            <strong>{system.value}</strong>
+            <p>{system.body}</p>
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="command-hero__lane">
+      <div class="command-hero__lane-title">Current release lane</div>
+      <div class="command-hero__lane-steps">
+        {
+          laneSteps.map((step, index) => (
+            <div class="command-hero__lane-step">
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <strong>{step}</strong>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .command-hero {
+    display: grid;
+    gap: 1.5rem;
+    border-radius: var(--radius-2xl);
+    border: 1px solid
+      color-mix(in srgb, var(--color-border-default) 88%, transparent);
+    background:
+      radial-gradient(
+        circle at 0% 0%,
+        color-mix(in srgb, var(--color-accent-cyan) 14%, transparent),
+        transparent 34%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-bg-secondary) 96%, transparent),
+        color-mix(in srgb, var(--color-bg-primary) 98%, transparent)
+      );
+    padding: clamp(1.5rem, 2vw + 1rem, 2.2rem);
+    box-shadow: 0 32px 80px -56px rgba(0, 0, 0, 0.6);
+  }
+
+  .command-hero__eyebrow {
+    margin: 0;
+    color: var(--color-accent-cyan);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .command-hero__title {
+    margin: 0.85rem 0 0;
+    max-width: 18ch;
+    font-size: clamp(2.6rem, 4.4vw, 4.3rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+  }
+
+  .command-hero__body {
+    margin: 1.1rem 0 0;
+    max-width: 36rem;
+    color: var(--color-fg-secondary);
+    font-size: 1.08rem;
+    line-height: 1.75;
+  }
+
+  .command-hero__actions {
+    margin-top: 1.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+  }
+
+  .command-hero__primary,
+  .command-hero__secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-lg);
+    padding: 0.9rem 1.3rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s ease,
+      background-color 0.25s ease;
+  }
+
+  .command-hero__primary {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-cyan),
+      var(--color-accent-green)
+    );
+    color: var(--color-bg-primary);
+  }
+
+  .command-hero__secondary {
+    border: 1px solid var(--color-border-default);
+    background: color-mix(in srgb, var(--color-bg-primary) 68%, transparent);
+    color: var(--color-fg-primary);
+  }
+
+  .command-hero__primary:hover,
+  .command-hero__secondary:hover {
+    transform: translateY(-2px);
+  }
+
+  .command-hero__metrics {
+    margin: 2rem 0 0;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .command-hero__metric {
+    border-left: 2px solid
+      color-mix(in srgb, var(--color-accent-cyan) 55%, transparent);
+    padding-left: 0.95rem;
+  }
+
+  .command-hero__metric dt {
+    color: var(--color-fg-muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .command-hero__metric dd {
+    margin: 0.45rem 0 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  .command-hero__board {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-2xl);
+    border: 1px solid
+      color-mix(in srgb, var(--color-border-default) 92%, transparent);
+    background:
+      linear-gradient(
+        color-mix(in srgb, var(--color-border-muted) 24%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-border-muted) 24%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-bg-primary) 95%, transparent),
+        color-mix(in srgb, var(--color-bg-secondary) 85%, transparent)
+      );
+    background-size:
+      1.4rem 1.4rem,
+      1.4rem 1.4rem,
+      auto;
+  }
+
+  .command-hero__board-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-border-default) 88%, transparent);
+    padding: 0.9rem 1rem;
+    color: var(--color-fg-muted);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .command-hero__status-grid {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1rem;
+  }
+
+  .command-card {
+    border-radius: var(--radius-xl);
+    border: 1px solid
+      color-mix(in srgb, var(--command-accent) 32%, var(--color-border-default));
+    background: color-mix(in srgb, var(--color-bg-secondary) 78%, transparent);
+    padding: 1rem;
+    box-shadow: inset 0 1px 0
+      color-mix(in srgb, var(--command-accent) 14%, transparent);
+  }
+
+  .command-card__header {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    color: var(--color-fg-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .command-card__state {
+    color: var(--command-accent);
+    font-family: var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .command-card strong {
+    display: block;
+    margin-top: 0.75rem;
+    font-size: 1.02rem;
+    line-height: 1.35;
+  }
+
+  .command-card p {
+    margin: 0.55rem 0 0;
+    color: var(--color-fg-secondary);
+    font-size: 0.93rem;
+    line-height: 1.65;
+  }
+
+  .command-hero__lane {
+    border-top: 1px solid
+      color-mix(in srgb, var(--color-border-default) 88%, transparent);
+    padding: 1rem;
+  }
+
+  .command-hero__lane-title {
+    color: var(--color-fg-muted);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .command-hero__lane-steps {
+    margin-top: 0.95rem;
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .command-hero__lane-step {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--color-bg-primary) 75%, transparent);
+    padding: 0.8rem 0.9rem;
+  }
+
+  .command-hero__lane-step span {
+    display: inline-flex;
+    min-width: 2rem;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--color-accent-cyan) 14%, transparent);
+    padding: 0.32rem 0.55rem;
+    color: var(--color-accent-cyan);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 700;
+  }
+
+  .command-hero__lane-step strong {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 68rem) {
+    .command-hero {
+      grid-template-columns: minmax(0, 1fr) minmax(22rem, 30rem);
+      align-items: center;
+    }
+
+    .command-hero__status-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
