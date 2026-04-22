@@ -1,3 +1,14 @@
+# [1.17.0](https://github.com/codywilliamson/shockstack/compare/v1.16.0...v1.17.0) (2026-04-22)
+
+### Bug Fixes
+
+- **ci:** pin security scan workflow ([8d9257d](https://github.com/codywilliamson/shockstack/commit/8d9257dfa212afbde867455ae8023edbb78e5f73))
+- **frontend:** prevent launch hero title clipping ([2be2a05](https://github.com/codywilliamson/shockstack/commit/2be2a05df3fcc9c15eca315a5b9d56c5ef757b70))
+
+### Features
+
+- **frontend:** add homepage hero showcase ([ef5e552](https://github.com/codywilliamson/shockstack/commit/ef5e552847d3fceb92fed4f623368146f19fcd09))
+
 # [1.16.0](https://github.com/codywilliamson/shockstack/compare/v1.15.2...v1.16.0) (2026-04-22)
 
 ### Bug Fixes
