@@ -1,19 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Sheet from "./SheetPanel.vue";
+import PagesMenu from "./PagesMenu.vue";
 import ThemeToggle from "./ThemeToggle.vue";
+import { primaryNavLinks } from "./site-nav";
 
 const open = ref(false);
-
-const navLinks = [
-  { label: "Components", href: "/components" },
-  { label: "Theme", href: "/theme" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "Use Cases", href: "/use-cases" },
-  { label: "Blog", href: "/blog" },
-  { label: "Docs", href: "/docs" },
-  { label: "About", href: "/about" },
-];
 
 function navigate(href: string) {
   open.value = false;
@@ -66,13 +58,18 @@ function navigate(href: string) {
 
     <nav class="flex flex-col gap-1">
       <button
-        v-for="link in navLinks"
+        v-for="link in primaryNavLinks"
         :key="link.href"
         class="mobile-nav-link"
         @click="navigate(link.href)"
       >
         {{ link.label }}
       </button>
+
+      <PagesMenu
+        mobile
+        :panel-open="open"
+      />
 
       <div class="border-border-default my-3 border-t" />
 
