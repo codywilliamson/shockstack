@@ -1,3 +1,13 @@
+# [1.16.0](https://github.com/codywilliamson/shockstack/compare/v1.15.2...v1.16.0) (2026-04-22)
+
+### Bug Fixes
+
+- **frontend:** anchor components tooltips correctly ([6ab48c5](https://github.com/codywilliamson/shockstack/commit/6ab48c5aab1d736482f9bb3ee22ac113507d6ec0))
+
+### Features
+
+- **frontend:** group pages into shared nav dropdown ([100c992](https://github.com/codywilliamson/shockstack/commit/100c99249b94dc3819a4073d6da3d298b8ce8966))
+
 ## [1.15.2](https://github.com/codywilliamson/shockstack/compare/v1.15.1...v1.15.2) (2026-04-21)
 
 ### Bug Fixes
