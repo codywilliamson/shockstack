@@ -1,0 +1,67 @@
+---
+import PricingCard from "../content/PricingCard.astro";
+---
+
+<!-- pricing cards -->
+<section class="reveal gradient-bg-subtle px-4 py-20 md:py-28">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-12 text-center">
+      <p
+        class="text-accent-purple mb-2 font-mono text-xs tracking-wider uppercase"
+      >
+        pricing
+      </p>
+      <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+        Simple, <span class="gradient-text-purple-pink">transparent</span> pricing
+      </h2>
+      <p class="text-fg-secondary mx-auto max-w-2xl text-lg">
+        ShockStack is open source. These cards showcase the pricing component.
+      </p>
+    </div>
+
+    <div class="stagger-in mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
+      <PricingCard
+        name="Starter"
+        price="Free"
+        description="For personal projects and learning"
+        features={[
+          "Full monorepo template",
+          "All 14 themes",
+          "Community support",
+          "MIT license",
+        ]}
+        cta="Get Started"
+        href="/docs"
+      />
+      <PricingCard
+        name="Pro"
+        price="$29"
+        description="For teams shipping production apps"
+        features={[
+          "Everything in Starter",
+          "Priority support",
+          "Private Discord access",
+          "Early access to updates",
+          "Custom theme builder",
+        ]}
+        cta="Start Free Trial"
+        href="/docs"
+        featured
+      />
+      <PricingCard
+        name="Enterprise"
+        price="Custom"
+        description="For organizations at scale"
+        features={[
+          "Everything in Pro",
+          "Dedicated support",
+          "Custom integrations",
+          "SLA guarantee",
+          "Team onboarding",
+        ]}
+        cta="Contact Sales"
+        href="/docs"
+      />
+    </div>
+  </div>
+</section>

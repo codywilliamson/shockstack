@@ -1,0 +1,91 @@
+---
+import Badge from "../content/Badge.astro";
+---
+
+<!-- badges -->
+<section class="reveal px-4 py-20 md:py-28">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-12">
+      <p
+        class="text-accent-green mb-2 font-mono text-xs tracking-wider uppercase"
+      >
+        badges
+      </p>
+      <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+        Labels & <span class="gradient-text-green-cyan">status chips</span>
+      </h2>
+      <p class="text-fg-secondary max-w-2xl text-lg">
+        Three variants across every accent color. Great for tags, statuses, and
+        inline metadata.
+      </p>
+    </div>
+
+    <div class="space-y-6">
+      <div class="badge-row">
+        <code class="badge-row-label">.badge-subtle</code>
+        <div class="badge-row-items">
+          <Badge color="purple">Purple</Badge>
+          <Badge color="pink">Pink</Badge>
+          <Badge color="green">Green</Badge>
+          <Badge color="cyan">Cyan</Badge>
+          <Badge color="orange">Orange</Badge>
+          <Badge color="red">Red</Badge>
+          <Badge color="yellow">Yellow</Badge>
+          <Badge color="neutral">Neutral</Badge>
+        </div>
+      </div>
+      <div class="badge-row">
+        <code class="badge-row-label">.badge-solid</code>
+        <div class="badge-row-items">
+          <Badge variant="solid" color="purple">Purple</Badge>
+          <Badge variant="solid" color="pink">Pink</Badge>
+          <Badge variant="solid" color="green">Green</Badge>
+          <Badge variant="solid" color="cyan">Cyan</Badge>
+          <Badge variant="solid" color="orange">Orange</Badge>
+          <Badge variant="solid" color="red">Red</Badge>
+          <Badge variant="solid" color="yellow">Yellow</Badge>
+          <Badge variant="solid" color="neutral">Neutral</Badge>
+        </div>
+      </div>
+      <div class="badge-row">
+        <code class="badge-row-label">.badge-outline</code>
+        <div class="badge-row-items">
+          <Badge variant="outline" color="purple">Purple</Badge>
+          <Badge variant="outline" color="pink">Pink</Badge>
+          <Badge variant="outline" color="green">Green</Badge>
+          <Badge variant="outline" color="cyan">Cyan</Badge>
+          <Badge variant="outline" color="orange">Orange</Badge>
+          <Badge variant="outline" color="red">Red</Badge>
+          <Badge variant="outline" color="yellow">Yellow</Badge>
+          <Badge variant="outline" color="neutral">Neutral</Badge>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .badge-row {
+    padding: 1.25rem;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    background-color: var(--color-bg-secondary);
+  }
+
+  .badge-row-label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-fg-muted);
+    margin-bottom: 0.75rem;
+    background-color: var(--color-bg-tertiary);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .badge-row-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+import AccordionPanel from "../ui/AccordionPanel.vue";
+
+const faqItems = [
+  {
+    value: "q1",
+    title: "Do I need the .NET backend?",
+    content:
+      "No. Delete the /backend directory and the frontend works standalone. The template auto-detects when the backend is absent and skips its build steps.",
+  },
+  {
+    value: "q2",
+    title: "How do I add a new theme?",
+    content:
+      "Duplicate one of the JSON files in packages/tokens/tokens/themes, adjust the colors, then run pnpm tokens:build. It becomes available under a new data-theme value automatically.",
+  },
+  {
+    value: "q3",
+    title: "Can I use a different database?",
+    content:
+      "The frontend is wired for Postgres via Drizzle. Swap the adapter in frontend/src/lib/db.ts. The .NET side uses EF Core — change the provider in Infrastructure.",
+  },
+  {
+    value: "q4",
+    title: "What's the deploy target?",
+    content:
+      "Cloudflare Workers for the frontend (via wrangler), Docker for the .NET API. Both are set up in the CI pipeline with semantic-release-driven versioning.",
+  },
+];
+---
+
+<!-- accordion -->
+<section class="reveal px-4 py-20 md:py-28">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-12">
+      <p
+        class="text-accent-purple mb-2 font-mono text-xs tracking-wider uppercase"
+      >
+        accordion
+      </p>
+      <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+        Collapsible <span class="gradient-text-purple-pink">panels</span>
+      </h2>
+      <p class="text-fg-secondary max-w-2xl text-lg">
+        Built on reka-ui primitives — accessible, keyboard-navigable, respects
+        <code>prefers-reduced-motion</code>.
+      </p>
+    </div>
+
+    <div class="mx-auto max-w-2xl">
+      <AccordionPanel client:load items={faqItems} />
+    </div>
+  </div>
+</section>

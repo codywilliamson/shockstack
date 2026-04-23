@@ -1,0 +1,67 @@
+<!-- gradient backgrounds showcase -->
+<section class="reveal px-4 py-20 md:py-28">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-12">
+      <p
+        class="text-accent-cyan mb-2 font-mono text-xs tracking-wider uppercase"
+      >
+        backgrounds
+      </p>
+      <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+        Gradient <span class="gradient-text-cyan-green">backgrounds</span>
+      </h2>
+      <p class="text-fg-secondary max-w-2xl text-lg">
+        Subtle gradient backgrounds that add depth without overwhelming content.
+      </p>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-3">
+      <div class="gradient-bg-preview">
+        <div class="gradient-bg-subtle gradient-bg-preview-inner">
+          <code class="text-fg-muted font-mono text-xs"
+            >.gradient-bg-subtle</code
+          >
+          <p class="text-fg-secondary mt-2 text-sm">
+            Vertical fade through accent
+          </p>
+        </div>
+      </div>
+      <div class="gradient-bg-preview">
+        <div class="gradient-bg-mesh gradient-bg-preview-inner">
+          <code class="text-fg-muted font-mono text-xs">.gradient-bg-mesh</code>
+          <p class="text-fg-secondary mt-2 text-sm">
+            Multi-point mesh gradient
+          </p>
+        </div>
+      </div>
+      <div class="gradient-bg-preview">
+        <div class="gradient-bg-radial gradient-bg-preview-inner">
+          <code class="text-fg-muted font-mono text-xs"
+            >.gradient-bg-radial</code
+          >
+          <p class="text-fg-secondary mt-2 text-sm">
+            Top-down radial spotlight
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .gradient-bg-preview {
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+  }
+
+  .gradient-bg-preview-inner {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    min-height: 10rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+</style>

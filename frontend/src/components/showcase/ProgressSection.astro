@@ -1,0 +1,79 @@
+---
+import ProgressBar from "../content/ProgressBar.astro";
+---
+
+<!-- progress bars -->
+<section class="reveal px-4 py-20 md:py-28">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-12">
+      <p
+        class="text-accent-orange mb-2 font-mono text-xs tracking-wider uppercase"
+      >
+        progress
+      </p>
+      <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+        Progress <span class="gradient-text-orange-yellow">indicators</span>
+      </h2>
+      <p class="text-fg-secondary max-w-2xl text-lg">
+        Determinate bars with gradient fills, plus an indeterminate slider for
+        background work.
+      </p>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-example">
+        <ProgressBar
+          label="Uploading assets"
+          value={72}
+          showValue
+          gradient="purple-pink"
+        />
+      </div>
+      <div class="progress-example">
+        <ProgressBar
+          label="Running tests"
+          value={45}
+          showValue
+          gradient="cyan-green"
+        />
+      </div>
+      <div class="progress-example">
+        <ProgressBar
+          label="Building bundle"
+          value={90}
+          showValue
+          gradient="orange-yellow"
+          size="lg"
+        />
+      </div>
+      <div class="progress-example">
+        <ProgressBar
+          label="Syncing with server"
+          indeterminate
+          gradient="pink-orange"
+        />
+      </div>
+      <div class="progress-example">
+        <ProgressBar value={30} gradient="green-cyan" size="sm" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .progress-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    background-color: var(--color-bg-secondary);
+  }
+
+  .progress-example {
+    width: 100%;
+  }
+</style>
