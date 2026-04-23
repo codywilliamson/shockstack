@@ -774,6 +774,109 @@ const featuredUseCases = stackUseCases.slice(0, 3);
       color-mix(in srgb, var(--color-accent-purple) 35%, transparent) inset;
   }
 
+  /* hero variant: release-train — orange ship-it energy */
+  :global([data-hero-variant="release-train"]) .features-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        115deg,
+        color-mix(in srgb, var(--color-accent-orange) 9%, transparent),
+        transparent 45%
+      ),
+      linear-gradient(
+        295deg,
+        color-mix(in srgb, var(--color-accent-yellow) 6%, transparent),
+        transparent 50%
+      );
+    opacity: 0;
+    animation: features-fade-in 0.45s ease forwards;
+  }
+
+  :global([data-hero-variant="release-train"]) .features-title {
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    font-weight: 800;
+  }
+
+  :global([data-hero-variant="release-train"]) .features-lede {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+  }
+
+  :global([data-hero-variant="release-train"]) .feature-card {
+    border: 1px solid
+      color-mix(
+        in srgb,
+        var(--color-accent-orange) 30%,
+        var(--color-border-default)
+      );
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--color-bg-secondary) 94%, transparent),
+      color-mix(in srgb, var(--color-bg-primary) 96%, transparent)
+    );
+    box-shadow:
+      0 0 0 0 color-mix(in srgb, var(--color-accent-orange) 0%, transparent),
+      0 22px 44px -34px
+        color-mix(in srgb, var(--color-accent-orange) 55%, transparent);
+    position: relative;
+    overflow: hidden;
+  }
+
+  :global([data-hero-variant="release-train"]) .feature-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(
+      180deg,
+      var(--color-accent-orange),
+      var(--color-accent-yellow)
+    );
+    transform: scaleY(0.6);
+    transform-origin: center;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  :global([data-hero-variant="release-train"]) .feature-card:hover {
+    border-color: color-mix(
+      in srgb,
+      var(--color-accent-orange) 55%,
+      var(--color-border-default)
+    );
+    transform: translateX(2px);
+  }
+
+  :global([data-hero-variant="release-train"]) .feature-card:hover::before {
+    transform: scaleY(1);
+  }
+
+  :global([data-hero-variant="release-train"]) .feature-icon {
+    border-radius: var(--radius-sm);
+    background: linear-gradient(
+      135deg,
+      color-mix(
+        in srgb,
+        var(--color-accent-orange) 25%,
+        var(--color-bg-tertiary)
+      ),
+      color-mix(
+        in srgb,
+        var(--color-accent-yellow) 15%,
+        var(--color-bg-tertiary)
+      )
+    );
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 8%, transparent),
+      0 4px 12px -8px
+        color-mix(in srgb, var(--color-accent-orange) 70%, transparent);
+  }
+
   @keyframes features-fade-in {
     to {
       opacity: 1;
