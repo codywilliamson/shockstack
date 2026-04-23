@@ -1,0 +1,133 @@
+---
+
+---
+
+<!-- tech stack -->
+<section class="reveal bg-bg-secondary/50 px-4 py-20 md:py-28">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-16 text-center">
+      <h2 class="mb-4 text-3xl font-bold md:text-4xl">The stack, visualized</h2>
+      <p class="text-fg-secondary mx-auto max-w-2xl text-lg">
+        A layered architecture where every piece is independently useful.
+      </p>
+    </div>
+
+    <div class="mx-auto max-w-3xl space-y-4">
+      <!-- layer: frontend -->
+      <div class="glass hover-lift stack-layer">
+        <div class="stack-layer-label text-accent-orange">Frontend</div>
+        <div class="stack-layer-items">
+          <span class="stack-badge">Astro 5</span>
+          <span class="stack-badge">Vue 3</span>
+          <span class="stack-badge">Tailwind 4</span>
+          <span class="stack-badge">reka-ui</span>
+        </div>
+      </div>
+
+      <!-- connector -->
+      <div class="flex justify-center">
+        <div class="border-border-default h-6 border-l-2 border-dashed"></div>
+      </div>
+
+      <!-- layer: shared -->
+      <div class="glass hover-lift stack-layer">
+        <div class="stack-layer-label text-accent-purple">Shared</div>
+        <div class="stack-layer-items">
+          <span class="stack-badge">Design Tokens</span>
+          <span class="stack-badge">Better Auth</span>
+          <span class="stack-badge">Drizzle ORM</span>
+          <span class="stack-badge">JWT</span>
+        </div>
+      </div>
+
+      <!-- connector -->
+      <div class="flex justify-center">
+        <div class="border-border-default h-6 border-l-2 border-dashed"></div>
+      </div>
+
+      <!-- layer: backend -->
+      <div class="glass hover-lift stack-layer">
+        <div class="stack-layer-label text-accent-cyan">Backend</div>
+        <div class="stack-layer-items">
+          <span class="stack-badge">.NET 10</span>
+          <span class="stack-badge">EF Core</span>
+          <span class="stack-badge">Aspire</span>
+          <span class="stack-badge">Clean Arch</span>
+        </div>
+      </div>
+
+      <!-- connector -->
+      <div class="flex justify-center">
+        <div class="border-border-default h-6 border-l-2 border-dashed"></div>
+      </div>
+
+      <!-- layer: infra -->
+      <div class="glass hover-lift stack-layer">
+        <div class="stack-layer-label text-accent-green">Infra</div>
+        <div class="stack-layer-items">
+          <span class="stack-badge">Docker</span>
+          <span class="stack-badge">Turborepo</span>
+          <span class="stack-badge">GitHub Actions</span>
+          <span class="stack-badge">Postgres</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .stack-layer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    border-radius: var(--radius-xl);
+    padding: 1.25rem 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .stack-layer {
+      flex-direction: row;
+    }
+  }
+
+  .stack-layer-label {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-width: 6rem;
+    text-align: center;
+  }
+
+  @media (min-width: 640px) {
+    .stack-layer-label {
+      text-align: left;
+    }
+  }
+
+  .stack-layer-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  @media (min-width: 640px) {
+    .stack-layer-items {
+      justify-content: flex-start;
+    }
+  }
+
+  .stack-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    background-color: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-muted);
+    color: var(--color-fg-primary);
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+</style>
