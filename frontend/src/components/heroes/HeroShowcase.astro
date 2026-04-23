@@ -181,6 +181,10 @@ const heroBootstrapScript = `
       window.addEventListener("resize", updateFloating);
       updateFloating();
 
+      // reveal once the floating state has been resolved to avoid a flash
+      // of the top pill bar when the page loads already scrolled past the hero
+      requestAnimationFrame(() => picker.classList.add("is-ready"));
+
       root.dataset.bound = "true";
     }
 
@@ -304,6 +308,12 @@ const heroBootstrapScript = `
   /* ----- PICKER: shared ----- */
   .hero-picker {
     --picker-fab-size: 3rem;
+  }
+
+  .hero-picker:not(.is-ready) .hero-picker__options,
+  .hero-picker:not(.is-ready) .hero-picker__trigger {
+    visibility: hidden;
+    transition: none;
   }
 
   .hero-picker__options {
