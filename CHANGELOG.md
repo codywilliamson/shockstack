@@ -1,3 +1,19 @@
+# [1.19.0](https://github.com/codywilliamson/shockstack/compare/v1.18.1...v1.19.0) (2026-04-23)
+
+### Bug Fixes
+
+- **frontend:** flatten hero framing, stick switcher, unclip descenders ([746800d](https://github.com/codywilliamson/shockstack/commit/746800df22ef24aec0ed6cec75af1c1755dec6bf))
+- **frontend:** gate hero picker behind is-ready class to prevent flash ([9115cbc](https://github.com/codywilliamson/shockstack/commit/9115cbcd60218e464c7bf71296c753e6ce4dd7d9))
+- **frontend:** make hero picker fixed so it follows the full page ([0ee7098](https://github.com/codywilliamson/shockstack/commit/0ee70984827909627f70280a20acb5a9eafef955))
+
+### Features
+
+- **frontend:** add blueprint variant to features section ([023502c](https://github.com/codywilliamson/shockstack/commit/023502c43cb0bb1298d55b26f0d7fe11c51fc303))
+- **frontend:** add launchpad variant to features section ([62d1b31](https://github.com/codywilliamson/shockstack/commit/62d1b31a3af840752dca694261c72c9b8600fd10))
+- **frontend:** add operator-desk variant to features section ([7f27758](https://github.com/codywilliamson/shockstack/commit/7f27758805b2c44cc0a9f021c89eaa9b409abd1f))
+- **frontend:** add release-train variant to features section ([b621336](https://github.com/codywilliamson/shockstack/commit/b621336c86d8ec68a42dd4b1008aae4d260ac8f2))
+- **frontend:** animate hero picker into a floating popup on scroll ([8ac4ba6](https://github.com/codywilliamson/shockstack/commit/8ac4ba653a216e86035cc39e6b6528e139a10f6d))
+
 ## [1.18.1](https://github.com/codywilliamson/shockstack/compare/v1.18.0...v1.18.1) (2026-04-23)
 
 ### Bug Fixes
