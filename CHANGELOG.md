@@ -1,3 +1,14 @@
+# [1.18.0](https://github.com/codywilliamson/shockstack/compare/v1.17.0...v1.18.0) (2026-04-23)
+
+### Bug Fixes
+
+- address faq accordion review feedback ([44b922a](https://github.com/codywilliamson/shockstack/commit/44b922ac9a273f2134e389662e1070505ba652af))
+- simplify faq accordion styles ([2fe8d0d](https://github.com/codywilliamson/shockstack/commit/2fe8d0d74226c2a91ab8cbff4f7552aff9f996be))
+
+### Features
+
+- refresh faq accordion styling ([9d7e68f](https://github.com/codywilliamson/shockstack/commit/9d7e68fe51b70ef25e790a3888505496af530fb4))
+
 # [1.17.0](https://github.com/codywilliamson/shockstack/compare/v1.16.0...v1.17.0) (2026-04-22)
 
 ### Bug Fixes
