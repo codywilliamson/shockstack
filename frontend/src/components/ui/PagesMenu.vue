@@ -146,7 +146,10 @@ function navigate(href: string) {
   color: var(--color-fg-primary);
 }
 
-.desktop-pages-content {
+:deep(.desktop-pages-content) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
   min-width: 11rem;
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-lg);
@@ -160,7 +163,7 @@ function navigate(href: string) {
   z-index: 50;
 }
 
-.desktop-pages-link {
+:deep(.desktop-pages-link) {
   display: flex;
   align-items: center;
   border-radius: var(--radius-md);
@@ -168,14 +171,15 @@ function navigate(href: string) {
   color: var(--color-fg-secondary);
   font-size: 0.875rem;
   font-weight: 500;
+  text-decoration: none;
   cursor: pointer;
   transition:
     background-color 0.15s ease,
     color 0.15s ease;
 }
 
-.desktop-pages-link:hover,
-.desktop-pages-link[data-highlighted] {
+:deep(.desktop-pages-link:hover),
+:deep(.desktop-pages-link[data-highlighted]) {
   background-color: var(--color-bg-tertiary);
   color: var(--color-fg-primary);
 }
@@ -275,7 +279,7 @@ function navigate(href: string) {
 }
 
 .desktop-pages-trigger:focus-visible,
-.desktop-pages-link:focus-visible,
+:deep(.desktop-pages-link:focus-visible),
 .mobile-pages-trigger:focus-visible,
 .mobile-pages-link:focus-visible {
   outline: 2px solid var(--color-accent-purple);
@@ -284,7 +288,7 @@ function navigate(href: string) {
 
 @media (prefers-reduced-motion: reduce) {
   .desktop-pages-trigger,
-  .desktop-pages-link,
+  :deep(.desktop-pages-link),
   .mobile-pages-trigger,
   .mobile-pages-panel,
   .mobile-pages-link,
