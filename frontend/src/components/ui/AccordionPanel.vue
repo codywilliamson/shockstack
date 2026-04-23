@@ -70,10 +70,6 @@ defineProps<{
   overflow: hidden;
 }
 
-.accordion-item {
-  background-color: var(--color-bg-secondary);
-}
-
 .accordion-item + .accordion-item {
   border-top: 1px solid var(--color-border-default);
 }
@@ -136,7 +132,7 @@ defineProps<{
 }
 
 .accordion-content[data-state="open"] {
-  animation: accordion-down 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: accordion-down 0.28s ease-out;
 }
 .accordion-content[data-state="closed"] {
   animation: accordion-up 0.22s ease-in;
