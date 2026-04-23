@@ -62,6 +62,8 @@ defineProps<{
 
 <style scoped>
 .accordion-root {
+  --accordion-motion-duration: 0.24s;
+
   width: 100%;
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-xl);
@@ -107,6 +109,10 @@ defineProps<{
   background-color: var(--color-bg-secondary);
 }
 
+.accordion-trigger[data-state="open"]:hover {
+  background-color: var(--color-bg-tertiary);
+}
+
 .accordion-trigger:focus-visible {
   outline: 2px solid var(--color-accent-purple);
   outline-offset: -2px;
@@ -132,10 +138,10 @@ defineProps<{
 }
 
 .accordion-content[data-state="open"] {
-  animation: accordion-down 0.28s ease-out;
+  animation: accordion-down var(--accordion-motion-duration) ease-out;
 }
 .accordion-content[data-state="closed"] {
-  animation: accordion-up 0.22s ease-in;
+  animation: accordion-up var(--accordion-motion-duration) ease-in;
 }
 
 .accordion-content-inner {
@@ -144,7 +150,7 @@ defineProps<{
 }
 
 .accordion-content[data-state="open"] .accordion-content-inner {
-  animation: accordion-content-in 0.28s ease-out;
+  animation: accordion-content-in var(--accordion-motion-duration) ease-out;
 }
 
 @keyframes accordion-down {
