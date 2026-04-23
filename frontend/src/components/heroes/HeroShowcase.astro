@@ -118,7 +118,7 @@ const heroBootstrapScript = `
 `;
 ---
 
-<div class="hero-showcase mx-auto max-w-6xl px-4 pt-4 pb-4" data-hero-showcase>
+<div class="hero-showcase mx-auto max-w-6xl px-4" data-hero-showcase>
   {
     heroOptions.map((option, index) => (
       <input
@@ -187,23 +187,36 @@ const heroBootstrapScript = `
   }
 
   .hero-showcase__controls {
-    position: sticky;
-    top: 0.75rem;
-    z-index: 20;
+    position: fixed;
+    top: 4.75rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 40;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    margin: 0 auto 1.25rem;
-    width: fit-content;
-    max-width: 100%;
+    gap: 0.4rem;
+    padding: 0.4rem;
+    max-width: calc(100vw - 1.5rem);
+    overflow-x: auto;
+    scrollbar-width: none;
     border-radius: var(--radius-full);
-    background: color-mix(in srgb, var(--color-bg-primary) 70%, transparent);
+    background: color-mix(in srgb, var(--color-bg-primary) 72%, transparent);
     backdrop-filter: blur(14px) saturate(140%);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
     border: 1px solid
       color-mix(in srgb, var(--color-border-default) 65%, transparent);
+    box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.45);
+  }
+
+  .hero-showcase__controls::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* reserve space so the fixed picker doesn't overlap the hero title */
+  .hero-showcase {
+    padding-top: 4.5rem;
+    padding-bottom: 1rem;
   }
 
   .hero-showcase__option {
