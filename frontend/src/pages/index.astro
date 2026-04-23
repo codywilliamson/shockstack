@@ -877,6 +877,84 @@ const featuredUseCases = stackUseCases.slice(0, 3);
         color-mix(in srgb, var(--color-accent-orange) 70%, transparent);
   }
 
+  /* hero variant: operator-desk — pink warm tactile elevation */
+  :global([data-hero-variant="operator-desk"]) .features-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at 30% 15%,
+      color-mix(in srgb, var(--color-accent-pink) 10%, transparent),
+      transparent 55%
+    );
+    opacity: 0;
+    animation: features-fade-in 0.45s ease forwards;
+  }
+
+  :global([data-hero-variant="operator-desk"]) .features-title {
+    letter-spacing: -0.025em;
+    color: var(--color-fg-primary);
+  }
+
+  :global([data-hero-variant="operator-desk"]) .features-lede {
+    font-style: italic;
+  }
+
+  :global([data-hero-variant="operator-desk"]) .feature-card {
+    border: 1px solid
+      color-mix(
+        in srgb,
+        var(--color-accent-pink) 18%,
+        var(--color-border-default)
+      );
+    background: linear-gradient(
+      165deg,
+      color-mix(
+        in srgb,
+        var(--color-accent-pink) 5%,
+        var(--color-bg-secondary)
+      ),
+      color-mix(in srgb, var(--color-bg-primary) 98%, transparent)
+    );
+    box-shadow:
+      0 1px 0 color-mix(in srgb, white 5%, transparent) inset,
+      0 24px 50px -32px
+        color-mix(in srgb, var(--color-accent-pink) 35%, transparent),
+      0 4px 12px -8px color-mix(in srgb, black 40%, transparent);
+  }
+
+  :global([data-hero-variant="operator-desk"]) .feature-card:hover {
+    border-color: color-mix(
+      in srgb,
+      var(--color-accent-pink) 40%,
+      var(--color-border-default)
+    );
+    transform: translateY(-3px) rotate(-0.15deg);
+    box-shadow:
+      0 1px 0 color-mix(in srgb, white 8%, transparent) inset,
+      0 32px 60px -28px
+        color-mix(in srgb, var(--color-accent-pink) 50%, transparent),
+      0 6px 16px -8px color-mix(in srgb, black 45%, transparent);
+  }
+
+  :global([data-hero-variant="operator-desk"]) .feature-icon {
+    border-radius: 9999px;
+    background: radial-gradient(
+      circle at 30% 30%,
+      color-mix(
+        in srgb,
+        var(--color-accent-pink) 28%,
+        var(--color-bg-tertiary)
+      ),
+      var(--color-bg-tertiary) 72%
+    );
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 12%, transparent),
+      0 4px 10px -4px
+        color-mix(in srgb, var(--color-accent-pink) 40%, transparent);
+  }
+
   @keyframes features-fade-in {
     to {
       opacity: 1;
