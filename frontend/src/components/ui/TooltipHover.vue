@@ -51,6 +51,25 @@ defineProps<{
   cursor: pointer;
 }
 
+.tooltip-trigger-btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-fg-primary);
+  border: 1px solid var(--color-border-default);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.tooltip-trigger-btn:hover {
+  border-color: var(--color-accent-green);
+  color: var(--color-accent-green);
+}
+
 .tooltip-content {
   background-color: var(--color-bg-tertiary);
   color: var(--color-fg-primary);
