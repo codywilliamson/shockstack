@@ -696,6 +696,84 @@ const featuredUseCases = stackUseCases.slice(0, 3);
       color-mix(in srgb, var(--color-accent-cyan) 30%, transparent) inset;
   }
 
+  /* hero variant: blueprint — purple grid-paper feel with dashed borders */
+  :global([data-hero-variant="blueprint"]) .features-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--color-accent-purple) 8%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--color-accent-purple) 8%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at 50% 40%, black 35%, transparent 85%);
+    opacity: 0;
+    animation: features-fade-in 0.45s ease forwards;
+  }
+
+  :global([data-hero-variant="blueprint"]) .features-title {
+    color: var(--color-fg-primary);
+    letter-spacing: -0.02em;
+  }
+
+  :global([data-hero-variant="blueprint"]) .features-title::after {
+    content: "";
+    display: block;
+    width: 3rem;
+    height: 2px;
+    margin: 0.85rem auto 0;
+    background: linear-gradient(
+      90deg,
+      var(--color-accent-purple),
+      var(--color-accent-pink)
+    );
+  }
+
+  :global([data-hero-variant="blueprint"]) .feature-card {
+    border: 1px dashed
+      color-mix(
+        in srgb,
+        var(--color-accent-purple) 45%,
+        var(--color-border-default)
+      );
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-bg-secondary) 85%, transparent),
+      color-mix(in srgb, var(--color-bg-primary) 96%, transparent)
+    );
+    box-shadow: none;
+  }
+
+  :global([data-hero-variant="blueprint"]) .feature-card:hover {
+    border-style: solid;
+    border-color: color-mix(
+      in srgb,
+      var(--color-accent-purple) 55%,
+      var(--color-border-default)
+    );
+    box-shadow: 0 18px 40px -32px
+      color-mix(in srgb, var(--color-accent-purple) 60%, transparent);
+  }
+
+  :global([data-hero-variant="blueprint"]) .feature-icon {
+    border-radius: 0;
+    background: color-mix(
+      in srgb,
+      var(--color-bg-primary) 70%,
+      color-mix(in srgb, var(--color-accent-purple) 20%, transparent)
+    );
+    box-shadow: 0 0 0 1px
+      color-mix(in srgb, var(--color-accent-purple) 35%, transparent) inset;
+  }
+
   @keyframes features-fade-in {
     to {
       opacity: 1;
