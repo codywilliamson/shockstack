@@ -65,8 +65,13 @@ defineProps<{
   width: 100%;
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-xl);
-  background-color: var(--color-bg-secondary);
+  background-color: var(--color-bg-primary);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
+}
+
+.accordion-item {
+  background-color: var(--color-bg-secondary);
 }
 
 .accordion-item + .accordion-item {
@@ -83,8 +88,9 @@ defineProps<{
   flex: 1;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.25rem;
-  background: transparent;
+  gap: 1rem;
+  padding: 1.125rem 1.25rem;
+  background-color: var(--color-bg-secondary);
   border: none;
   color: var(--color-fg-primary);
   font-family: inherit;
@@ -92,11 +98,17 @@ defineProps<{
   font-weight: 600;
   text-align: left;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .accordion-trigger:hover {
   background-color: var(--color-bg-tertiary);
+}
+
+.accordion-trigger[data-state="open"] {
+  background-color: var(--color-bg-secondary);
 }
 
 .accordion-trigger:focus-visible {
@@ -117,20 +129,26 @@ defineProps<{
 
 .accordion-content {
   overflow: hidden;
+  background-color: var(--color-bg-tertiary);
   color: var(--color-fg-secondary);
   font-size: 0.875rem;
   line-height: 1.6;
 }
 
 .accordion-content[data-state="open"] {
-  animation: accordion-down 0.2s ease-out;
+  animation: accordion-down 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .accordion-content[data-state="closed"] {
-  animation: accordion-up 0.2s ease-in;
+  animation: accordion-up 0.22s ease-in;
 }
 
 .accordion-content-inner {
-  padding: 0 1.25rem 1rem;
+  padding: 1rem 1.25rem 1.25rem;
+  border-top: 1px solid var(--color-border-muted);
+}
+
+.accordion-content[data-state="open"] .accordion-content-inner {
+  animation: accordion-content-in 0.28s ease-out;
 }
 
 @keyframes accordion-down {
@@ -150,10 +168,24 @@ defineProps<{
   }
 }
 
+@keyframes accordion-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.35rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .accordion-content[data-state="open"],
   .accordion-content[data-state="closed"] {
     animation-duration: 0.01ms;
+  }
+  .accordion-content[data-state="open"] .accordion-content-inner {
+    animation: none;
   }
   .accordion-chevron {
     transition: none;
