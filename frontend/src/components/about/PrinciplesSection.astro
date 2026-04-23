@@ -1,0 +1,83 @@
+---
+const principles = [
+  {
+    title: "Conventions over configuration",
+    body: "Opinions are a feature. A sensible default beats three good options you have to pick between.",
+  },
+  {
+    title: "Tokens all the way down",
+    body: "Every color, radius, and shadow routes through a single source. Themes are composable; overrides are rare.",
+  },
+  {
+    title: "Zero-cost abstractions",
+    body: "Shipping JS is a tradeoff. Astro islands + CSS animations mean the runtime footprint stays near zero.",
+  },
+  {
+    title: "Optional depth",
+    body: "The .NET backend is opt-in. The token pipeline is opt-in. Use what you need, delete the rest without regret.",
+  },
+];
+---
+
+<!-- principles -->
+<section class="reveal gradient-bg-subtle px-4 py-20 md:py-28">
+  <div class="mx-auto max-w-5xl">
+    <div class="mb-12">
+      <p
+        class="text-accent-purple mb-2 font-mono text-xs tracking-wider uppercase"
+      >
+        principles
+      </p>
+      <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+        The rules we refuse to <span class="gradient-text-purple-pink"
+          >break</span
+        >
+      </h2>
+      <p class="text-fg-secondary max-w-2xl text-lg">
+        Every default traces back to one of these. If a feature fights them, it
+        doesn't ship.
+      </p>
+    </div>
+
+    <div class="stagger-in grid gap-4 md:grid-cols-2">
+      {
+        principles.map((p) => (
+          <div class="principle-card">
+            <h3 class="principle-title">{p.title}</h3>
+            <p class="principle-body">{p.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .principle-card {
+    padding: 1.5rem;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    background-color: var(--color-bg-secondary);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .principle-card:hover {
+    border-color: var(--color-accent-purple);
+    transform: translateY(-2px);
+  }
+
+  .principle-title {
+    color: var(--color-fg-primary);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .principle-body {
+    color: var(--color-fg-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+</style>

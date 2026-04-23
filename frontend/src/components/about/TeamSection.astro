@@ -1,0 +1,97 @@
+---
+import Avatar from "../content/Avatar.astro";
+
+const team = [
+  {
+    name: "Ada Placeholder",
+    role: "Creator & maintainer (example)",
+    gradient: "purple-pink",
+    bio: "Fictional teammate. Swap in your real maintainer's bio when adopting the template.",
+  },
+  {
+    name: "Ben Example",
+    role: "Frontend & design (example)",
+    gradient: "cyan-green",
+    bio: "Fictional teammate. Replace with your design-systems lead — gradient, bio, and all.",
+  },
+  {
+    name: "Cora Sample",
+    role: "Backend & infra (example)",
+    gradient: "orange-yellow",
+    bio: "Fictional teammate. Stand-in for whoever owns your backend and deploy pipeline.",
+  },
+] as const;
+---
+
+<!-- team -->
+<section class="reveal gradient-bg-radial px-4 py-20 md:py-28">
+  <div class="mx-auto max-w-5xl">
+    <div class="mb-12 text-center">
+      <p
+        class="text-accent-pink mb-2 font-mono text-xs tracking-wider uppercase"
+      >
+        team
+      </p>
+      <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+        People behind <span class="gradient-text-pink-orange">the stack</span>
+      </h2>
+    </div>
+
+    <div class="stagger-in grid gap-6 md:grid-cols-3">
+      {
+        team.map((member) => (
+          <div class="team-card">
+            <Avatar name={member.name} gradient={member.gradient} size="xl" />
+            <h3 class="team-name">{member.name}</h3>
+            <p class="team-role">{member.role}</p>
+            <p class="team-bio">{member.bio}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .team-card {
+    padding: 1.75rem;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    background-color: var(--color-bg-secondary);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .team-card:hover {
+    border-color: var(--color-accent-pink);
+    transform: translateY(-2px);
+  }
+
+  .team-name {
+    color: var(--color-fg-primary);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    margin-top: 0.75rem;
+  }
+
+  .team-role {
+    color: var(--color-accent-pink);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .team-bio {
+    color: var(--color-fg-secondary);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin-top: 0.5rem;
+  }
+</style>
