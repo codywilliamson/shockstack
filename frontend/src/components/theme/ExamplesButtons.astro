@@ -1,0 +1,94 @@
+<div class="mb-12">
+  <h3 class="text-fg-muted mb-4 text-sm font-semibold tracking-wider uppercase">
+    Buttons
+  </h3>
+  <div class="flex flex-wrap gap-3">
+    <button class="btn-primary">Primary</button>
+    <button class="btn-secondary">Secondary</button>
+    <button class="btn-destructive">Destructive</button>
+    <button class="btn-ghost">Ghost</button>
+  </div>
+  <div class="mt-4 flex flex-wrap gap-3">
+    <button class="btn-accent bg-accent-purple text-bg-primary">Purple</button>
+    <button class="btn-accent bg-accent-pink text-bg-primary">Pink</button>
+    <button class="btn-accent bg-accent-green text-bg-primary">Green</button>
+    <button class="btn-accent bg-accent-cyan text-bg-primary">Cyan</button>
+    <button class="btn-accent bg-accent-orange text-bg-primary">Orange</button>
+    <button class="btn-accent bg-accent-red text-bg-primary">Red</button>
+    <button class="btn-accent bg-accent-yellow text-bg-primary">Yellow</button>
+  </div>
+</div>
+
+<style>
+  .btn-primary {
+    background: var(--color-accent-purple);
+    color: var(--color-bg-primary);
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    border: 1px solid var(--color-border-default);
+    color: var(--color-fg-primary);
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--color-accent-purple);
+    transform: translateY(-1px);
+  }
+
+  .btn-destructive {
+    background: var(--color-accent-red);
+    color: var(--color-bg-primary);
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+  }
+
+  .btn-destructive:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    color: var(--color-fg-secondary);
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+  }
+
+  .btn-ghost:hover {
+    background: var(--color-bg-secondary);
+    color: var(--color-fg-primary);
+  }
+
+  .btn-accent {
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+  }
+
+  .btn-accent:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+</style>
