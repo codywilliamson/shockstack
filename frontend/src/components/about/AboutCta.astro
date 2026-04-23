@@ -1,0 +1,57 @@
+---
+
+---
+
+<!-- cta -->
+<section class="reveal px-4 py-20 md:py-24">
+  <div class="mx-auto max-w-3xl text-center">
+    <h2 class="mb-5 text-3xl font-bold md:text-4xl">
+      Ready to <span class="gradient-text-animated">stop bikeshedding</span>?
+    </h2>
+    <p class="text-fg-secondary mb-8 text-lg">
+      Clone the template, run one command, and ship.
+    </p>
+    <div class="flex flex-wrap justify-center gap-3">
+      <a href="/docs" class="about-cta about-cta-primary">Read the docs</a>
+      <a href="/pricing" class="about-cta">See pricing</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-lg);
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: 1px solid var(--color-border-default);
+    color: var(--color-fg-primary);
+    background-color: var(--color-bg-secondary);
+    text-decoration: none;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .about-cta:hover {
+    border-color: var(--color-accent-purple);
+    color: var(--color-accent-purple);
+  }
+
+  .about-cta-primary {
+    border: none;
+    color: var(--color-bg-primary);
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-purple),
+      var(--color-accent-pink)
+    );
+  }
+
+  .about-cta-primary:hover {
+    color: var(--color-bg-primary);
+    opacity: 0.9;
+  }
+</style>

@@ -1,0 +1,150 @@
+---
+import Badge from "../content/Badge.astro";
+
+const timeline = [
+  {
+    date: "2024 Q3",
+    title: "The idea",
+    body: "Years of wiring up the same stack for every new project finally boiled over. A convention-first template was the fix.",
+    color: "purple",
+  },
+  {
+    date: "2025 Q1",
+    title: "First prototype",
+    body: "Astro + Vue + CF Workers on the frontend. .NET 10 with Aspire on the backend. Design tokens stitched through the whole tree.",
+    color: "pink",
+  },
+  {
+    date: "2025 Q3",
+    title: "Design system lands",
+    body: "14 themes, full token pipeline via Style Dictionary, and a component library that re-skins itself on a single attribute change.",
+    color: "cyan",
+  },
+  {
+    date: "2026 Q1",
+    title: "Open-sourced",
+    body: "Released under MIT on GitHub with a semantic-release pipeline and docs site. First outside contributions rolling in.",
+    color: "green",
+  },
+  {
+    date: "Today",
+    title: "Shipping weekly",
+    body: "Steady cadence of component, docs, and DX improvements driven by usage and community feedback.",
+    color: "orange",
+  },
+] as const;
+---
+
+<!-- timeline -->
+<section class="reveal px-4 py-20 md:py-28">
+  <div class="mx-auto max-w-3xl">
+    <div class="mb-10">
+      <p
+        class="text-accent-orange mb-2 font-mono text-xs tracking-wider uppercase"
+      >
+        milestones
+      </p>
+      <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+        How we got <span class="gradient-text-orange-yellow">here</span>
+      </h2>
+    </div>
+
+    <ol class="timeline">
+      {
+        timeline.map((entry) => (
+          <li class="timeline-item">
+            <span class={`timeline-dot timeline-dot-${entry.color}`} />
+            <div class="timeline-body">
+              <div class="timeline-meta">
+                <Badge color={entry.color} size="sm">
+                  {entry.date}
+                </Badge>
+              </div>
+              <h3 class="timeline-title">{entry.title}</h3>
+              <p class="timeline-text">{entry.body}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+  }
+
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 0.4375rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background: linear-gradient(
+      180deg,
+      var(--color-accent-purple),
+      var(--color-accent-pink),
+      var(--color-accent-orange)
+    );
+    opacity: 0.4;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-left: 2rem;
+    padding-bottom: 1.75rem;
+  }
+
+  .timeline-item:last-child {
+    padding-bottom: 0;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: 0;
+    top: 0.375rem;
+    width: 0.9375rem;
+    height: 0.9375rem;
+    border-radius: var(--radius-full);
+    background-color: var(--color-bg-primary);
+    border: 2px solid;
+  }
+
+  .timeline-dot-purple {
+    border-color: var(--color-accent-purple);
+  }
+  .timeline-dot-pink {
+    border-color: var(--color-accent-pink);
+  }
+  .timeline-dot-cyan {
+    border-color: var(--color-accent-cyan);
+  }
+  .timeline-dot-green {
+    border-color: var(--color-accent-green);
+  }
+  .timeline-dot-orange {
+    border-color: var(--color-accent-orange);
+  }
+
+  .timeline-meta {
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline-title {
+    color: var(--color-fg-primary);
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.375rem;
+  }
+
+  .timeline-text {
+    color: var(--color-fg-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+</style>

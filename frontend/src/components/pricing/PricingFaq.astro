@@ -1,0 +1,58 @@
+---
+import AccordionPanel from "../ui/AccordionPanel.vue";
+
+const billingFaq = [
+  {
+    value: "b1",
+    title: "Can I switch plans later?",
+    content:
+      "Yes — upgrades take effect immediately, downgrades at the end of the current billing cycle. No fees, no hoops.",
+  },
+  {
+    value: "b2",
+    title: "Do you offer student or OSS discounts?",
+    content:
+      "Yes. Open-source maintainers and students get Pro features free — reach out with a link to your GitHub profile or a valid student email.",
+  },
+  {
+    value: "b3",
+    title: "What happens if I cancel?",
+    content:
+      "You keep access through the end of the period you paid for. After that you're back on Starter — your data and themes stay intact.",
+  },
+  {
+    value: "b4",
+    title: "Is there a yearly discount?",
+    content:
+      "Pro is 20% off when billed yearly. Enterprise pricing is always custom and can be quarterly or annual.",
+  },
+];
+---
+
+<section class="reveal gradient-bg-radial px-4 py-20 md:py-28">
+  <div class="mx-auto max-w-3xl">
+    <div class="mb-10 text-center">
+      <p
+        class="text-accent-orange mb-2 font-mono text-xs tracking-wider uppercase"
+      >
+        billing faq
+      </p>
+      <h2 class="mb-3 text-3xl font-bold md:text-4xl">
+        Common <span class="gradient-text-orange-yellow">questions</span>
+      </h2>
+    </div>
+
+    <AccordionPanel client:load items={billingFaq} />
+
+    <p class="text-fg-muted mt-8 text-center text-sm">
+      Still have questions? <a
+        href="/docs"
+        class="text-accent-purple hover:text-accent-pink">Read the docs</a
+      > or
+      <a
+        href="mailto:hello@shockstack.dev"
+        class="text-accent-purple hover:text-accent-pink">email us</a
+      >.
+    </p>
+  </div>
+</section>
