@@ -1,5 +1,5 @@
 ---
-
+import { features } from "../../lib/features";
 ---
 
 <!-- features grid -->
@@ -16,199 +16,28 @@
     </div>
 
     <div class="features-grid grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      <div class="glass hover-lift feature-card group">
-        <div class="feature-icon text-accent-orange">
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-            <polyline points="2 17 12 22 22 17"></polyline>
-            <polyline points="2 12 12 17 22 12"></polyline>
-          </svg>
-        </div>
-        <h3 class="mb-2 text-lg font-semibold">Astro 5 SSR</h3>
-        <p class="text-fg-muted text-sm">
-          Island architecture with server-side rendering. Deploy to Cloudflare
-          Workers or Docker.
-        </p>
-      </div>
-
-      <div class="glass hover-lift feature-card group">
-        <div class="feature-icon text-accent-green">
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-            <path d="M2 2l7.586 7.586"></path>
-            <circle cx="11" cy="11" r="2"></circle>
-          </svg>
-        </div>
-        <h3 class="mb-2 text-lg font-semibold">Vue 3 Islands</h3>
-        <p class="text-fg-muted text-sm">
-          Interactive components hydrate on demand. Ship zero JS by default, add
-          reactivity where needed.
-        </p>
-      </div>
-
-      <div class="glass hover-lift feature-card group">
-        <div class="feature-icon text-accent-purple">
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <circle cx="13.5" cy="6.5" r="2.5"></circle>
-            <circle cx="6" cy="12" r="2.5"></circle>
-            <circle cx="18" cy="12" r="2.5"></circle>
-            <circle cx="13.5" cy="17.5" r="2.5"></circle>
-          </svg>
-        </div>
-        <h3 class="mb-2 text-lg font-semibold">Design Tokens</h3>
-        <p class="text-fg-muted text-sm">
-          Style Dictionary v5 generates CSS vars, Tailwind config, TS constants,
-          and JSON from a single source.
-        </p>
-      </div>
-
-      <div class="glass hover-lift feature-card group">
-        <div class="feature-icon text-accent-pink">
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0110 0v4"></path>
-          </svg>
-        </div>
-        <h3 class="mb-2 text-lg font-semibold">Better Auth</h3>
-        <p class="text-fg-muted text-sm">
-          Email/password and OAuth out of the box. JWT validation shared with
-          the .NET backend.
-        </p>
-      </div>
-
-      <div class="glass hover-lift feature-card group">
-        <div class="feature-icon text-accent-cyan">
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-            <line x1="8" y1="21" x2="16" y2="21"></line>
-            <line x1="12" y1="17" x2="12" y2="21"></line>
-          </svg>
-        </div>
-        <h3 class="mb-2 text-lg font-semibold">.NET 10 Backend</h3>
-        <p class="text-fg-muted text-sm">
-          Optional clean architecture API with EF Core, Aspire orchestration,
-          and shared auth.
-        </p>
-      </div>
-
-      <div class="glass hover-lift feature-card group">
-        <div class="feature-icon text-accent-yellow">
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-            <path d="M2 17l10 5 10-5"></path>
-            <path d="M2 12l10 5 10-5"></path>
-          </svg>
-        </div>
-        <h3 class="mb-2 text-lg font-semibold">Tailwind 4</h3>
-        <p class="text-fg-muted text-sm">
-          Latest Tailwind with Vite plugin integration. Token-powered theme with
-          fourteen built-in palettes.
-        </p>
-      </div>
-
-      <div class="glass hover-lift feature-card group">
-        <div class="feature-icon text-accent-green">
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="16 18 22 12 16 6"></polyline>
-            <polyline points="8 6 2 12 8 18"></polyline>
-          </svg>
-        </div>
-        <h3 class="mb-2 text-lg font-semibold">CI/CD Pipeline</h3>
-        <p class="text-fg-muted text-sm">
-          GitHub Actions with semantic-release, commitlint, and automated
-          deployments baked in.
-        </p>
-      </div>
-
-      <div class="glass hover-lift feature-card group">
-        <div class="feature-icon text-accent-orange">
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path
-              d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0022 16z"
-            ></path>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-            <line x1="12" y1="22.08" x2="12" y2="12"></line>
-          </svg>
-        </div>
-        <h3 class="mb-2 text-lg font-semibold">Docker Ready</h3>
-        <p class="text-fg-muted text-sm">
-          Multi-stage Dockerfiles, compose configs, and Aspire AppHost for
-          single-command orchestration.
-        </p>
-      </div>
+      {
+        features.map((f) => (
+          <div class="glass hover-lift feature-card group">
+            <div class={`feature-icon text-accent-${f.color}`}>
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <Fragment set:html={f.svgInner} />
+              </svg>
+            </div>
+            <h3 class="mb-2 text-lg font-semibold">{f.title}</h3>
+            <p class="text-fg-muted text-sm">{f.description}</p>
+          </div>
+        ))
+      }
     </div>
   </div>
 </section>
