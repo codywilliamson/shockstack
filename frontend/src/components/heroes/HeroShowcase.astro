@@ -51,9 +51,17 @@ const heroBootstrapScript = `
 (() => {
   const STORAGE_KEY = "shockstack:homepage-hero";
   const HERO_IDS = ${JSON.stringify(heroOptions.map((option) => option.id))};
+  const HERO_META = ${JSON.stringify(
+    Object.fromEntries(
+      heroOptions.map((o) => [o.id, { label: o.label, accent: o.accent }]),
+    ),
+  )};
   const DEFAULT_HERO = "${defaultHero}";
   const ROOT_SELECTOR = "[data-hero-showcase]";
   const INPUT_SELECTOR = 'input[name="homepage-hero"]';
+  const PICKER_SELECTOR = "[data-hero-picker]";
+  const TRIGGER_SELECTOR = "[data-hero-picker-trigger]";
+  const FLOATING_OFFSET = 96;
 
   function resolveInitialHero() {
     const url = new URL(window.location.href);
@@ -78,11 +86,18 @@ const heroBootstrapScript = `
     const root = document.querySelector(ROOT_SELECTOR);
     if (!(root instanceof HTMLElement)) return;
 
+    const picker = root.querySelector(PICKER_SELECTOR);
+    const trigger = root.querySelector(TRIGGER_SELECTOR);
+    const triggerLabel = trigger?.querySelector("[data-hero-picker-trigger-label]");
+    const triggerDot = trigger?.querySelector("[data-hero-picker-trigger-dot]");
     const inputs = Array.from(root.querySelectorAll(INPUT_SELECTOR)).filter(
       (input) => input instanceof HTMLInputElement,
     );
 
+    if (!picker || !(picker instanceof HTMLElement)) return;
     if (!inputs.length) return;
+
+    const closePicker = () => picker.classList.remove("is-expanded");
 
     const applyHero = (value) => {
       const nextInput =
@@ -93,6 +108,18 @@ const heroBootstrapScript = `
       document.documentElement.dataset.heroVariant = nextInput.value;
       localStorage.setItem(STORAGE_KEY, nextInput.value);
       syncUrl(nextInput.value);
+
+      const meta = HERO_META[nextInput.value];
+      if (meta && triggerLabel) triggerLabel.textContent = meta.label;
+      if (meta && trigger instanceof HTMLElement) {
+        trigger.style.setProperty(
+          "--hero-option-accent",
+          "var(--color-accent-" + meta.accent + ")",
+        );
+      }
+      if (meta && triggerDot instanceof HTMLElement) {
+        triggerDot.style.background = "var(--color-accent-" + meta.accent + ")";
+      }
     };
 
     if (root.dataset.bound !== "true") {
@@ -100,8 +127,60 @@ const heroBootstrapScript = `
         input.addEventListener("change", () => {
           if (!input.checked) return;
           applyHero(input.value);
+          closePicker();
         });
       }
+
+      // intercept label clicks so the hidden radio doesn't pull focus
+      // (focus lands at the top of the page, which scrolls past the hero)
+      const labels = root.querySelectorAll(".hero-picker__option");
+      for (const label of labels) {
+        label.addEventListener("click", (event) => {
+          event.preventDefault();
+          const forId = label.getAttribute("for");
+          if (!forId) return;
+          const input = inputs.find((i) => i.id === forId);
+          if (!input) return;
+          if (!input.checked) {
+            input.checked = true;
+            input.dispatchEvent(new Event("change", { bubbles: true }));
+          } else {
+            closePicker();
+          }
+        });
+      }
+
+      if (trigger instanceof HTMLElement) {
+        trigger.addEventListener("click", (event) => {
+          event.stopPropagation();
+          picker.classList.toggle("is-expanded");
+          const expanded = picker.classList.contains("is-expanded");
+          trigger.setAttribute("aria-expanded", String(expanded));
+        });
+      }
+
+      document.addEventListener("click", (event) => {
+        if (!picker.classList.contains("is-expanded")) return;
+        if (!(event.target instanceof Node)) return;
+        if (picker.contains(event.target)) return;
+        closePicker();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closePicker();
+      });
+
+      const updateFloating = () => {
+        const rect = root.getBoundingClientRect();
+        const shouldFloat = rect.bottom < FLOATING_OFFSET;
+        picker.classList.toggle("is-floating", shouldFloat);
+        if (!shouldFloat) closePicker();
+      };
+
+      window.addEventListener("scroll", updateFloating, { passive: true });
+      window.addEventListener("resize", updateFloating);
+      updateFloating();
+
       root.dataset.bound = "true";
     }
 
@@ -128,29 +207,63 @@ const heroBootstrapScript = `
         id={`hero-option-${option.id}`}
         value={option.id}
         checked={index === 0}
+        tabindex="-1"
+        aria-hidden="true"
       />
     ))
   }
 
   <script is:inline set:html={heroBootstrapScript} />
 
-  <div
-    class="hero-showcase__controls"
-    role="radiogroup"
-    aria-label="Homepage hero style"
-  >
-    {
-      heroOptions.map((option) => (
-        <label
-          class="hero-showcase__option"
-          for={`hero-option-${option.id}`}
-          style={`--hero-option-accent: var(--color-accent-${option.accent})`}
-        >
-          <span class="hero-showcase__option-dot" />
-          <span class="hero-showcase__option-name">{option.label}</span>
-        </label>
-      ))
-    }
+  <div class="hero-picker" data-hero-picker>
+    <button
+      class="hero-picker__trigger"
+      data-hero-picker-trigger
+      type="button"
+      aria-expanded="false"
+      aria-label="Change hero style"
+    >
+      <span
+        class="hero-picker__trigger-dot"
+        data-hero-picker-trigger-dot
+        aria-hidden="true"></span>
+      <span class="hero-picker__trigger-label" data-hero-picker-trigger-label>
+        Launchpad
+      </span>
+      <svg
+        class="hero-picker__trigger-caret"
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+
+    <div
+      class="hero-picker__options"
+      role="radiogroup"
+      aria-label="Homepage hero style"
+    >
+      {
+        heroOptions.map((option, index) => (
+          <label
+            class="hero-picker__option"
+            for={`hero-option-${option.id}`}
+            style={`--hero-option-accent: var(--color-accent-${option.accent}); --hero-option-index: ${index}`}
+          >
+            <span class="hero-picker__option-dot" />
+            <span class="hero-picker__option-name">{option.label}</span>
+          </label>
+        ))
+      }
+    </div>
   </div>
 
   <div class="hero-showcase__panels">
@@ -178,6 +291,8 @@ const heroBootstrapScript = `
 <style>
   .hero-showcase {
     position: relative;
+    padding-top: 4.75rem;
+    padding-bottom: 1rem;
   }
 
   .hero-showcase__input {
@@ -186,7 +301,12 @@ const heroBootstrapScript = `
     pointer-events: none;
   }
 
-  .hero-showcase__controls {
+  /* ----- PICKER: shared ----- */
+  .hero-picker {
+    --picker-fab-size: 3rem;
+  }
+
+  .hero-picker__options {
     position: fixed;
     top: 4.75rem;
     left: 50%;
@@ -207,19 +327,22 @@ const heroBootstrapScript = `
     border: 1px solid
       color-mix(in srgb, var(--color-border-default) 65%, transparent);
     box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.45);
+    transition:
+      top 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      left 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      right 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      bottom 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.25s ease,
+      border-radius 0.4s ease,
+      padding 0.4s ease;
   }
 
-  .hero-showcase__controls::-webkit-scrollbar {
+  .hero-picker__options::-webkit-scrollbar {
     display: none;
   }
 
-  /* reserve space so the fixed picker doesn't overlap the hero title */
-  .hero-showcase {
-    padding-top: 4.5rem;
-    padding-bottom: 1rem;
-  }
-
-  .hero-showcase__option {
+  .hero-picker__option {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -235,10 +358,11 @@ const heroBootstrapScript = `
       transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
       border-color 0.25s ease,
       box-shadow 0.25s ease,
-      background-color 0.25s ease;
+      background-color 0.25s ease,
+      opacity 0.3s ease;
   }
 
-  .hero-showcase__option-dot {
+  .hero-picker__option-dot {
     display: inline-block;
     height: 0.5rem;
     width: 0.5rem;
@@ -248,7 +372,7 @@ const heroBootstrapScript = `
       color-mix(in srgb, var(--hero-option-accent) 14%, transparent);
   }
 
-  .hero-showcase__option:hover {
+  .hero-picker__option:hover {
     transform: translateY(-1px);
     border-color: color-mix(
       in srgb,
@@ -257,38 +381,31 @@ const heroBootstrapScript = `
     );
   }
 
-  .hero-showcase__option-name {
+  .hero-picker__option-name {
     font-size: 0.85rem;
     font-weight: 600;
     line-height: 1.2;
     white-space: nowrap;
   }
 
-  .hero-showcase__panels {
-    position: relative;
-  }
-
-  .hero-showcase__panel {
-    display: none;
-  }
-
+  /* checked styles driven by hidden radio inputs on .hero-showcase */
   #hero-option-launchpad:checked
-    ~ .hero-showcase__controls
+    ~ .hero-picker
     label[for="hero-option-launchpad"],
   #hero-option-control-room:checked
-    ~ .hero-showcase__controls
+    ~ .hero-picker
     label[for="hero-option-control-room"],
   #hero-option-blueprint:checked
-    ~ .hero-showcase__controls
+    ~ .hero-picker
     label[for="hero-option-blueprint"],
   #hero-option-release-train:checked
-    ~ .hero-showcase__controls
+    ~ .hero-picker
     label[for="hero-option-release-train"],
   #hero-option-operator-desk:checked
-    ~ .hero-showcase__controls
+    ~ .hero-picker
     label[for="hero-option-operator-desk"],
   #hero-option-signal-grid:checked
-    ~ .hero-showcase__controls
+    ~ .hero-picker
     label[for="hero-option-signal-grid"] {
     border-color: color-mix(
       in srgb,
@@ -301,25 +418,202 @@ const heroBootstrapScript = `
   }
 
   #hero-option-launchpad:focus-visible
-    ~ .hero-showcase__controls
+    ~ .hero-picker
     label[for="hero-option-launchpad"],
   #hero-option-control-room:focus-visible
-    ~ .hero-showcase__controls
+    ~ .hero-picker
     label[for="hero-option-control-room"],
   #hero-option-blueprint:focus-visible
-    ~ .hero-showcase__controls
+    ~ .hero-picker
     label[for="hero-option-blueprint"],
   #hero-option-release-train:focus-visible
-    ~ .hero-showcase__controls
+    ~ .hero-picker
     label[for="hero-option-release-train"],
   #hero-option-operator-desk:focus-visible
-    ~ .hero-showcase__controls
+    ~ .hero-picker
     label[for="hero-option-operator-desk"],
   #hero-option-signal-grid:focus-visible
-    ~ .hero-showcase__controls
+    ~ .hero-picker
     label[for="hero-option-signal-grid"] {
     outline: 2px solid var(--color-accent-cyan);
     outline-offset: 3px;
+  }
+
+  /* ----- PICKER TRIGGER (FAB) ----- */
+  .hero-picker__trigger {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 41;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.65rem 1rem 0.65rem 0.85rem;
+    border-radius: var(--radius-full);
+    border: 1px solid
+      color-mix(in srgb, var(--color-border-default) 70%, transparent);
+    background: color-mix(in srgb, var(--color-bg-primary) 82%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    color: var(--color-fg-primary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(12px) scale(0.92);
+    pointer-events: none;
+    box-shadow:
+      0 12px 30px -18px rgba(0, 0, 0, 0.55),
+      0 0 0 1px
+        color-mix(
+          in srgb,
+          var(--hero-option-accent, transparent) 20%,
+          transparent
+        )
+        inset;
+    transition:
+      opacity 0.3s ease,
+      transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .hero-picker__trigger:hover {
+    border-color: color-mix(
+      in srgb,
+      var(--hero-option-accent, var(--color-border-default)) 50%,
+      var(--color-border-default)
+    );
+    transform: translateY(0) scale(1) translateZ(0);
+  }
+
+  .hero-picker__trigger-dot {
+    display: inline-block;
+    height: 0.55rem;
+    width: 0.55rem;
+    border-radius: 999px;
+    background: var(--color-accent-cyan);
+    box-shadow: 0 0 0 0.28rem color-mix(in srgb, currentColor 0%, transparent);
+  }
+
+  .hero-picker__trigger-caret {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0.7;
+  }
+
+  .hero-picker.is-expanded .hero-picker__trigger-caret {
+    transform: rotate(180deg);
+  }
+
+  /* ----- FLOATING STATE ----- */
+  .hero-picker.is-floating .hero-picker__trigger {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  .hero-picker.is-floating .hero-picker__options {
+    top: auto;
+    left: auto;
+    right: 1rem;
+    bottom: calc(1rem + var(--picker-fab-size) + 0.75rem);
+    transform: translateX(0) translateY(8px) scale(0.96);
+    transform-origin: bottom right;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 0.55rem;
+    gap: 0.3rem;
+    max-width: min(16rem, calc(100vw - 2rem));
+    border-radius: var(--radius-xl);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .hero-picker.is-floating.is-expanded .hero-picker__options {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0) translateY(0) scale(1);
+  }
+
+  .hero-picker.is-floating .hero-picker__option {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s ease,
+      background-color 0.25s ease,
+      box-shadow 0.25s ease;
+    transition-delay: 0s;
+  }
+
+  .hero-picker.is-floating.is-expanded .hero-picker__option {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition-delay: calc(var(--hero-option-index) * 0.035s + 0.05s);
+  }
+
+  /* ----- MOBILE: always floating ----- */
+  @media (max-width: 639px) {
+    .hero-showcase {
+      padding-top: 1.5rem;
+    }
+
+    .hero-picker__trigger {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .hero-picker__options {
+      top: auto;
+      left: auto;
+      right: 1rem;
+      bottom: calc(1rem + var(--picker-fab-size) + 0.75rem);
+      transform: translateX(0) translateY(8px) scale(0.96);
+      transform-origin: bottom right;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 0.55rem;
+      gap: 0.3rem;
+      max-width: min(16rem, calc(100vw - 2rem));
+      border-radius: var(--radius-xl);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .hero-picker.is-expanded .hero-picker__options {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0) translateY(0) scale(1);
+    }
+
+    .hero-picker__option {
+      opacity: 0;
+      transform: translateY(6px) scale(0.98);
+      transition:
+        opacity 0.3s ease,
+        transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.25s ease,
+        background-color 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    .hero-picker.is-expanded .hero-picker__option {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition-delay: calc(var(--hero-option-index) * 0.035s + 0.05s);
+    }
+  }
+
+  /* ----- PANELS ----- */
+  .hero-showcase__panels {
+    position: relative;
+  }
+
+  .hero-showcase__panel {
+    display: none;
   }
 
   #hero-option-launchpad:checked
@@ -352,6 +646,15 @@ const heroBootstrapScript = `
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-picker__options,
+    .hero-picker__trigger,
+    .hero-picker__option,
+    .hero-picker__trigger-caret {
+      transition: opacity 0.15s ease;
     }
   }
 </style>
