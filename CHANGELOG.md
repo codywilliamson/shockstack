@@ -1,3 +1,9 @@
+## [1.18.1](https://github.com/codywilliamson/shockstack/compare/v1.18.0...v1.18.1) (2026-04-23)
+
+### Bug Fixes
+
+- **frontend:** repair pages dropdown layout ([543fdf9](https://github.com/codywilliamson/shockstack/commit/543fdf9c1d092bd388f30896d57fe20e1ffa3eb4))
+
 # [1.18.0](https://github.com/codywilliamson/shockstack/compare/v1.17.0...v1.18.0) (2026-04-23)
 
 ### Bug Fixes
