@@ -17,19 +17,19 @@ const featuredUseCases = stackUseCases.slice(0, 3);
   <HeroShowcase />
 
   <!-- features grid -->
-  <section class="reveal px-4 py-20 md:py-28">
+  <section class="reveal features-section px-4 py-20 md:py-28">
     <div class="mx-auto max-w-6xl">
-      <div class="mb-16 text-center">
-        <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+      <div class="features-header mb-16 text-center">
+        <h2 class="features-title mb-4 text-3xl font-bold md:text-4xl">
           Everything you need, nothing you don't
         </h2>
-        <p class="text-fg-secondary mx-auto max-w-2xl text-lg">
+        <p class="features-lede text-fg-secondary mx-auto max-w-2xl text-lg">
           Batteries included where it matters. Every piece is optional,
           swappable, and documented.
         </p>
       </div>
 
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="features-grid grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <div class="glass hover-lift feature-card group">
           <div class="feature-icon text-accent-orange">
             <svg
@@ -598,9 +598,19 @@ const featuredUseCases = stackUseCases.slice(0, 3);
 
 <style>
   /* feature cards */
+  .features-section {
+    position: relative;
+    transition: background-color 0.35s ease;
+  }
+
   .feature-card {
     border-radius: var(--radius-xl);
     padding: 1.5rem;
+    transition:
+      border-color 0.35s ease,
+      background 0.35s ease,
+      box-shadow 0.35s ease,
+      transform 0.35s ease;
   }
 
   .feature-icon {
@@ -612,6 +622,84 @@ const featuredUseCases = stackUseCases.slice(0, 3);
     border-radius: var(--radius-lg);
     background-color: var(--color-bg-tertiary);
     margin-bottom: 1rem;
+    transition:
+      background-color 0.35s ease,
+      box-shadow 0.35s ease,
+      border-radius 0.35s ease;
+  }
+
+  /* hero variant: launchpad — cyan glow, subtle grid overlay */
+  :global([data-hero-variant="launchpad"]) .features-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      circle at 50% 0%,
+      color-mix(in srgb, var(--color-accent-cyan) 10%, transparent),
+      transparent 55%
+    );
+    opacity: 0;
+    animation: features-fade-in 0.45s ease forwards;
+  }
+
+  :global([data-hero-variant="launchpad"]) .features-title {
+    background: linear-gradient(
+      120deg,
+      var(--color-fg-primary),
+      var(--color-accent-cyan)
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  :global([data-hero-variant="launchpad"]) .feature-card {
+    border: 1px solid
+      color-mix(
+        in srgb,
+        var(--color-accent-cyan) 22%,
+        var(--color-border-default)
+      );
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-bg-secondary) 92%, transparent),
+      color-mix(in srgb, var(--color-bg-primary) 94%, transparent)
+    );
+    box-shadow:
+      0 1px 0 color-mix(in srgb, var(--color-accent-cyan) 18%, transparent)
+        inset,
+      0 18px 40px -30px
+        color-mix(in srgb, var(--color-accent-cyan) 40%, transparent);
+  }
+
+  :global([data-hero-variant="launchpad"]) .feature-card:hover {
+    border-color: color-mix(
+      in srgb,
+      var(--color-accent-cyan) 50%,
+      var(--color-border-default)
+    );
+    box-shadow:
+      0 1px 0 color-mix(in srgb, var(--color-accent-cyan) 28%, transparent)
+        inset,
+      0 24px 48px -28px
+        color-mix(in srgb, var(--color-accent-cyan) 55%, transparent);
+  }
+
+  :global([data-hero-variant="launchpad"]) .feature-icon {
+    background: color-mix(
+      in srgb,
+      var(--color-bg-tertiary) 60%,
+      color-mix(in srgb, var(--color-accent-cyan) 20%, transparent)
+    );
+    box-shadow: 0 0 0 1px
+      color-mix(in srgb, var(--color-accent-cyan) 30%, transparent) inset;
+  }
+
+  @keyframes features-fade-in {
+    to {
+      opacity: 1;
+    }
   }
 
   /* stack visualization */
