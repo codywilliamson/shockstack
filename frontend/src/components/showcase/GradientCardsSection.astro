@@ -1,0 +1,157 @@
+---
+import FeatureCardGradient from "../content/FeatureCardGradient.astro";
+---
+
+<!-- gradient feature cards -->
+<section class="reveal px-4 py-20 md:py-28">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-12">
+      <p
+        class="text-accent-green mb-2 font-mono text-xs tracking-wider uppercase"
+      >
+        gradient cards
+      </p>
+      <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+        Feature cards with <span class="gradient-text-purple-pink"
+          >gradient borders</span
+        >
+      </h2>
+      <p class="text-fg-secondary max-w-2xl text-lg">
+        Cards with token-based gradient borders that glow on hover. Every
+        gradient pair uses accent colors from the active theme.
+      </p>
+    </div>
+
+    <div class="stagger-in grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <FeatureCardGradient
+        title="Island Architecture"
+        description="Ship zero JavaScript by default. Interactive Vue components hydrate only when needed, keeping your pages fast."
+        gradient="purple-pink"
+      >
+        <svg
+          slot="icon"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="var(--color-accent-purple)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+          <polyline points="2 17 12 22 22 17"></polyline>
+          <polyline points="2 12 12 17 22 12"></polyline>
+        </svg>
+      </FeatureCardGradient>
+
+      <FeatureCardGradient
+        title="14 Built-in Themes"
+        description="Dracula, Nord, Gruvbox, Catppuccin, Tokyo Night, and more. Switch themes with a single attribute change."
+        gradient="cyan-green"
+      >
+        <svg
+          slot="icon"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="var(--color-accent-cyan)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="13.5" cy="6.5" r="2.5"></circle>
+          <circle cx="6" cy="12" r="2.5"></circle>
+          <circle cx="18" cy="12" r="2.5"></circle>
+          <circle cx="13.5" cy="17.5" r="2.5"></circle>
+        </svg>
+      </FeatureCardGradient>
+
+      <FeatureCardGradient
+        title="Type-Safe Tokens"
+        description="Style Dictionary generates CSS variables, Tailwind config, and TypeScript constants from a single token source."
+        gradient="orange-yellow"
+      >
+        <svg
+          slot="icon"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="var(--color-accent-orange)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="16 18 22 12 16 6"></polyline>
+          <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+      </FeatureCardGradient>
+
+      <FeatureCardGradient
+        title="Auth Built In"
+        description="Better Auth handles email/password and OAuth. JWT tokens are shared with the .NET backend for seamless cross-stack auth."
+        gradient="pink-orange"
+      >
+        <svg
+          slot="icon"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="var(--color-accent-pink)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0110 0v4"></path>
+        </svg>
+      </FeatureCardGradient>
+
+      <FeatureCardGradient
+        title="Full-Stack Ready"
+        description="Optional .NET 10 backend with clean architecture, EF Core, and Aspire orchestration. Strip it if you don't need it."
+        gradient="green-cyan"
+      >
+        <svg
+          slot="icon"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="var(--color-accent-green)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+      </FeatureCardGradient>
+
+      <FeatureCardGradient
+        title="CI/CD Pipeline"
+        description="GitHub Actions with semantic-release, commitlint, path filtering, and automated deploys to Cloudflare and Docker."
+        gradient="purple-pink"
+      >
+        <svg
+          slot="icon"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="var(--color-accent-purple)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+      </FeatureCardGradient>
+    </div>
+  </div>
+</section>

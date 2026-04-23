@@ -1,0 +1,41 @@
+---
+import TestimonialCard from "../content/TestimonialCard.astro";
+---
+
+<!-- testimonials -->
+<section class="reveal px-4 py-20 md:py-28">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-12">
+      <p
+        class="text-accent-pink mb-2 font-mono text-xs tracking-wider uppercase"
+      >
+        testimonials
+      </p>
+      <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+        What developers <span class="gradient-text-pink-orange">are saying</span
+        >
+      </h2>
+    </div>
+
+    <div class="stagger-in grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <TestimonialCard
+        quote="ShockStack saved me weeks of setup. The design token system alone is worth it — switch themes and everything just works."
+        name="Alex Chen"
+        title="Senior Frontend Engineer"
+        accent="purple"
+      />
+      <TestimonialCard
+        quote="Finally a monorepo template that actually has opinions. No more bikeshedding about project structure or tooling choices."
+        name="Sarah Kim"
+        title="Full-Stack Developer"
+        accent="cyan"
+      />
+      <TestimonialCard
+        quote="The Aspire integration is chef's kiss. One command to spin up Postgres, the API, and the frontend. Onboarding new devs is trivial now."
+        name="Marcus Johnson"
+        title="Engineering Lead"
+        accent="green"
+      />
+    </div>
+  </div>
+</section>

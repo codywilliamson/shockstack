@@ -1,0 +1,25 @@
+---
+import StatsCard from "../content/StatsCard.astro";
+---
+
+<!-- stats section with radial gradient bg -->
+<section class="reveal gradient-bg-radial px-4 py-20 md:py-28">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-12 text-center">
+      <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+        Numbers that <span class="gradient-text-cyan-green">speak</span>
+      </h2>
+    </div>
+
+    <div class="stagger-in grid grid-cols-2 gap-6 md:grid-cols-4">
+      <StatsCard value="14" label="Built-in themes" gradient="purple-pink" />
+      <StatsCard
+        value="8+"
+        label="Scaffolding commands"
+        gradient="cyan-green"
+      />
+      <StatsCard value="0" label="JS animation deps" gradient="orange-yellow" />
+      <StatsCard value="100%" label="Token coverage" gradient="pink-orange" />
+    </div>
+  </div>
+</section>
