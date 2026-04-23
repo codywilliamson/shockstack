@@ -118,7 +118,7 @@ const heroBootstrapScript = `
 `;
 ---
 
-<div class="hero-showcase mx-auto max-w-6xl px-4 pt-6 pb-4" data-hero-showcase>
+<div class="hero-showcase mx-auto max-w-6xl px-4 pt-4 pb-4" data-hero-showcase>
   {
     heroOptions.map((option, index) => (
       <input
@@ -187,11 +187,23 @@ const heroBootstrapScript = `
   }
 
   .hero-showcase__controls {
+    position: sticky;
+    top: 0.75rem;
+    z-index: 20;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.25rem 0 1rem;
+    padding: 0.5rem;
+    margin: 0 auto 1.25rem;
+    width: fit-content;
+    max-width: 100%;
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--color-bg-primary) 70%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid
+      color-mix(in srgb, var(--color-border-default) 65%, transparent);
   }
 
   .hero-showcase__option {
@@ -328,5 +340,21 @@ const heroBootstrapScript = `
       opacity: 1;
       transform: translateY(0);
     }
+  }
+</style>
+
+<style is:global>
+  /* flatten child hero sections so they read as part of the page */
+  .hero-showcase__panel > .launchpad-hero,
+  .hero-showcase__panel > .command-hero,
+  .hero-showcase__panel > .blueprint-hero,
+  .hero-showcase__panel > .release-hero,
+  .hero-showcase__panel > .desk-hero,
+  .hero-showcase__panel > .signal-hero {
+    border: none;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+    padding: clamp(1.5rem, 3vw, 3rem) 0;
   }
 </style>
