@@ -1,3 +1,10 @@
+## [1.19.1](https://github.com/codywilliamson/shockstack/compare/v1.19.0...v1.19.1) (2026-04-23)
+
+### Bug Fixes
+
+- **frontend:** use background-image in StatsCard to preserve background-clip text ([2ab208d](https://github.com/codywilliamson/shockstack/commit/2ab208d01897ff0530f4dbe9f62de0b2d80fd261))
+- **showcase:** move tooltip-trigger-btn styles into TooltipHover.vue ([b731faf](https://github.com/codywilliamson/shockstack/commit/b731faff687ac45ad08aed84df0e22ec24d63583))
+
 # [1.19.0](https://github.com/codywilliamson/shockstack/compare/v1.18.1...v1.19.0) (2026-04-23)
 
 ### Bug Fixes
