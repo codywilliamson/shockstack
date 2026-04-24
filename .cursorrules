@@ -14,5 +14,5 @@ Backend: dotnet build/test backend/ShockStack.slnx
 Conventions:
 - Conventional commits, pnpm only
 - Tailwind 4 via @tailwindcss/vite
-- CSS-only animations
+- CSS-first animations; JS motion allowed when CSS can't reasonably express it
 - See docs/system/ for detailed docs

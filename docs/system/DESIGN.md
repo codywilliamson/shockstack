@@ -34,7 +34,7 @@ spacing:
 
 ## Overview
 
-ShockStack perfectly blends Astro 5, Vue 3, and Tailwind 4 to create a robust, convention-first architectural template. The design language favors a sleek, dark/light configurable UI featuring smooth CSS-only view transitions and robust Headless UI accessibility.
+ShockStack perfectly blends Astro 5, Vue 3, and Tailwind 4 to create a robust, convention-first architectural template. The design language favors a sleek, dark/light configurable UI featuring smooth, CSS-first view transitions (with targeted JS motion where CSS falls short) and robust Headless UI accessibility.
 
 ## Colors
 

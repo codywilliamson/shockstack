@@ -2,14 +2,18 @@
 interface Props {
   id: string;
   class?: string;
+  size?: "sm" | "md";
 }
 
-const { id, class: className } = Astro.props;
+const { id, class: className, size = "md" } = Astro.props;
+const box = size === "sm" ? "h-8 w-8" : "h-10 w-10";
+const icon = size === "sm" ? "h-4 w-4" : "h-5 w-5";
 ---
 
 <span
   class:list={[
-    "bg-bg-tertiary border-border-default inline-flex h-10 w-10 items-center justify-center rounded-lg border",
+    "bg-bg-tertiary border-border-default inline-flex items-center justify-center rounded-lg border",
+    box,
     className,
   ]}
   aria-hidden="true"
@@ -17,7 +21,7 @@ const { id, class: className } = Astro.props;
   {
     id === "saas-dashboard" ? (
       <svg
-        class="text-accent-purple h-5 w-5"
+        class:list={["text-accent-purple", icon]}
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -31,7 +35,7 @@ const { id, class: className } = Astro.props;
       </svg>
     ) : id === "internal-ops" ? (
       <svg
-        class="text-accent-cyan h-5 w-5"
+        class:list={["text-accent-cyan", icon]}
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -49,7 +53,7 @@ const { id, class: className } = Astro.props;
       </svg>
     ) : id === "content-platform" ? (
       <svg
-        class="text-accent-green h-5 w-5"
+        class:list={["text-accent-green", icon]}
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -62,7 +66,7 @@ const { id, class: className } = Astro.props;
       </svg>
     ) : id === "startup-mvp" ? (
       <svg
-        class="text-accent-orange h-5 w-5"
+        class:list={["text-accent-orange", icon]}
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -76,9 +80,37 @@ const { id, class: className } = Astro.props;
         <path d="M8 13l2 2" />
         <path d="M16 13l-2 2" />
       </svg>
+    ) : id === "ecommerce-storefront" ? (
+      <svg
+        class:list={["text-accent-pink", icon]}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <path d="M16 10a4 4 0 0 1-8 0" />
+      </svg>
+    ) : id === "api-first-devtool" ? (
+      <svg
+        class:list={["text-accent-yellow", icon]}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="16 18 22 12 16 6" />
+        <polyline points="8 6 2 12 8 18" />
+        <line x1="14" y1="4" x2="10" y2="20" />
+      </svg>
     ) : (
       <svg
-        class="text-accent-pink h-5 w-5"
+        class:list={["text-accent-pink", icon]}
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"

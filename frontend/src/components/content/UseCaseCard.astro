@@ -5,23 +5,24 @@ import { stackOptions, type StackUseCase } from "../../lib/use-cases";
 interface Props {
   useCase: StackUseCase;
   compact?: boolean;
+  detailed?: boolean;
 }
 
-const { useCase, compact = false } = Astro.props;
+const { useCase, compact = false, detailed = false } = Astro.props;
 const includeOptions = useCase.include.map((id) => stackOptions[id]);
 const skipOptions = useCase.skip.map((id) => stackOptions[id]);
 const outcomes = compact ? useCase.outcomes.slice(0, 2) : useCase.outcomes;
 ---
 
 <article
+  id={`use-case-${useCase.id}`}
   class:list={[
-    "bg-bg-secondary border-border-default rounded-xl border p-5",
-    "hover:border-accent-purple transition-colors",
+    "bg-bg-secondary border-border-default hover-lift rounded-xl border p-5",
   ]}
 >
   <header class="mb-3 flex items-start gap-3">
     <UseCaseIcon id={useCase.id} />
-    <div>
+    <div class="min-w-0 flex-1">
       <h3 class="text-fg-primary text-lg font-semibold">{useCase.title}</h3>
       <p class="text-fg-secondary mt-1 text-sm leading-relaxed">
         {useCase.summary}
@@ -29,13 +30,30 @@ const outcomes = compact ? useCase.outcomes.slice(0, 2) : useCase.outcomes;
     </div>
   </header>
 
+  {
+    detailed && (
+      <div class="border-border-muted mb-4 rounded-lg border-l-2 pl-3">
+        <p class="text-fg-muted mb-1 font-mono text-[11px] tracking-wider uppercase">
+          Best for
+        </p>
+        <p class="text-fg-secondary text-sm leading-relaxed">
+          {useCase.bestFor}
+        </p>
+      </div>
+    )
+  }
+
   <ul class="text-fg-secondary mb-4 list-disc space-y-1 pl-5 text-sm">
     {outcomes.map((outcome) => <li>{outcome}</li>)}
   </ul>
 
   <div class="space-y-3">
     <div>
-      <p class="text-fg-muted mb-2 text-xs tracking-wide uppercase">Include</p>
+      <p
+        class="text-fg-muted mb-2 font-mono text-[11px] tracking-wider uppercase"
+      >
+        Include
+      </p>
       <div class="flex flex-wrap gap-2">
         {
           includeOptions.map((option) => (
@@ -50,7 +68,7 @@ const outcomes = compact ? useCase.outcomes.slice(0, 2) : useCase.outcomes;
     {
       !compact && skipOptions.length > 0 && (
         <div>
-          <p class="text-fg-muted mb-2 text-xs tracking-wide uppercase">
+          <p class="text-fg-muted mb-2 font-mono text-[11px] tracking-wider uppercase">
             Can Skip
           </p>
           <div class="flex flex-wrap gap-2">
@@ -64,4 +82,40 @@ const outcomes = compact ? useCase.outcomes.slice(0, 2) : useCase.outcomes;
       )
     }
   </div>
+
+  {
+    detailed && (
+      <div class="border-border-muted mt-5 space-y-3 border-t pt-4">
+        {useCase.examples.length > 0 && (
+          <div>
+            <p class="text-fg-muted mb-1 font-mono text-[11px] tracking-wider uppercase">
+              Examples
+            </p>
+            <p class="text-fg-secondary text-sm">
+              {useCase.examples.join(" · ")}
+            </p>
+          </div>
+        )}
+        {useCase.tradeoffs.length > 0 && (
+          <div>
+            <p class="text-fg-muted mb-1 font-mono text-[11px] tracking-wider uppercase">
+              Trade-offs
+            </p>
+            <ul class="text-fg-secondary list-disc space-y-1 pl-5 text-sm">
+              {useCase.tradeoffs.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <a
+          href={useCase.nextSteps.href}
+          class="text-accent-purple hover:text-accent-pink inline-flex items-center gap-1 text-sm font-medium transition-colors"
+        >
+          {useCase.nextSteps.label}
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    )
+  }
 </article>

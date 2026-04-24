@@ -1,0 +1,98 @@
+---
+import UseCaseCard from "./UseCaseCard.astro";
+import UseCaseIcon from "./UseCaseIcon.astro";
+import { pickerQuestions, stackUseCases } from "../../lib/use-cases";
+
+const projectTypeQ = pickerQuestions[0];
+const featured = [
+  stackUseCases.find((u) => u.id === "saas-dashboard")!,
+  stackUseCases.find((u) => u.id === "content-platform")!,
+  stackUseCases.find((u) => u.id === "ecommerce-storefront")!,
+];
+---
+
+<section
+  class="reveal border-border-default bg-bg-secondary/30 relative overflow-hidden border-y px-4 py-20"
+>
+  <div
+    class="pointer-events-none absolute inset-0"
+    aria-hidden="true"
+    style="background: radial-gradient(700px 300px at 20% 0%, color-mix(in srgb, var(--color-accent-purple) 10%, transparent), transparent 60%), radial-gradient(600px 280px at 90% 100%, color-mix(in srgb, var(--color-accent-cyan) 8%, transparent), transparent 60%);"
+  >
+  </div>
+
+  <div class="relative mx-auto max-w-6xl">
+    <div class="mb-10 max-w-3xl">
+      <p
+        class="text-accent-green mb-2 font-mono text-xs tracking-wider uppercase"
+      >
+        Planning Use Cases
+      </p>
+      <h2 class="text-3xl font-bold md:text-5xl">Not sure where to start?</h2>
+      <p class="text-fg-secondary mt-3 text-base leading-relaxed md:text-lg">
+        Tell us what you're building and we'll point you at the right setup — no
+        guesswork, no over-building.
+      </p>
+    </div>
+
+    <div class="picker-card mb-12 p-6 md:p-8">
+      <p class="text-fg-muted mb-3 font-mono text-xs tracking-wider uppercase">
+        Question 1 of 5
+      </p>
+      <h3 class="text-fg-primary mb-5 text-xl font-semibold md:text-2xl">
+        {projectTypeQ.prompt}
+      </h3>
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          projectTypeQ.options.map((option) => (
+            <a
+              href={`/use-cases?q1=${option.id}#picker`}
+              class="picker-option group flex items-start gap-3 p-4"
+              data-teaser-option
+            >
+              <UseCaseIcon id={option.icon} size="sm" />
+              <div class="min-w-0 flex-1">
+                <p class="text-fg-primary font-medium">{option.label}</p>
+                <p class="text-fg-secondary mt-0.5 text-sm leading-snug">
+                  {option.description}
+                </p>
+              </div>
+              <span
+                class="text-fg-muted group-hover:text-accent-purple mt-1 flex-shrink-0 transition-colors"
+                aria-hidden="true"
+              >
+                &rarr;
+              </span>
+            </a>
+          ))
+        }
+      </div>
+      <p class="text-fg-muted mt-5 text-xs">
+        Or
+        <a
+          href="/use-cases#picker"
+          class="text-accent-purple hover:text-accent-pink font-medium transition-colors"
+        >
+          jump into the full picker &rarr;
+        </a>
+      </p>
+    </div>
+
+    <div>
+      <div class="mb-5 flex flex-wrap items-end justify-between gap-4">
+        <h3 class="text-fg-primary text-xl font-semibold md:text-2xl">
+          Or browse featured builds
+        </h3>
+        <a
+          href="/use-cases"
+          class="text-accent-purple hover:text-accent-pink text-sm font-medium transition-colors"
+        >
+          See every use case &rarr;
+        </a>
+      </div>
+      <div class="grid gap-5 lg:grid-cols-3">
+        {featured.map((useCase) => <UseCaseCard useCase={useCase} compact />)}
+      </div>
+    </div>
+  </div>
+</section>

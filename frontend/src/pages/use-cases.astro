@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import UseCaseCard from "../components/content/UseCaseCard.astro";
+import StackPicker from "../components/use-cases/StackPicker.vue";
 import { stackOptionIds, stackOptions, stackUseCases } from "../lib/use-cases";
 
 export const prerender = true;
@@ -10,24 +11,39 @@ const options = stackOptionIds.map((id) => stackOptions[id]);
 
 <BaseLayout
   title="Use Cases"
-  description="Where ShockStack fits best, plus which stack options to include or skip."
+  description="Interactive stack picker — answer 5 questions, get the ShockStack setup that fits your project."
 >
-  <section class="mb-12">
+  <section class="mb-10">
     <p
       class="text-accent-green mb-3 font-mono text-xs tracking-wider uppercase"
     >
       Planning Guide
     </p>
-    <h1 class="mb-3 text-4xl font-bold">What You Can Build With ShockStack</h1>
-    <p class="text-fg-secondary max-w-3xl text-lg">
-      Start with the smallest setup that solves the problem. Add backend and
-      orchestration options when your product needs them.
+    <h1 class="mb-3 text-4xl font-bold md:text-5xl">
+      What should you build with ShockStack?
+    </h1>
+    <p class="text-fg-secondary max-w-3xl text-lg leading-relaxed">
+      Answer five quick questions and we'll recommend the use case, the options
+      to include, and the ones to skip for now.
     </p>
   </section>
 
-  <section class="mb-14">
-    <div class="mb-4 flex items-center justify-between gap-4">
-      <h2 class="text-2xl font-semibold">Use Cases</h2>
+  <div class="mb-16">
+    <StackPicker client:only="vue" />
+  </div>
+
+  <section class="mb-16" aria-labelledby="gallery-heading">
+    <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p
+          class="text-accent-green mb-2 font-mono text-xs tracking-wider uppercase"
+        >
+          Full gallery
+        </p>
+        <h2 id="gallery-heading" class="text-2xl font-semibold md:text-3xl">
+          Every use case, in detail
+        </h2>
+      </div>
       <a
         href="/docs/getting-started"
         class="text-accent-purple hover:text-accent-pink text-sm font-medium transition-colors"
@@ -37,12 +53,18 @@ const options = stackOptionIds.map((id) => stackOptions[id]);
     </div>
 
     <div class="grid gap-5 lg:grid-cols-2">
-      {stackUseCases.map((useCase) => <UseCaseCard useCase={useCase} />)}
+      {
+        stackUseCases.map((useCase) => (
+          <UseCaseCard useCase={useCase} detailed />
+        ))
+      }
     </div>
   </section>
 
-  <section>
-    <h2 class="mb-4 text-2xl font-semibold">Option Picker: Include vs Skip</h2>
+  <section aria-labelledby="reference-heading">
+    <h2 id="reference-heading" class="mb-3 text-2xl font-semibold">
+      Option reference: include vs skip
+    </h2>
     <p class="text-fg-secondary mb-6 max-w-3xl">
       Keep what helps now. Skip what adds complexity you do not need yet.
     </p>
