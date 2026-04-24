@@ -1,0 +1,172 @@
+---
+title: "Database Guide"
+description: "Drizzle ORM schema, migrations, seeding, and querying Postgres from Astro."
+order: 9
+---
+
+import Alert from "../../components/content/Alert.astro";
+import TerminalTabs from "../../components/content/TerminalTabs.astro";
+
+# Database guide
+
+ShockStack talks to Postgres from the frontend via [Drizzle ORM](https://orm.drizzle.team/). The schema backs [Better Auth](/docs/authentication) and any application tables you add. Drizzle Kit handles migrations and the local studio.
+
+**Versions:** `drizzle-orm ^0.45`, `drizzle-kit ^0.31`, `postgres ^3.4` (postgres.js driver), Postgres 17.
+
+## Layout
+
+```
+frontend/
+├── drizzle.config.ts          # schema + output paths
+├── drizzle/                   # generated migrations (tracked)
+└── src/lib/db/
+    ├── client.ts              # drizzle() instance
+    ├── schema.ts              # table definitions
+    └── seed.ts                # `pnpm db:seed`
+```
+
+## Local Postgres
+
+You can stand up Postgres any way you like. The repo ships with Compose and Aspire flavours.
+
+<TerminalTabs
+  title="Start Postgres"
+  variants={{
+    linux: {
+      lines: [
+        { kind: "comment", text: "option 1 — docker compose (frontend-only mode)" },
+        { kind: "command", text: "docker compose -f docker/docker-compose.dev.yml up -d postgres" },
+        { kind: "comment", text: "option 2 — .NET Aspire orchestrates postgres + api + frontend" },
+        { kind: "command", text: "ss dev" },
+      ],
+    },
+    mac: {
+      lines: [
+        { kind: "comment", text: "option 1 — docker compose (frontend-only mode)" },
+        { kind: "command", text: "docker compose -f docker/docker-compose.dev.yml up -d postgres" },
+        { kind: "comment", text: "option 2 — .NET Aspire orchestrates postgres + api + frontend" },
+        { kind: "command", text: "ss dev" },
+      ],
+    },
+    windows: {
+      lines: [
+        { kind: "comment", text: "option 1 — docker compose (frontend-only mode)" },
+        { kind: "command", text: "docker compose -f docker\\docker-compose.dev.yml up -d postgres" },
+        { kind: "comment", text: "option 2 — .NET Aspire orchestrates postgres + api + frontend" },
+        { kind: "command", text: "ss dev" },
+      ],
+    },
+  }}
+/>
+
+Connection URL for both:
+
+```
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/shockstack
+```
+
+## Schema
+
+`src/lib/db/schema.ts` defines the tables. The built-in set covers authentication:
+
+| Table | Purpose |
+| --- | --- |
+| `users` | Profile (name, email, emailVerified, image). |
+| `sessions` | Browser/API sessions with cascade delete to `users`. |
+| `accounts` | OAuth provider tokens + password hash for the email flow. |
+| `verifications` | Email / OTP verification records. |
+
+Tables use `timestamp().defaultNow()` and use FK cascade deletes so deleting a user cleans up their sessions and accounts.
+
+<Alert variant="info" title="Better Auth owns the auth tables">
+  Don't edit `users`, `sessions`, `accounts`, or `verifications` column-by-column
+  without checking `better-auth/adapters/drizzle` first — their shape is dictated by
+  the adapter. Add new app tables alongside them, with FKs to `users.id` if needed.
+</Alert>
+
+## Generating migrations
+
+Change `schema.ts`, then:
+
+```bash
+pnpm --filter frontend exec drizzle-kit generate
+```
+
+This emits a new SQL file in `frontend/drizzle/`. Commit it alongside the schema change — migrations are part of the review.
+
+## Applying migrations
+
+```bash
+pnpm ss db migrate
+```
+
+That wraps `drizzle-kit migrate` against the current `DATABASE_URL`. Use it locally and in CI before the app starts.
+
+## Resetting (local only)
+
+```bash
+pnpm ss db reset         # drops + migrates + seeds. Prompts first.
+pnpm ss db reset --force # skip the prompt
+```
+
+The command refuses to run against a non-localhost URL.
+
+## Seeding
+
+`src/lib/db/seed.ts` creates a demo user via Better Auth's `sign-up/email` endpoint so password hashing stays consistent with live sign-ups.
+
+```bash
+pnpm ss db seed
+# or: pnpm --filter frontend db:seed
+```
+
+Edit `seed.ts` to add your own fixtures.
+
+## Drizzle Studio
+
+Visual browser for rows and schema:
+
+```bash
+pnpm ss db studio
+```
+
+Opens on <code>local.drizzle.studio</code>.
+
+## Querying from Astro
+
+The `db` export is a typed Drizzle instance wired to the schema.
+
+```ts
+// src/pages/users/[id].astro
+---
+import { eq } from "drizzle-orm";
+import { db } from "../../lib/db/client";
+import { users } from "../../lib/db/schema";
+
+const { id } = Astro.params;
+const [user] = await db
+  .select()
+  .from(users)
+  .where(eq(users.id, id!))
+  .limit(1);
+
+if (!user) return Astro.redirect("/404");
+---
+<h1>{user.name}</h1>
+```
+
+For the current session user, prefer `Astro.locals.user` — middleware already resolved the session.
+
+## Adding a table
+
+1. Add it to `schema.ts` (use `pgTable`, FK to `users.id` with `onDelete: "cascade"` when relevant).
+2. `pnpm --filter frontend exec drizzle-kit generate`.
+3. Commit the new migration file in `frontend/drizzle/`.
+4. Use `pnpm ss db migrate` locally; CI will run it on deploy.
+
+## Production
+
+- Provision Postgres on your platform (Neon, Supabase, RDS, self-hosted — all fine).
+- Set `DATABASE_URL` as a runtime secret.
+- Run `pnpm ss db migrate` as a release step **before** the app picks up the new image.
+- Back up before destructive migrations. Drizzle will happily drop columns if you tell it to.

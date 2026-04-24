@@ -1,0 +1,177 @@
+---
+title: "CLI Commands"
+description: "The `ss` developer CLI and the pnpm scripts that round it out."
+order: 12
+---
+
+import Alert from "../../components/content/Alert.astro";
+import Badge from "../../components/content/Badge.astro";
+import TerminalTabs from "../../components/content/TerminalTabs.astro";
+
+# CLI commands
+
+The `ss` CLI wraps the common day-two tasks — start the stack, scaffold a file, reset the database, check your environment. It's registered as a workspace binary, so after `pnpm install` you can run it via `pnpm ss <command>`.
+
+## The `ss` CLI
+
+<TerminalTabs
+  title="Common workflows"
+  variants={{
+    linux: {
+      lines: [
+        { kind: "command", text: "pnpm ss --help" },
+        { kind: "command", text: "pnpm ss dev" },
+        { kind: "command", text: "pnpm ss doctor" },
+      ],
+    },
+    mac: {
+      lines: [
+        { kind: "command", text: "pnpm ss --help" },
+        { kind: "command", text: "pnpm ss dev" },
+        { kind: "command", text: "pnpm ss doctor" },
+      ],
+    },
+    windows: {
+      lines: [
+        { kind: "command", text: "pnpm ss --help" },
+        { kind: "command", text: "pnpm ss dev" },
+        { kind: "command", text: "pnpm ss doctor" },
+      ],
+    },
+  }}
+/>
+
+### `ss init`
+
+Sets up a fresh checkout: picks features (backend / auth / blog), copies `.env.example` → `.env` with a generated `BETTER_AUTH_SECRET`, installs deps, builds tokens, and runs a sanity check.
+
+```bash
+pnpm ss init           # interactive
+pnpm ss init --yes     # accept defaults
+```
+
+### `ss doctor`
+
+Runs prerequisites and project-state checks:
+
+- Node ≥ 22, pnpm ≥ 10.4.
+- `.NET` SDK if the backend is enabled.
+- Docker presence (optional, warns if missing).
+- `.env` present with a usable `DATABASE_URL`.
+- Tokens built.
+
+Use it after pulling `main`, or whenever something feels off.
+
+### `ss info`
+
+Reports the current project shape: frontend-only vs. full-stack, which features are enabled, theme count, database status.
+
+### `ss dev`
+
+Starts the development servers. Auto-detects your setup:
+
+- Has `backend/` and `dotnet` on the PATH → full-stack via **.NET Aspire** (Postgres + API + frontend with a dashboard).
+- Otherwise → frontend-only on port `4321`.
+
+```bash
+pnpm ss dev              # auto
+pnpm ss dev --frontend   # force Astro-only
+pnpm ss dev --backend    # force Aspire (errors if .NET missing)
+```
+
+<Alert variant="info" title="Aspire is your friend">
+  When full-stack mode runs, the Aspire dashboard shows logs, traces, and
+  process health for every service in one place. The URL is printed on startup.
+</Alert>
+
+### `ss db <subcommand>` <Badge color="cyan" variant="subtle" size="sm">postgres</Badge>
+
+| Subcommand | Action |
+| --- | --- |
+| `ss db seed` | Runs `frontend/src/lib/db/seed.ts` — creates the demo user. |
+| `ss db migrate` | Applies pending Drizzle migrations against `DATABASE_URL`. |
+| `ss db reset` | **Local only.** Drops, migrates, seeds. Refuses non-localhost URLs. |
+| `ss db studio` | Launches Drizzle Studio for browsing rows. |
+
+Pair with the [Database guide](/docs/database-guide).
+
+### `ss add <kind> <name>`
+
+Scaffolds new files that follow the conventions.
+
+```bash
+pnpm ss add page dashboard          # frontend/src/pages/dashboard.astro
+pnpm ss add component ToastList     # frontend/src/components/ToastList.vue
+pnpm ss add api Products            # backend/src/ShockStack.Api/Controllers/ProductsController.cs
+```
+
+Add `--dry-run` to preview without writing. Existing files are never overwritten.
+
+### `ss strip`
+
+Interactive removal of optional features (backend, auth, blog). Shows the files that will be deleted, asks for confirmation, and recommends `pnpm install` afterwards. Great for paring the template down to exactly what a new project needs.
+
+## Root `pnpm` scripts
+
+Everything the CLI does is also available as a raw script. Handy in CI and when you want one step without the orchestration.
+
+<div class="my-4 overflow-x-auto">
+
+| Script | What it runs |
+| --- | --- |
+| `pnpm dev` | `turbo dev` — all workspaces. |
+| `pnpm build` | `turbo build` — frontend build + tokens. |
+| `pnpm lint` | `turbo lint` — ESLint across the graph. |
+| `pnpm typecheck` | `turbo typecheck` — `astro check` etc. |
+| `pnpm test` | Workspace tests + CLI tests. |
+| `pnpm test:cli` | CLI tests only. |
+| `pnpm tokens:build` | Rebuild design tokens. |
+| `pnpm docs:check` | Lint DESIGN.md style. |
+
+</div>
+
+## Workspace filters
+
+Run anything in one workspace with `pnpm --filter <name>`.
+
+```bash
+pnpm --filter frontend dev         # Astro dev server only
+pnpm --filter frontend build
+pnpm --filter frontend preview
+pnpm --filter frontend db:seed
+pnpm --filter @shockstack/tokens build
+pnpm --filter @shockstack/tokens tokens:extract
+```
+
+## Backend (`dotnet`)
+
+No `pnpm` script fronts these — run `dotnet` directly.
+
+```bash
+dotnet run --project backend/src/ShockStack.AppHost   # Aspire: everything
+dotnet test backend/ShockStack.slnx                   # xUnit
+dotnet watch --project backend/src/ShockStack.Api     # API hot-reload
+```
+
+`ss dev` is the friendlier wrapper around AppHost.
+
+## Release
+
+Releases are driven by **Conventional Commits** → `semantic-release` on `main`:
+
+- Commits tagged `feat:` bump the minor version; `fix:` the patch.
+- The release workflow writes `CHANGELOG.md`, tags, and triggers deploys.
+- Nothing runs automatically on non-`main` branches.
+
+See [Conventions](/docs/conventions) for the commit style we enforce.
+
+## Cheat sheet
+
+```bash
+pnpm ss init --yes                       # first-time setup
+pnpm ss dev                              # daily driver
+pnpm ss doctor                           # "why is it broken"
+pnpm ss add component Foo                # new component
+pnpm ss db reset --force && pnpm ss db seed   # clean slate
+pnpm lint && pnpm typecheck && pnpm test # pre-push check
+```

@@ -1,0 +1,172 @@
+---
+title: "Component Library"
+description: "The set of Astro and Vue components that ship with ShockStack — what they do, when to reach for them, and how to build your own."
+order: 5
+---
+
+import Alert from "../../components/content/Alert.astro";
+import Badge from "../../components/content/Badge.astro";
+
+# Component library
+
+ShockStack ships two tiers of components:
+
+- **Astro content components** (`src/components/content/`) — zero-JS presentational primitives. Safe to drop into MDX.
+- **Vue UI components** (`src/components/ui/`) — interactive islands built on [`reka-ui`](https://reka-ui.com/) primitives.
+
+Everything reads from [design tokens](/docs/design-tokens), so components look correct in every theme without per-component work.
+
+## Content components (Astro)
+
+Import from `src/components/content/` in `.astro` or `.mdx` files.
+
+### `<Alert>`
+
+Status callout — info, success, warning, error. Dismissible variant loads a small inline script.
+
+```astro
+<Alert variant="warning" title="Heads up" dismissible>
+  Rotate this secret before deploying.
+</Alert>
+```
+
+Props: `variant` (`info` | `success` | `warning` | `error`), `title?`, `dismissible?`.
+
+### `<Badge>`
+
+Inline label. Supports the full accent palette and three visual modes.
+
+```astro
+<Badge color="cyan" variant="subtle" size="sm">beta</Badge>
+```
+
+Props: `color` (accent name or `neutral`), `variant` (`solid` | `subtle` | `outline`), `size` (`sm` | `md`).
+
+### `<Avatar>`
+
+Profile image with initials fallback and optional gradient background.
+
+```astro
+<Avatar name="Ada Lovelace" size="md" gradient="purple-pink" />
+```
+
+Props: `src?`, `alt?`, `name?` (used for initials), `size` (`xs`–`xl`), `gradient?`.
+
+### `<Kbd>`
+
+Keyboard shortcut indicator. Automatically renders ⌘ on macOS and Ctrl elsewhere.
+
+```astro
+<Kbd keys={["Mod", "K"]} />
+```
+
+Props: `keys: string[]`, `size?` (`sm` | `md`).
+
+### `<ProgressBar>`
+
+Linear progress or indeterminate loader.
+
+```astro
+<ProgressBar value={62} label="Uploading" showValue />
+<ProgressBar indeterminate label="Processing…" />
+```
+
+### `<Skeleton>`
+
+Shimmer placeholder for loading states. Respects `prefers-reduced-motion`.
+
+```astro
+<Skeleton shape="text" lines={3} />
+<Skeleton shape="circle" width="3rem" height="3rem" />
+```
+
+### `<TerminalTabs>`
+
+Multi-OS command blocks (Linux / macOS / Windows). Selection persists across the page.
+
+```astro
+<TerminalTabs
+  title="Install"
+  variants={{
+    linux: { lines: [{ kind: "command", text: "pnpm install" }] },
+    mac: { lines: [{ kind: "command", text: "pnpm install" }] },
+    windows: { lines: [{ kind: "command", text: "pnpm install" }] },
+  }}
+/>
+```
+
+### Marketing primitives
+
+Used on landing pages; also available to you:
+
+- `<FeatureCardGradient>` — gradient-bordered feature card with icon slot.
+- `<StatsCard>` — numeric stat with gradient label.
+- `<TestimonialCard>`, `<PricingCard>`, `<UseCaseCard>` — specific page patterns.
+
+## Vue UI components (interactive)
+
+Import from `src/components/ui/`. These are the islands — add `client:load` / `client:idle` when dropping them into `.astro`.
+
+| Component | Built on | Use for |
+| --- | --- | --- |
+| `AccordionPanel.vue` | reka-ui Accordion | Grouped collapsible sections |
+| `TooltipHover.vue` | reka-ui Tooltip | Hover hints |
+| `ConfirmDialog.vue` | reka-ui AlertDialog | Confirm before destructive actions |
+| `DestructiveDialog.vue` | reka-ui AlertDialog | Typed-confirmation ("delete my data") |
+| `SheetPanel.vue` | reka-ui Dialog | Side sheets / slide-overs |
+| `OperationQueue.vue` | — | Toast-style queue for async ops |
+| `ThemeToggle.vue` | — | The theme picker in the header |
+| `PagesMenu.vue`, `UserMenu.vue`, `MobileNav.vue` | reka-ui Menu / Dialog | Header navigation |
+| `AuthForm.vue` | — | Sign-in / sign-up form, wired to Better Auth |
+
+<Alert variant="info" title="Pick the right client directive">
+  `client:load` hydrates immediately; `client:idle` waits until the browser is idle;
+  `client:visible` defers until the component scrolls into view. Pick the lightest
+  that still feels responsive.
+</Alert>
+
+## Variant pattern
+
+Components use `class:list` with a shared base class plus modifier classes. No `cva` runtime — the pattern is purposefully simple and Tailwind-friendly.
+
+```astro
+---
+interface Props {
+  variant?: "primary" | "secondary";
+  size?: "sm" | "md" | "lg";
+}
+const { variant = "primary", size = "md" } = Astro.props;
+---
+
+<button class:list={["btn", `btn-${variant}`, `btn-${size}`]}>
+  <slot />
+</button>
+
+<style>
+  .btn {
+    border-radius: var(--radius-lg);
+    transition: background-color 0.15s ease;
+  }
+  .btn-primary {
+    background-color: var(--color-accent-purple);
+    color: var(--color-bg-primary);
+  }
+  .btn-sm {
+    padding: 0.35rem 0.85rem;
+    font-size: 0.875rem;
+  }
+</style>
+```
+
+## Adding your own component
+
+1. **Choose a tier.** Static & no state → Astro in `content/`. Interactive & stateful → Vue in `ui/`.
+2. **Consume tokens.** Reference CSS custom properties (`var(--color-bg-secondary)`) or semantic Tailwind utilities (`bg-bg-secondary`). Never hex.
+3. **Follow the variant pattern** above; avoid a runtime class-variance library.
+4. **Scaffold with the CLI:** `pnpm ss add component MyThing` creates a skeleton in `frontend/src/components/` with a props interface.
+
+## See also
+
+- [Design tokens](/docs/design-tokens) — the values your component will consume.
+- [Theming](/docs/theming) — verify your component works across themes.
+- [Frontend guide](/docs/frontend-guide) — when to choose an island vs. a static component.

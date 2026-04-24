@@ -1,0 +1,165 @@
+---
+title: "Testing Guide"
+description: "Vitest for frontend + CLI, xUnit for the .NET backend, and how it all runs in CI."
+order: 11
+---
+
+import Alert from "../../components/content/Alert.astro";
+import TerminalTabs from "../../components/content/TerminalTabs.astro";
+
+# Testing guide
+
+ShockStack keeps tests close to the code and fast to run. Three test domains:
+
+1. **Frontend** — Vitest 4, colocated `*.test.ts` files.
+2. **CLI** — Vitest against `bin/` with its own config (`bin/vitest.config.ts`).
+3. **Backend** — xUnit in `backend/src/ShockStack.Tests/`.
+
+## Running tests
+
+<TerminalTabs
+  title="Run tests"
+  variants={{
+    linux: {
+      lines: [
+        { kind: "comment", text: "everything (frontend + CLI + backend)" },
+        { kind: "command", text: "pnpm test" },
+        { kind: "comment", text: "frontend only, watch mode" },
+        { kind: "command", text: "pnpm --filter frontend test --watch" },
+        { kind: "comment", text: "CLI tests only" },
+        { kind: "command", text: "pnpm test:cli" },
+        { kind: "comment", text: "backend (xUnit)" },
+        { kind: "command", text: "dotnet test backend/ShockStack.slnx" },
+      ],
+    },
+    mac: {
+      lines: [
+        { kind: "command", text: "pnpm test" },
+        { kind: "command", text: "pnpm --filter frontend test --watch" },
+        { kind: "command", text: "pnpm test:cli" },
+        { kind: "command", text: "dotnet test backend/ShockStack.slnx" },
+      ],
+    },
+    windows: {
+      lines: [
+        { kind: "command", text: "pnpm test" },
+        { kind: "command", text: "pnpm --filter frontend test --watch" },
+        { kind: "command", text: "pnpm test:cli" },
+        { kind: "command", text: "dotnet test backend/ShockStack.slnx" },
+      ],
+    },
+  }}
+/>
+
+`pnpm test` at the repo root runs `turbo test` (every workspace) **plus** the CLI suite. That's the same command CI uses.
+
+## Frontend tests
+
+Tests live next to the code they cover: `Button.vue` → `Button.test.ts` in the same folder. The existing smoke test at `frontend/src/__tests__/smoke.test.ts` is a good place to drop cross-cutting checks.
+
+### A pure function
+
+```ts
+import { describe, it, expect } from "vitest";
+import { formatMoney } from "./money";
+
+describe("formatMoney", () => {
+  it("formats USD with two decimals", () => {
+    expect(formatMoney(12.3, "USD")).toBe("$12.30");
+  });
+
+  it("handles zero", () => {
+    expect(formatMoney(0, "USD")).toBe("$0.00");
+  });
+});
+```
+
+### A Vue component
+
+Install `@vue/test-utils` if you haven't (`pnpm --filter frontend add -D @vue/test-utils jsdom`). Use `happy-dom` or `jsdom` as the Vitest environment.
+
+```ts
+import { mount } from "@vue/test-utils";
+import { describe, it, expect } from "vitest";
+import Button from "./Button.vue";
+
+describe("<Button>", () => {
+  it("emits click", async () => {
+    const wrapper = mount(Button, { slots: { default: "Go" } });
+    await wrapper.trigger("click");
+    expect(wrapper.emitted("click")).toHaveLength(1);
+  });
+});
+```
+
+<Alert variant="info" title="Astro components are tricky to unit test">
+  Prefer testing logic that lives outside `.astro` files — pull it into a `.ts` module
+  and test that. Integration-test `.astro` pages via a full build or Playwright if you
+  need end-to-end coverage.
+</Alert>
+
+### Database-backed tests
+
+Either point `DATABASE_URL` at a disposable local Postgres, or mock the `db` client at the module boundary. Avoid testing Drizzle's own query behavior — Drizzle has its own tests. Test **your** schema and query shapes.
+
+## CLI tests
+
+The `ss` CLI has its own Vitest config (`bin/vitest.config.ts`) and test directory (`bin/__tests__/`). Tests cover command registration, argument parsing, and file-system safety (e.g. the `db reset` production guard).
+
+```bash
+pnpm test:cli
+```
+
+If you add a new `ss` command, add a test in `bin/__tests__/<command>.test.ts`.
+
+## Backend tests
+
+xUnit in `backend/src/ShockStack.Tests/`. Structure tests by project (`ShockStack.Core.Tests`, `ShockStack.Api.Tests`, …) once the suite grows.
+
+```csharp
+public class SlugifierTests
+{
+    [Theory]
+    [InlineData("Hello World", "hello-world")]
+    [InlineData("  Spaces  ", "spaces")]
+    public void Slugifies_the_obvious_cases(string input, string expected)
+    {
+        Assert.Equal(expected, Slugifier.Slug(input));
+    }
+}
+```
+
+Run a single project:
+
+```bash
+dotnet test backend/src/ShockStack.Tests/ShockStack.Tests.csproj
+```
+
+## CI
+
+`.github/workflows/ci.yml` uses `paths-filter` to run only what changed. Typical flow:
+
+| Path changes | Pipeline |
+| --- | --- |
+| `frontend/**` | `pnpm install` → `pnpm --filter frontend lint typecheck test build` |
+| `bin/**` | `pnpm install` → `pnpm test:cli` |
+| `backend/**` | `dotnet restore` → `dotnet test` → `dotnet build` |
+| `packages/tokens/**` | `pnpm --filter @shockstack/tokens build` (artifact used by frontend) |
+
+Failures block the PR. There's no separate nightly — every PR runs the full relevant graph.
+
+## What to test (and what not to)
+
+**Test:**
+- Pure utilities with non-trivial logic.
+- Data transformations (schema → API shape).
+- Interactive component emissions and accessibility contracts.
+- CLI argument parsing and safety rails.
+- Any place a regression cost you an afternoon.
+
+**Don't test:**
+- Framework internals (Vue's reactivity, Drizzle's SQL).
+- Trivial getters / setters.
+- Style. Visual regressions go in a Playwright / Percy suite, not Vitest.
+
+Keep the suite under a minute locally. If it slows down, split out a `test:slow` tier; don't let the fast tier rot.
