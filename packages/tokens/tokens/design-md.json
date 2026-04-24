@@ -1,0 +1,160 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "$description": "Convention-first Astro + Vue + Tailwind 4 + .NET 10 monorepo template.",
+  "color": {
+    "$type": "color",
+    "primary": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.102, 0.11, 0.118],
+        "hex": "#1a1c1e"
+      }
+    },
+    "secondary": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.424, 0.447, 0.471],
+        "hex": "#6c7278"
+      }
+    },
+    "accent-purple": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.545, 0.361, 0.965],
+        "hex": "#8b5cf6"
+      }
+    },
+    "accent-red": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.937, 0.267, 0.267],
+        "hex": "#ef4444"
+      }
+    },
+    "bg-primary": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [1, 1, 1],
+        "hex": "#ffffff"
+      }
+    },
+    "bg-secondary": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.976, 0.98, 0.984],
+        "hex": "#f9fafb"
+      }
+    },
+    "bg-tertiary": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.953, 0.957, 0.965],
+        "hex": "#f3f4f6"
+      }
+    },
+    "fg-primary": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.067, 0.094, 0.153],
+        "hex": "#111827"
+      }
+    },
+    "fg-secondary": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.294, 0.333, 0.388],
+        "hex": "#4b5563"
+      }
+    },
+    "fg-muted": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.612, 0.639, 0.686],
+        "hex": "#9ca3af"
+      }
+    },
+    "border-default": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.898, 0.906, 0.922],
+        "hex": "#e5e7eb"
+      }
+    }
+  },
+  "spacing": {
+    "$type": "dimension",
+    "sm": {
+      "$value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "md": {
+      "$value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "lg": {
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "xl": {
+      "$value": {
+        "value": 32,
+        "unit": "px"
+      }
+    }
+  },
+  "rounded": {
+    "$type": "dimension",
+    "sm": {
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "md": {
+      "$value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "lg": {
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "full": {
+      "$value": {
+        "value": 9999,
+        "unit": "px"
+      }
+    }
+  },
+  "typography": {
+    "h1": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Space Grotesk",
+        "fontSize": {
+          "value": 48,
+          "unit": "px"
+        }
+      }
+    },
+    "body": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": {
+          "value": 16,
+          "unit": "px"
+        }
+      }
+    }
+  }
+}
