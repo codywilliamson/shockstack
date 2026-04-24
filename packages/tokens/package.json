@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "tokens:extract": "pnpm exec design.md export --format dtcg ../../docs/system/DESIGN.md > tokens/design-md.json",
+    "tokens:extract": "node ../../node_modules/@google/design.md/dist/index.js export --format dtcg ../../docs/system/DESIGN.md > tokens/design-md.json",
     "build": "pnpm tokens:extract && tsx build.ts",
-    "lint:design": "pnpm exec design.md lint ../../docs/system/DESIGN.md"
+    "lint:design": "node ../../node_modules/@google/design.md/dist/index.js lint ../../docs/system/DESIGN.md"
   },
   "devDependencies": {
     "style-dictionary": "^5.4.0",
