@@ -1,6 +1,6 @@
 ---
 title: "Theming"
-description: "The 14 built-in themes, runtime switching, and how to add your own palette."
+description: "The 19 built-in themes, runtime switching, and how to add your own palette."
 order: 4
 ---
 
@@ -10,7 +10,7 @@ import TerminalTabs from "../../components/content/TerminalTabs.astro";
 
 # Theming
 
-ShockStack ships **14 curated themes** out of the box. Switching between them is a one-line operation at runtime: set `data-theme="<name>"` on `<html>`. Every component reacts instantly because colors flow from [design tokens](/docs/design-tokens).
+ShockStack ships **19 curated themes** out of the box. Switching between them is a one-line operation at runtime: set `data-theme="<name>"` on `<html>`. Every component reacts instantly because colors flow from [design tokens](/docs/design-tokens).
 
 ## The model
 
@@ -29,7 +29,7 @@ Three moving parts:
 2. **Theme attribute** — `<html data-theme="midnight">` picks which block wins.
 3. **Semantic utilities** — components never name a color directly; they reach for `bg-bg-primary`, `text-fg-muted`, etc.
 
-## The 14 built-in themes
+## The 19 built-in themes
 
 <div class="my-4 grid gap-2 sm:grid-cols-2">
   <div><Badge color="purple" variant="subtle">dracula</Badge> — classic purple/pink dark</div>
@@ -44,6 +44,11 @@ Three moving parts:
   <div><Badge color="purple" variant="subtle">one-dark</Badge> — Atom-inspired</div>
   <div><Badge color="yellow" variant="subtle">solarized-dark</Badge> — high-contrast science</div>
   <div><Badge color="yellow" variant="subtle">solarized-light</Badge> — light sibling</div>
+  <div><Badge color="cyan" variant="subtle">kanagawa-wave</Badge> — painterly ocean dark</div>
+  <div><Badge color="pink" variant="subtle">rose-pine-moon</Badge> — soft dusk palette</div>
+  <div><Badge color="green" variant="subtle">everforest-dark</Badge> — earthy low-glare dark</div>
+  <div><Badge color="yellow" variant="subtle">ayu-mirage</Badge> — warm crisp editor dark</div>
+  <div><Badge color="cyan" variant="subtle">github-dark-dimmed</Badge> — familiar dimmed developer UI</div>
   <div><Badge color="purple" variant="subtle">midnight</Badge> — default dark</div>
   <div><Badge color="pink" variant="subtle">dawn</Badge> — default light</div>
 </div>

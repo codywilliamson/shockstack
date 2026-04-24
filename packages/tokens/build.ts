@@ -73,6 +73,31 @@ const themes = [
     selector: '[data-theme="solarized-light"]',
   },
   {
+    name: "kanagawa-wave",
+    source: "kanagawa-wave.json",
+    selector: '[data-theme="kanagawa-wave"]',
+  },
+  {
+    name: "rose-pine-moon",
+    source: "rose-pine-moon.json",
+    selector: '[data-theme="rose-pine-moon"]',
+  },
+  {
+    name: "everforest-dark",
+    source: "everforest-dark.json",
+    selector: '[data-theme="everforest-dark"]',
+  },
+  {
+    name: "ayu-mirage",
+    source: "ayu-mirage.json",
+    selector: '[data-theme="ayu-mirage"]',
+  },
+  {
+    name: "github-dark-dimmed",
+    source: "github-dark-dimmed.json",
+    selector: '[data-theme="github-dark-dimmed"]',
+  },
+  {
     name: "midnight",
     source: "midnight.json",
     selector: '[data-theme="midnight"]',

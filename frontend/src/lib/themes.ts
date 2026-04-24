@@ -120,6 +120,56 @@ export const THEME_OPTIONS = [
     },
   },
   {
+    value: "kanagawa-wave",
+    label: "Kanagawa Wave",
+    preview: {
+      page: "#1f1f28",
+      surface: "#2a2a37",
+      accent: "#7fb4ca",
+      text: "#dcd7ba",
+    },
+  },
+  {
+    value: "rose-pine-moon",
+    label: "Rose Pine Moon",
+    preview: {
+      page: "#232136",
+      surface: "#2a273f",
+      accent: "#c4a7e7",
+      text: "#e0def4",
+    },
+  },
+  {
+    value: "everforest-dark",
+    label: "Everforest Dark",
+    preview: {
+      page: "#2d353b",
+      surface: "#343f44",
+      accent: "#a7c080",
+      text: "#d3c6aa",
+    },
+  },
+  {
+    value: "ayu-mirage",
+    label: "Ayu Mirage",
+    preview: {
+      page: "#1f2430",
+      surface: "#242936",
+      accent: "#ffcd66",
+      text: "#cccac2",
+    },
+  },
+  {
+    value: "github-dark-dimmed",
+    label: "GitHub Dark Dimmed",
+    preview: {
+      page: "#22272e",
+      surface: "#2d333b",
+      accent: "#539bf5",
+      text: "#adbac7",
+    },
+  },
+  {
     value: "midnight",
     label: "Midnight",
     preview: {

@@ -68,7 +68,7 @@ pnpm tokens:build
 
 **Customize:** edit token source files → rebuild.
 
-**Themes:** 14 built-in palettes, including Dracula, Alucard, Nord, Gruvbox variants, Catppuccin Mocha, Tokyo Night, One Dark, Solarized, Midnight, and Dawn. Switched via `[data-theme]` on `<html>`.
+**Themes:** 19 built-in palettes, including Dracula, Alucard, Nord, Gruvbox variants, Catppuccin Mocha, Tokyo Night, One Dark, Solarized, Kanagawa Wave, Rose Pine Moon, Everforest Dark, Ayu Mirage, GitHub Dark Dimmed, Midnight, and Dawn. Switched via `[data-theme]` on `<html>`.
 
 ## Auth
 

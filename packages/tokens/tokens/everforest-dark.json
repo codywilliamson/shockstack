@@ -1,0 +1,29 @@
+{
+  "color": {
+    "bg": {
+      "primary": { "value": "#2d353b", "type": "color" },
+      "secondary": { "value": "#343f44", "type": "color" },
+      "tertiary": { "value": "#232a2e", "type": "color" }
+    },
+    "fg": {
+      "primary": { "value": "#d3c6aa", "type": "color" },
+      "secondary": { "value": "#9da9a0", "type": "color" },
+      "muted": { "value": "#7a8478", "type": "color" }
+    },
+    "accent": {
+      "purple": { "value": "#d699b6", "type": "color" },
+      "pink": { "value": "#d699b6", "type": "color" },
+      "green": { "value": "#a7c080", "type": "color" },
+      "cyan": { "value": "#7fbbb3", "type": "color" },
+      "orange": { "value": "#e69875", "type": "color" },
+      "red": { "value": "#e67e80", "type": "color" },
+      "yellow": { "value": "#dbbc7f", "type": "color" }
+    },
+    "border": {
+      "default": { "value": "#475258", "type": "color" },
+      "muted": { "value": "#3d484d", "type": "color" }
+    },
+    "selection": { "value": "#425047", "type": "color" },
+    "current-line": { "value": "#343f44", "type": "color" }
+  }
+}

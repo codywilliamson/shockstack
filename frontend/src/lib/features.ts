@@ -37,7 +37,7 @@ export const features = [
   {
     title: "Tailwind 4",
     description:
-      "Latest Tailwind with Vite plugin integration. Token-powered theme with fourteen built-in palettes.",
+      "Latest Tailwind with Vite plugin integration. Token-powered theme with nineteen built-in palettes.",
     color: "yellow",
     svgInner: `<path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path>`,
   },

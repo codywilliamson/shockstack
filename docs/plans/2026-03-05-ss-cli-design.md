@@ -86,7 +86,7 @@ interactive project setup wizard. runs in phases with checkpoints.
 - prompt: do you want the backend? (y/n)
 - prompt: do you want auth? (y/n)
 - prompt: do you want the blog/content? (y/n)
-- prompt: which themes? (multi-select from 14 built-in)
+- prompt: which themes? (multi-select from 19 built-in)
 
 **phase 3 — strip**
 
