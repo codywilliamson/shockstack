@@ -2,11 +2,9 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import UseCaseCard from "../components/content/UseCaseCard.astro";
 import StackPicker from "../components/use-cases/StackPicker.vue";
-import { stackOptionIds, stackOptions, stackUseCases } from "../lib/use-cases";
+import { stackUseCases } from "../lib/use-cases";
 
 export const prerender = true;
-
-const options = stackOptionIds.map((id) => stackOptions[id]);
 ---
 
 <BaseLayout
@@ -56,33 +54,6 @@ const options = stackOptionIds.map((id) => stackOptions[id]);
       {
         stackUseCases.map((useCase) => (
           <UseCaseCard useCase={useCase} detailed />
-        ))
-      }
-    </div>
-  </section>
-
-  <section aria-labelledby="reference-heading">
-    <h2 id="reference-heading" class="mb-3 text-2xl font-semibold">
-      Option reference: include vs skip
-    </h2>
-    <p class="text-fg-secondary mb-6 max-w-3xl">
-      Keep what helps now. Skip what adds complexity you do not need yet.
-    </p>
-
-    <div class="grid gap-4 md:grid-cols-2">
-      {
-        options.map((option) => (
-          <article class="bg-bg-secondary border-border-default rounded-lg border p-4">
-            <h3 class="text-fg-primary mb-2 font-semibold">{option.label}</h3>
-            <p class="text-fg-secondary mb-2 text-sm">
-              <span class="text-accent-green font-medium">Include when:</span>{" "}
-              {option.includeWhen}
-            </p>
-            <p class="text-fg-secondary text-sm">
-              <span class="text-accent-orange font-medium">Skip when:</span>{" "}
-              {option.skipWhen}
-            </p>
-          </article>
         ))
       }
     </div>

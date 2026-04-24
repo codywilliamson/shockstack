@@ -76,7 +76,7 @@ Better Auth with email/password. Session state is cookie-backed with route prote
 
 ## Backend (Optional)
 
-The backend activates when the `/backend` directory is present. Clean architecture with Core, Infrastructure, and API layers.
+The backend activates when the `/backend` directory is present. Clean architecture with Core, Infrastructure, and API layers. Package versions are managed centrally in [backend/Directory.Packages.props](backend/Directory.Packages.props) — add new packages there, not per-csproj.
 
 ```bash
 cd backend
