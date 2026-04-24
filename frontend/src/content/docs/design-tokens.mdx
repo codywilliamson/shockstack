@@ -1,51 +1,127 @@
 ---
 title: "Design Tokens"
-description: "Token model, build flow, and practical theming workflow."
+description: "How the token pipeline works, how to edit tokens, and how they flow through to Tailwind and CSS."
 order: 3
 ---
 
+import Alert from "../../components/content/Alert.astro";
+import TerminalTabs from "../../components/content/TerminalTabs.astro";
+import Badge from "../../components/content/Badge.astro";
+
 # Design Tokens
 
-Design tokens are the visual source of truth for spacing, typography, color, radii, and shadows.
+Every color, radius, shadow, and font in ShockStack comes from **one source**: the [Style Dictionary](https://styledictionary.com/) pipeline in `packages/tokens`. Tokens are consumed by Tailwind 4, Astro components, and Vue islands through generated CSS custom properties.
 
-## Token Strategy
+If it's a visual value in the product, it almost certainly lives as a token.
 
-ShockStack uses layered token sources:
+## The pipeline at a glance
 
-- base primitives for shared values
-- multiple built-in theme palettes
-- custom overrides for project-specific changes
+<div class="my-4">
+  <Badge color="purple" variant="subtle">edit</Badge>
+  <Badge color="cyan" variant="subtle">build</Badge>
+  <Badge color="green" variant="subtle">consume</Badge>
+</div>
 
-This keeps the design language consistent while still allowing local customization.
+1. **Edit** — author token values in `packages/tokens/tokens/*.json` (DTCG format).
+2. **Build** — `pnpm tokens:build` runs Style Dictionary and emits CSS, JSON, and a Tailwind preset.
+3. **Consume** — the frontend imports `tokens.css` in `src/styles/global.css` and exposes semantic utilities (`bg-bg-primary`, `text-fg-muted`, `border-border-default`, `text-accent-purple`, …).
 
-## Build Flow
+## Rebuilding tokens
+
+<TerminalTabs
+  title="Build tokens"
+  variants={{
+    linux: {
+      lines: [
+        { kind: "command", text: "pnpm tokens:build" },
+        { kind: "output", text: "✔ wrote packages/tokens/dist/tokens.css" },
+        { kind: "output", text: "✔ wrote packages/tokens/dist/tokens.js" },
+        { kind: "output", text: "✔ wrote packages/tokens/dist/tailwind.tokens.js" },
+      ],
+    },
+    mac: {
+      lines: [
+        { kind: "command", text: "pnpm tokens:build" },
+        { kind: "output", text: "✔ wrote packages/tokens/dist/tokens.css" },
+        { kind: "output", text: "✔ wrote packages/tokens/dist/tokens.js" },
+        { kind: "output", text: "✔ wrote packages/tokens/dist/tailwind.tokens.js" },
+      ],
+    },
+    windows: {
+      lines: [
+        { kind: "command", text: "pnpm tokens:build" },
+        { kind: "output", text: "✔ wrote packages/tokens/dist/tokens.css" },
+        { kind: "output", text: "✔ wrote packages/tokens/dist/tokens.js" },
+        { kind: "output", text: "✔ wrote packages/tokens/dist/tailwind.tokens.js" },
+      ],
+    },
+  }}
+/>
+
+The build emits:
+
+- **`dist/tokens.css`** — all themes, each scoped under `[data-theme="<name>"]`.
+- **`dist/tokens.js`** + **`dist/tokens.d.ts`** — typed constants for runtime use.
+- **`dist/tailwind.tokens.js`** — a Tailwind preset mapped to semantic names.
+
+<Alert variant="info" title="Tokens are prebuilt for the frontend">
+  The frontend imports `../../packages/tokens/dist/tokens.css` directly. If you bump
+  token values without rebuilding, the app won't pick up the change. Run `pnpm tokens:build`
+  (or start the repo with `ss dev`, which chains it for you).
+</Alert>
+
+## Token categories
+
+The frontend exposes these semantic groups via Tailwind (`@theme` block in `frontend/src/styles/global.css`):
+
+| Group | Tailwind classes | Use for |
+| --- | --- | --- |
+| Backgrounds | `bg-bg-primary`, `bg-bg-secondary`, `bg-bg-tertiary` | App chrome, cards, overlays |
+| Foregrounds | `text-fg-primary`, `text-fg-secondary`, `text-fg-muted` | Headings, body, captions |
+| Accents | `text-accent-{purple,pink,cyan,green,orange,yellow,red}` | Brand, status, callouts |
+| Borders | `border-border-default`, `border-border-muted` | Cards, dividers |
+| Selection | `bg-selection` | Text selection highlight |
+| Radii | `rounded-{sm,md,lg,xl,2xl,full}` | Corner radius |
+| Shadows | `shadow-{sm,md,lg,xl}` | Elevation |
+
+Prefer these over one-off hex codes — they are the only values that respond to theme changes.
+
+## Authoring tokens
+
+Token sources live in `packages/tokens/tokens/`:
+
+- `base.json` — primitives that rarely change.
+- `custom.json` — project-specific overrides.
+- `dracula.json`, `nord.json`, `tokyo-night.json`, `dawn.json`, `midnight.json`, `gruvbox*.json`, `catppuccin-mocha.json`, `one-dark.json`, `solarized-*.json` — built-in themes.
+- `design-md.json` — generated output of `pnpm tokens:extract` (see below).
+
+Each theme exports the same **semantic keys**; only the underlying values change. That contract is what makes theme switching truly drop-in.
+
+## Extracting tokens from `DESIGN.md`
+
+ShockStack supports the [`@google/design.md`](https://github.com/google/design.md) workflow. Designers can author a single Markdown spec in `docs/system/DESIGN.md`; `pnpm --filter @shockstack/tokens tokens:extract` converts that spec into `tokens/design-md.json`, which flows through the same Style Dictionary build.
 
 ```bash
+pnpm --filter @shockstack/tokens tokens:extract
 pnpm tokens:build
 ```
 
-The token build generates:
+This is optional — you can author JSON directly. Use whichever fits your team.
 
-- CSS variables for runtime theming
-- JavaScript/TypeScript exports for app usage
-- JSON artifacts for tooling and integrations
+## Customization workflow
 
-## Frontend Integration
+1. Edit `packages/tokens/tokens/<file>.json` (or `DESIGN.md`, then extract).
+2. Run `pnpm tokens:build`.
+3. Check the app visually across at least two themes (e.g. `midnight` and `dawn`).
+4. Commit **both** the source tokens and the regenerated `dist/` files — generated output is tracked so deploys don't need to rebuild tokens.
 
-Generated tokens are imported into global styles and mapped to semantic utilities.  
-Components then consume semantic classes rather than hardcoded color values.
+## What *not* to do
 
-## Theme Switching
+- **Don't** add raw hex codes in components. If you need a new value, add a token.
+- **Don't** edit `dist/` files by hand. They are regenerated on every build.
+- **Don't** couple to a single theme. If a component only looks right in dark mode, the token assignment is wrong.
 
-Theme switching is controlled through a root `data-theme` attribute.
+## See also
 
-Because utilities map to semantic token names, the UI can switch themes without changing component markup.
-
-## Customization Workflow
-
-1. Update token sources
-2. Rebuild tokens
-3. Verify styles in both themes
-4. Commit generated outputs with source changes
-
-Treat token updates like API changes for the design system: prefer semantic naming and avoid one-off values.
+- [Theming](/docs/theming) — the 14 built-in themes and how switching works.
+- [Component library](/docs/component-library) — components that already consume these tokens.

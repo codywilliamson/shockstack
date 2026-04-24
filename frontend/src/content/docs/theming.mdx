@@ -1,49 +1,138 @@
 ---
 title: "Theming"
-description: "Theme model, switching behavior, and semantic styling guidance."
+description: "The 14 built-in themes, runtime switching, and how to add your own palette."
 order: 4
 ---
 
+import Alert from "../../components/content/Alert.astro";
+import Badge from "../../components/content/Badge.astro";
+import TerminalTabs from "../../components/content/TerminalTabs.astro";
+
 # Theming
 
-ShockStack ships with multiple built-in themes through semantic tokens and a root theme attribute.
+ShockStack ships **14 curated themes** out of the box. Switching between them is a one-line operation at runtime: set `data-theme="<name>"` on `<html>`. Every component reacts instantly because colors flow from [design tokens](/docs/design-tokens).
 
-## Theme Model
+## The model
 
-The system has three parts:
+```
+┌───────────────────────────────┐
+│  <html data-theme="dracula">  │
+│    ├── tokens.css (all themes scoped by data-theme)
+│    ├── @theme block in global.css
+│    └── semantic Tailwind utilities
+└───────────────────────────────┘
+```
 
-1. token-generated CSS variables for each theme
-2. root `data-theme` attribute to activate a theme
-3. semantic utility classes that consume token values
+Three moving parts:
 
-Because components use semantic classes, theme changes do not require component rewrites.
+1. **Tokens** — `packages/tokens/dist/tokens.css` contains a block per theme: `[data-theme="dracula"] { --ss-color-bg-primary: … }`.
+2. **Theme attribute** — `<html data-theme="midnight">` picks which block wins.
+3. **Semantic utilities** — components never name a color directly; they reach for `bg-bg-primary`, `text-fg-muted`, etc.
 
-## Theme Resolution
+## The 14 built-in themes
 
-Theme selection follows this order:
+<div class="my-4 grid gap-2 sm:grid-cols-2">
+  <div><Badge color="purple" variant="subtle">dracula</Badge> — classic purple/pink dark</div>
+  <div><Badge color="pink" variant="subtle">light</Badge> — bright companion (Alucard)</div>
+  <div><Badge color="cyan" variant="subtle">nord</Badge> — arctic blue palette</div>
+  <div><Badge color="orange" variant="subtle">gruvbox</Badge> — warm retro dark</div>
+  <div><Badge color="orange" variant="subtle">gruvbox-light</Badge> — warm retro light</div>
+  <div><Badge color="orange" variant="subtle">gruvbox-soft</Badge> — lower-contrast gruvbox</div>
+  <div><Badge color="orange" variant="subtle">gruvbox-hard</Badge> — high-contrast gruvbox</div>
+  <div><Badge color="purple" variant="subtle">catppuccin-mocha</Badge> — pastel dark</div>
+  <div><Badge color="cyan" variant="subtle">tokyo-night</Badge> — neon city dark</div>
+  <div><Badge color="purple" variant="subtle">one-dark</Badge> — Atom-inspired</div>
+  <div><Badge color="yellow" variant="subtle">solarized-dark</Badge> — high-contrast science</div>
+  <div><Badge color="yellow" variant="subtle">solarized-light</Badge> — light sibling</div>
+  <div><Badge color="purple" variant="subtle">midnight</Badge> — default dark</div>
+  <div><Badge color="pink" variant="subtle">dawn</Badge> — default light</div>
+</div>
 
-1. saved user preference
-2. system color preference
-3. project default
+The canonical list lives in `frontend/src/lib/themes.ts` (`VALID_THEMES`). `DEFAULT_THEME` is `midnight`; the built-in `ThemeToggle` and `PagesMenu` components offer the full set.
 
-Set the theme attribute before first paint to avoid flashing the wrong theme.
+## Resolution order
 
-## Using Theme-Aware Utilities
+When the document loads, theme selection follows:
 
-Use semantic utilities for backgrounds, text, accents, and borders.  
-Avoid hardcoding hex values in components when a semantic token exists.
+1. **Saved preference** — `localStorage.getItem("theme")` if it matches a known theme.
+2. **Default theme** — `DEFAULT_THEME` from `src/lib/themes.ts`.
 
-## Accessibility Notes
+The bootstrap script in `BaseLayout.astro` runs **before paint** to prevent a flash of wrong theme.
 
-- Ensure color contrast remains acceptable in both themes
-- Respect reduced motion preferences for animated transitions
-- Validate focus and interactive states across themes
+<Alert variant="warning" title="Don't fight the bootstrap">
+  Any logic that sets the theme on mount has to match what the inline script already set —
+  otherwise the page will briefly render in one theme and snap to another. If you change the
+  defaults, update both `themes.ts` and the inline script it feeds.
+</Alert>
 
-## Extending Themes
+## Switching themes at runtime
 
-To add a new theme:
+The `ThemeToggle.vue` component handles persistence and View Transitions animation. If you need to switch imperatively:
 
-1. add token values for the new palette
-2. include it in token build output
-3. update theme selection UI/logic
-4. verify all semantic utilities render correctly
+```ts
+import { applyTheme } from "../lib/themes";
+
+applyTheme("tokyo-night"); // sets data-theme + writes localStorage
+```
+
+For a one-off, a DOM update is enough:
+
+```ts
+document.documentElement.setAttribute("data-theme", "dawn");
+localStorage.setItem("theme", "dawn");
+```
+
+## Adding a new theme
+
+<TerminalTabs
+  title="Add a theme"
+  variants={{
+    linux: {
+      lines: [
+        { kind: "command", text: "cp packages/tokens/tokens/dracula.json packages/tokens/tokens/my-theme.json" },
+        { kind: "comment", text: "edit my-theme.json with your values" },
+        { kind: "command", text: "pnpm tokens:build" },
+      ],
+    },
+    mac: {
+      lines: [
+        { kind: "command", text: "cp packages/tokens/tokens/dracula.json packages/tokens/tokens/my-theme.json" },
+        { kind: "comment", text: "edit my-theme.json with your values" },
+        { kind: "command", text: "pnpm tokens:build" },
+      ],
+    },
+    windows: {
+      lines: [
+        { kind: "command", text: "Copy-Item packages/tokens/tokens/dracula.json packages/tokens/tokens/my-theme.json" },
+        { kind: "comment", text: "edit my-theme.json with your values" },
+        { kind: "command", text: "pnpm tokens:build" },
+      ],
+    },
+  }}
+/>
+
+Then:
+
+1. Register the new theme in `packages/tokens/build.ts` (it becomes a `[data-theme="my-theme"]` block).
+2. Add it to `VALID_THEMES` in `frontend/src/lib/themes.ts` so the picker knows about it.
+3. Add a preview entry in `THEME_OPTIONS` if you want it in the UI switcher.
+
+## Accessibility
+
+- **Contrast** — each semantic token pair (`bg-primary` / `fg-primary`) is tuned to meet WCAG AA in every theme. If you adjust a value, re-test.
+- **Reduced motion** — the view-transition animation on theme switch is skipped when `prefers-reduced-motion: reduce`.
+- **Focus outlines** — derive from `--color-accent-purple`, which exists in every theme.
+
+## Semantic over literal
+
+In code: **always** use the semantic utility.
+
+```astro
+<!-- ✅ Reacts to every theme -->
+<div class="bg-bg-secondary text-fg-primary border border-border-default">
+
+<!-- ❌ Locked to one palette -->
+<div class="bg-[#1e1e2e] text-[#cdd6f4] border border-[#45475a]">
+```
+
+If you reach for a bracket color, that's a signal you need a new token.

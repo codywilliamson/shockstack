@@ -1,54 +1,156 @@
 ---
 title: "Deployment"
-description: "Deployment model, required environment variables, and release flow."
+description: "Deploy the frontend to Cloudflare Workers, run the full stack in Docker, and wire up the release pipeline."
 order: 8
 ---
 
+import Alert from "../../components/content/Alert.astro";
+import Badge from "../../components/content/Badge.astro";
+import TerminalTabs from "../../components/content/TerminalTabs.astro";
+
 # Deployment
 
-ShockStack supports frontend-focused deployment and full-stack container deployment.
+ShockStack has two deploy shapes:
 
-## Deployment Targets
+1. **Frontend on Cloudflare Workers** — the Astro app runs at the edge with the [`@astrojs/cloudflare`](https://docs.astro.build/en/guides/integrations-guide/cloudflare/) adapter.
+2. **Full stack in Docker** — `.NET` API + Postgres + frontend, orchestrated by Compose (or any container platform).
 
-- Frontend runtime deployment
-- Containerized full-stack deployment
+Pick the one that matches your shape. They share CI.
 
-Choose based on whether you need only the web app or the complete API/database stack.
+## Environment variables
 
-## Required Environment Variables
+<div class="my-4 overflow-x-auto">
 
-| Variable | Scope | Purpose |
-|----------|-------|---------|
-| `DATABASE_URL` | App | Database connection |
-| `BETTER_AUTH_SECRET` | App | Session/auth signing secret |
-| `BETTER_AUTH_URL` | App | Public application URL |
-| `CLOUDFLARE_API_TOKEN` | CI/CD | Frontend deployment credentials |
-| `CLOUDFLARE_ACCOUNT_ID` | CI/CD | Frontend deployment account |
-| `ConnectionStrings__DefaultConnection` | Backend | Backend database connection |
-| `Cors__Origins__0` | Backend | Allowed frontend origin |
+| Variable | Where | Purpose |
+| --- | --- | --- |
+| `DATABASE_URL` | Frontend | Drizzle / Better Auth database connection (Postgres). |
+| `BETTER_AUTH_SECRET` | Frontend | HMAC secret for sessions. **Rotate per environment.** |
+| `BETTER_AUTH_URL` | Frontend | Public origin — e.g. `https://app.example.com`. Must match the live URL. |
+| `CLOUDFLARE_API_TOKEN` | CI | Token with **Workers: edit** scope. |
+| `CLOUDFLARE_ACCOUNT_ID` | CI | Target account. |
+| `ConnectionStrings__DefaultConnection` | Backend | EF Core connection string. |
+| `Cors__Origins__0` | Backend | Allowed frontend origin. |
 
-## Typical Frontend Deploy Flow
+</div>
 
-1. Build design tokens
-2. Build frontend artifacts
-3. Publish runtime bundle with deployment CLI/tooling
+<Alert variant="warning" title="Never reuse dev secrets in prod">
+  `BETTER_AUTH_SECRET` gates every session. Generate a fresh value per environment
+  (`openssl rand -base64 32`) and store it in your platform's secret manager — not
+  in the repo.
+</Alert>
 
-## Typical Full-Stack Deploy Flow
+## Frontend: Cloudflare Workers
 
-1. Build and tag backend container image
-2. Push image to container registry
-3. Deploy runtime with environment variables and secrets
-4. Run health checks and rollout verification
+`frontend/astro.config.*` uses the Cloudflare adapter; `frontend/wrangler.jsonc` declares bindings (R2 bucket, compatibility flags).
 
-## CI/CD Behavior
+<TerminalTabs
+  title="Deploy the frontend"
+  variants={{
+    linux: {
+      lines: [
+        { kind: "command", text: "pnpm tokens:build" },
+        { kind: "command", text: "pnpm --filter frontend build" },
+        { kind: "command", text: "pnpm --filter frontend wrangler deploy" },
+      ],
+    },
+    mac: {
+      lines: [
+        { kind: "command", text: "pnpm tokens:build" },
+        { kind: "command", text: "pnpm --filter frontend build" },
+        { kind: "command", text: "pnpm --filter frontend wrangler deploy" },
+      ],
+    },
+    windows: {
+      lines: [
+        { kind: "command", text: "pnpm tokens:build" },
+        { kind: "command", text: "pnpm --filter frontend build" },
+        { kind: "command", text: "pnpm --filter frontend wrangler deploy" },
+      ],
+    },
+  }}
+/>
 
-- CI runs lint, typecheck, test, and build tasks
-- Release automation publishes changelog/tag artifacts
-- Deploy automation can publish frontend and backend independently
+CI authenticates with `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID`. For secrets like `BETTER_AUTH_SECRET`, use:
 
-## Rollout Checklist
+```bash
+pnpm --filter frontend wrangler secret put BETTER_AUTH_SECRET
+```
 
-- Validate env vars/secrets are set in target environment
-- Confirm database connectivity before cutover
-- Verify readiness/liveness endpoints after deploy
-- Confirm auth flow works end-to-end in production URL
+### R2 for file uploads
+
+`wrangler.jsonc` ships with an R2 bucket binding. If you don't need file storage, remove the binding; if you do, create the bucket once:
+
+```bash
+pnpm --filter frontend wrangler r2 bucket create shockstack-uploads
+```
+
+The server-side upload route reaches it via `context.locals.runtime.env.UPLOADS` (typed through `env.d.ts`).
+
+## Full stack: Docker
+
+`docker/docker-compose.yml` brings up Postgres + the API + the frontend. Good for staging, self-hosted prod, or anywhere you don't want edge.
+
+<TerminalTabs
+  title="Docker deploy"
+  variants={{
+    linux: {
+      lines: [
+        { kind: "command", text: "docker compose -f docker/docker-compose.yml build" },
+        { kind: "command", text: "docker compose -f docker/docker-compose.yml up -d" },
+        { kind: "command", text: "curl -f http://localhost:8080/health" },
+      ],
+    },
+    mac: {
+      lines: [
+        { kind: "command", text: "docker compose -f docker/docker-compose.yml build" },
+        { kind: "command", text: "docker compose -f docker/docker-compose.yml up -d" },
+        { kind: "command", text: "curl -f http://localhost:8080/health" },
+      ],
+    },
+    windows: {
+      lines: [
+        { kind: "command", text: "docker compose -f docker\\docker-compose.yml build" },
+        { kind: "command", text: "docker compose -f docker\\docker-compose.yml up -d" },
+        { kind: "command", text: "curl -f http://localhost:8080/health" },
+      ],
+    },
+  }}
+/>
+
+Push the built images to your registry (GHCR, ECR, etc.) and run them through your usual orchestrator — Kubernetes, Fly, Railway, a single VM. Nothing in the stack is Docker-specific beyond the Dockerfile.
+
+## CI/CD
+
+`.github/workflows/` uses `paths-filter` to run only what changed:
+
+- **frontend** paths → lint → typecheck → test → build.
+- **backend** paths → `dotnet restore` → `dotnet test` → `dotnet build`.
+- **tokens** paths → `pnpm --filter @shockstack/tokens build`.
+
+`semantic-release` runs on `main`, reads Conventional Commits, bumps the version, generates `CHANGELOG.md`, and tags the release. Deploys are triggered from tags.
+
+## Rollout checklist
+
+Use this before every cutover.
+
+- [ ] Secrets set (`BETTER_AUTH_SECRET`, `DATABASE_URL`, Cloudflare tokens).
+- [ ] `BETTER_AUTH_URL` matches the live origin.
+- [ ] Database migrations applied (`pnpm ss db migrate` locally against the target, or via CI).
+- [ ] Health endpoints respond (`/health` on the backend, `/api/health` on the frontend if enabled).
+- [ ] Sign-in & session roundtrip works from the production URL.
+- [ ] Observability hooks in place (logs, traces, error reporting).
+- [ ] Rollback plan: previous image tag on hand; `wrangler rollback` for edge.
+
+## Rolling back
+
+<div class="my-4 flex flex-wrap gap-2">
+  <Badge color="cyan" variant="subtle">Cloudflare</Badge>
+  <code>pnpm --filter frontend wrangler rollback [--version-id]</code>
+</div>
+
+<div class="my-4 flex flex-wrap gap-2">
+  <Badge color="orange" variant="subtle">Docker</Badge>
+  <code>docker compose up -d frontend --image ghcr.io/you/shockstack-frontend:PREV</code>
+</div>
+
+Both are quick; preferred over trying to patch forward in an outage.
