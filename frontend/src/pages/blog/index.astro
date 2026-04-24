@@ -1,44 +1,284 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Badge from "../../components/content/Badge.astro";
 
 export const prerender = true;
 
 const posts = (await getCollection("blog"))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const [featured, ...rest] = posts;
+
+const allTags = Array.from(
+  new Set(posts.flatMap((post) => post.data.tags)),
+).sort();
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+
+const readingTime = (text: string) => {
+  const words = text.trim().split(/\s+/).length;
+  return Math.max(1, Math.round(words / 200));
+};
+
+const postCountLabel = posts.length === 1 ? "1 post" : `${posts.length} posts`;
 ---
 
-<BaseLayout title="Blog" description="Latest posts from ShockStack.">
-  <h1 class="mb-8 text-3xl font-bold">Blog</h1>
-  <div class="grid gap-6">
-    {
-      posts.map((post) => (
-        <article class="border-border-default hover:border-accent-purple rounded-lg border p-6 transition-colors">
-          <a href={`/blog/${post.id}`}>
-            <h2 class="text-fg-primary mb-2 text-xl font-semibold">
-              {post.data.title}
-            </h2>
-            <p class="text-fg-secondary mb-3">{post.data.description}</p>
-            <div class="text-fg-muted flex items-center gap-4 text-sm">
-              <time datetime={post.data.date.toISOString()}>
-                {post.data.date.toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </time>
-              <div class="flex gap-2">
-                {post.data.tags.map((tag) => (
-                  <span class="bg-bg-secondary rounded-full px-2 py-0.5">
+<BaseLayout
+  title="Blog — ShockStack"
+  description="Notes, deep dives, and announcements from the ShockStack team."
+  fullWidth
+>
+  <section class="blog-hero relative overflow-hidden">
+    <div class="grid-overlay" aria-hidden="true"></div>
+    <div class="mx-auto max-w-6xl px-4 pt-20 pb-12 md:pt-28 md:pb-16">
+      <div class="reveal max-w-3xl">
+        <div
+          class="border-border-default bg-bg-secondary/60 text-fg-muted mb-6 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium backdrop-blur"
+        >
+          <span class="bg-accent-green pulse-soft h-1.5 w-1.5 rounded-full"
+          ></span>
+          {postCountLabel} · updated {
+            formatDate(posts[0]?.data.date ?? new Date())
+          }
+        </div>
+        <h1 class="text-4xl font-bold tracking-tight md:text-6xl">
+          The <span class="gradient-text-purple-pink">ShockStack</span> journal
+        </h1>
+        <p class="text-fg-secondary mt-5 max-w-2xl text-lg md:text-xl">
+          Engineering notes, architecture deep dives, and release announcements.
+          Opinionated takes on building a convention-first stack you can ship.
+        </p>
+        {
+          allTags.length > 0 && (
+            <div class="stagger-in mt-8 flex flex-wrap gap-2">
+              {allTags.map((tag) => (
+                <a
+                  href={`#tag-${tag}`}
+                  class="border-border-default bg-bg-secondary/60 text-fg-secondary hover:border-accent-purple hover:text-accent-purple rounded-full border px-3 py-1 text-xs font-medium backdrop-blur transition-colors"
+                >
+                  #{tag}
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  {
+    featured && (
+      <section class="mx-auto max-w-6xl px-4 pb-10">
+        <a
+          href={`/blog/${featured.id}`}
+          class="featured-card reveal group relative block overflow-hidden rounded-2xl"
+          aria-label={`Read: ${featured.data.title}`}
+        >
+          <div class="featured-gradient" aria-hidden="true" />
+          <div class="relative grid gap-8 p-8 md:grid-cols-[1.4fr_1fr] md:p-12">
+            <div class="min-w-0">
+              <div class="mb-4 flex items-center gap-3 text-xs tracking-wider uppercase">
+                <span class="gradient-text-purple-pink font-semibold">
+                  Featured
+                </span>
+                <span class="text-fg-muted">·</span>
+                <time
+                  class="text-fg-muted"
+                  datetime={featured.data.date.toISOString()}
+                >
+                  {formatDate(featured.data.date)}
+                </time>
+              </div>
+              <h2 class="text-fg-primary group-hover:text-accent-purple text-3xl font-bold tracking-tight transition-colors md:text-4xl">
+                {featured.data.title}
+              </h2>
+              <p class="text-fg-secondary mt-4 text-base md:text-lg">
+                {featured.data.description}
+              </p>
+              <div class="mt-6 flex flex-wrap items-center gap-2">
+                {featured.data.tags.map((tag) => (
+                  <Badge color="purple" variant="subtle" size="sm">
                     {tag}
-                  </span>
+                  </Badge>
                 ))}
               </div>
+              <div class="text-accent-purple mt-8 inline-flex items-center gap-2 text-sm font-medium">
+                Read the article
+                <span class="transition-transform group-hover:translate-x-1">
+                  →
+                </span>
+              </div>
             </div>
-          </a>
-        </article>
-      ))
-    }
-  </div>
+            <div class="hidden md:block" aria-hidden="true">
+              <div class="featured-ornament" />
+            </div>
+          </div>
+        </a>
+      </section>
+    )
+  }
+
+  {
+    rest.length > 0 && (
+      <section class="mx-auto max-w-6xl px-4 pb-24">
+        <div class="reveal mb-8 flex items-end justify-between">
+          <div>
+            <h2 class="text-fg-primary text-2xl font-bold tracking-tight">
+              All posts
+            </h2>
+            <p class="text-fg-muted mt-1 text-sm">
+              Chronological — newest first.
+            </p>
+          </div>
+          <div class="text-fg-muted hidden text-sm sm:block">
+            {rest.length} more
+          </div>
+        </div>
+        <div class="stagger-in grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {rest.map((post) => (
+            <article class="post-card glass hover-lift group rounded-xl">
+              <a href={`/blog/${post.id}`} class="block h-full p-6">
+                <div class="flex h-full flex-col">
+                  <div class="text-fg-muted mb-3 flex items-center gap-2 text-xs">
+                    <time datetime={post.data.date.toISOString()}>
+                      {formatDate(post.data.date)}
+                    </time>
+                    <span>·</span>
+                    <span>{readingTime(post.data.description)} min read</span>
+                  </div>
+                  <h3 class="text-fg-primary group-hover:text-accent-purple text-xl leading-tight font-semibold transition-colors">
+                    {post.data.title}
+                  </h3>
+                  <p class="text-fg-secondary mt-3 flex-1 text-sm leading-relaxed">
+                    {post.data.description}
+                  </p>
+                  {post.data.tags.length > 0 && (
+                    <div class="mt-5 flex flex-wrap gap-1.5">
+                      {post.data.tags.slice(0, 3).map((tag) => (
+                        <span class="border-border-muted text-fg-muted rounded-md border px-2 py-0.5 text-[11px] font-medium">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+      </section>
+    )
+  }
 </BaseLayout>
+
+<style>
+  .blog-hero {
+    background:
+      radial-gradient(
+        ellipse at 20% 0%,
+        color-mix(in srgb, var(--color-accent-purple) 10%, transparent) 0%,
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse at 85% 110%,
+        color-mix(in srgb, var(--color-accent-pink) 8%, transparent) 0%,
+        transparent 55%
+      ),
+      var(--color-bg-primary);
+  }
+
+  .grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--color-border-default) 55%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--color-border-default) 55%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 2.5rem 2.5rem;
+    mask-image: radial-gradient(ellipse at 50% 0%, black 40%, transparent 80%);
+    -webkit-mask-image: radial-gradient(
+      ellipse at 50% 0%,
+      black 40%,
+      transparent 80%
+    );
+    pointer-events: none;
+    opacity: 0.35;
+  }
+
+  .featured-card {
+    border: 1px solid var(--color-border-default);
+    background: color-mix(in srgb, var(--color-bg-secondary) 70%, transparent);
+    backdrop-filter: blur(12px);
+    transition:
+      border-color 0.4s ease,
+      transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.4s ease;
+  }
+
+  .featured-card:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(
+      in srgb,
+      var(--color-accent-purple) 55%,
+      transparent
+    );
+    box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.25);
+  }
+
+  .featured-gradient {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(
+        ellipse at 0% 0%,
+        color-mix(in srgb, var(--color-accent-purple) 15%, transparent) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse at 100% 100%,
+        color-mix(in srgb, var(--color-accent-pink) 12%, transparent) 0%,
+        transparent 50%
+      );
+    pointer-events: none;
+  }
+
+  .featured-ornament {
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 18rem;
+    margin-left: auto;
+    border-radius: var(--radius-2xl);
+    background:
+      radial-gradient(
+        circle at 30% 30%,
+        color-mix(in srgb, var(--color-accent-purple) 40%, transparent),
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 70% 70%,
+        color-mix(in srgb, var(--color-accent-pink) 35%, transparent),
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 50% 20%,
+        color-mix(in srgb, var(--color-accent-cyan) 25%, transparent),
+        transparent 50%
+      );
+    filter: blur(0.5px);
+    border: 1px solid var(--color-border-default);
+  }
+</style>

@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Badge from "../../components/content/Badge.astro";
 
 export const prerender = true;
 
@@ -13,29 +14,284 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+
+const allPosts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const currentIndex = allPosts.findIndex((p) => p.id === post.id);
+const prev = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+const next =
+  currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+
+const related = allPosts
+  .filter(
+    (p) =>
+      p.id !== post.id && p.data.tags.some((t) => post.data.tags.includes(t)),
+  )
+  .slice(0, 3);
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
 
 <BaseLayout
-  title={post.data.title}
+  title={`${post.data.title} — ShockStack Blog`}
   description={post.data.description}
   type="article"
+  fullWidth
 >
-  <article class="prose prose-lg mx-auto max-w-3xl">
-    <header class="mb-8">
-      <h1 class="mb-2 text-4xl font-bold">{post.data.title}</h1>
-      <div class="text-fg-muted flex items-center gap-4">
-        <time datetime={post.data.date.toISOString()}>
-          {
-            post.data.date.toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })
-          }
-        </time>
+  <article>
+    <header class="post-hero relative overflow-hidden">
+      <div class="grid-overlay" aria-hidden="true"></div>
+      <div class="relative mx-auto max-w-4xl px-4 pt-16 pb-12 md:pt-24">
+        <a
+          href="/blog"
+          class="text-fg-muted hover:text-accent-purple reveal inline-flex items-center gap-1.5 text-sm font-medium transition-colors"
+        >
+          <span aria-hidden="true">←</span> Back to blog
+        </a>
+        <div class="reveal mt-8">
+          <div
+            class="text-fg-muted mb-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
+          >
+            <time datetime={post.data.date.toISOString()}>
+              {formatDate(post.data.date)}
+            </time>
+            {
+              post.data.tags.length > 0 && (
+                <>
+                  <span aria-hidden="true">·</span>
+                  <div class="flex flex-wrap gap-1.5">
+                    {post.data.tags.map((tag) => (
+                      <Badge color="purple" variant="subtle" size="sm">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </>
+              )
+            }
+          </div>
+          <h1
+            class="text-fg-primary text-4xl leading-tight font-bold tracking-tight md:text-5xl lg:text-6xl"
+          >
+            {post.data.title}
+          </h1>
+          <p class="text-fg-secondary mt-6 max-w-2xl text-lg md:text-xl">
+            {post.data.description}
+          </p>
+        </div>
       </div>
+      <div class="post-hero-fade" aria-hidden="true"></div>
     </header>
-    <Content />
+
+    <div class="mx-auto max-w-6xl px-4 pb-20">
+      <div class="relative grid gap-10 lg:grid-cols-[minmax(0,1fr)_14rem]">
+        <div class="min-w-0">
+          <div
+            class="prose prose-lg prose-headings:scroll-mt-24 mx-auto max-w-3xl lg:mx-0"
+          >
+            <Content />
+          </div>
+
+          <footer
+            class="border-border-default mx-auto mt-16 max-w-3xl border-t pt-8 lg:mx-0"
+          >
+            <div
+              class="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div class="text-fg-muted text-sm">
+                Published {formatDate(post.data.date)}
+              </div>
+              <div class="flex flex-wrap gap-2">
+                {
+                  post.data.tags.map((tag) => (
+                    <Badge color="purple" variant="subtle" size="sm">
+                      #{tag}
+                    </Badge>
+                  ))
+                }
+              </div>
+            </div>
+
+            <nav
+              class="mt-10 grid gap-3 sm:grid-cols-2"
+              aria-label="Post navigation"
+            >
+              {
+                prev ? (
+                  <a href={`/blog/${prev.id}`} class="nav-card group">
+                    <span class="text-fg-muted text-xs tracking-wider uppercase">
+                      ← Previous
+                    </span>
+                    <span class="text-fg-primary group-hover:text-accent-purple mt-1 block text-sm font-semibold transition-colors">
+                      {prev.data.title}
+                    </span>
+                  </a>
+                ) : (
+                  <div />
+                )
+              }
+              {
+                next ? (
+                  <a
+                    href={`/blog/${next.id}`}
+                    class="nav-card group text-right"
+                  >
+                    <span class="text-fg-muted text-xs tracking-wider uppercase">
+                      Next →
+                    </span>
+                    <span class="text-fg-primary group-hover:text-accent-purple mt-1 block text-sm font-semibold transition-colors">
+                      {next.data.title}
+                    </span>
+                  </a>
+                ) : (
+                  <div />
+                )
+              }
+            </nav>
+          </footer>
+
+          {
+            related.length > 0 && (
+              <section class="mx-auto mt-16 max-w-3xl lg:mx-0">
+                <h2 class="text-fg-primary mb-6 text-xl font-semibold">
+                  Related posts
+                </h2>
+                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {related.map((r) => (
+                    <a
+                      href={`/blog/${r.id}`}
+                      class="glass hover-lift group block rounded-xl p-5"
+                    >
+                      <time
+                        class="text-fg-muted text-xs"
+                        datetime={r.data.date.toISOString()}
+                      >
+                        {formatDate(r.data.date)}
+                      </time>
+                      <h3 class="text-fg-primary group-hover:text-accent-purple mt-2 text-sm leading-snug font-semibold transition-colors">
+                        {r.data.title}
+                      </h3>
+                    </a>
+                  ))}
+                </div>
+              </section>
+            )
+          }
+        </div>
+
+        {
+          tocHeadings.length > 0 && (
+            <aside class="hidden lg:block">
+              <div class="sticky top-8">
+                <h2 class="text-fg-muted mb-3 text-xs font-semibold tracking-wider uppercase">
+                  On this page
+                </h2>
+                <ul class="space-y-1 text-sm">
+                  {tocHeadings.map((h) => (
+                    <li>
+                      <a
+                        href={`#${h.slug}`}
+                        class:list={[
+                          "text-fg-secondary hover:text-accent-purple block rounded-md px-2 py-1 transition-colors",
+                          h.depth === 3 && "pl-5 text-[13px]",
+                        ]}
+                      >
+                        {h.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </aside>
+          )
+        }
+      </div>
+    </div>
   </article>
 </BaseLayout>
+
+<style>
+  .post-hero {
+    background:
+      radial-gradient(
+        ellipse at 30% 0%,
+        color-mix(in srgb, var(--color-accent-purple) 8%, transparent) 0%,
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse at 75% 80%,
+        color-mix(in srgb, var(--color-accent-cyan) 6%, transparent) 0%,
+        transparent 55%
+      ),
+      var(--color-bg-primary);
+  }
+
+  .post-hero-fade {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 4rem;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--color-bg-primary)
+    );
+    pointer-events: none;
+  }
+
+  .grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--color-border-default) 45%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--color-border-default) 45%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 2.5rem 2.5rem;
+    mask-image: radial-gradient(ellipse at 50% 0%, black 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(
+      ellipse at 50% 0%,
+      black 30%,
+      transparent 75%
+    );
+    pointer-events: none;
+    opacity: 0.3;
+  }
+
+  .nav-card {
+    display: block;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    background: color-mix(in srgb, var(--color-bg-secondary) 50%, transparent);
+    backdrop-filter: blur(8px);
+    transition:
+      border-color 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .nav-card:hover {
+    border-color: color-mix(
+      in srgb,
+      var(--color-accent-purple) 50%,
+      transparent
+    );
+    transform: translateY(-2px);
+  }
+</style>
