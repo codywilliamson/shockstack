@@ -60,5 +60,30 @@ const themeBootstrapScript = `
       <slot />
     </main>
     <Footer />
+    <script>
+      document.addEventListener("astro:page-load", () => {
+        const revealObserver = new IntersectionObserver(
+          (entries, observer) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-revealed");
+                observer.unobserve(entry.target);
+              }
+            }
+          },
+          {
+            root: null,
+            rootMargin: "0px 0px -10% 0px",
+            threshold: 0,
+          },
+        );
+
+        for (const element of document.querySelectorAll(
+          ".reveal, .stagger-in",
+        )) {
+          revealObserver.observe(element);
+        }
+      });
+    </script>
   </body>
 </html>

@@ -38,70 +38,72 @@ async function signOut() {
 </script>
 
 <template>
-  <template v-if="!user" />
+  <div class="contents">
+    <template v-if="!user" />
 
-  <DropdownMenuRoot v-else>
-    <DropdownMenuTrigger
-      class="border-border-default bg-bg-secondary hover:border-accent-purple/50 focus:border-accent-purple flex size-8 items-center justify-center overflow-hidden rounded-full border transition-colors outline-none"
-      aria-label="User menu"
-    >
-      <img
-        v-if="user.image"
-        :src="user.image"
-        :alt="user.name"
-        class="size-full object-cover"
+    <DropdownMenuRoot v-else>
+      <DropdownMenuTrigger
+        class="border-border-default bg-bg-secondary hover:border-accent-purple/50 focus:border-accent-purple flex size-8 items-center justify-center overflow-hidden rounded-full border transition-colors outline-none"
+        aria-label="User menu"
       >
-      <span
-        v-else
-        class="text-fg-secondary text-xs font-medium"
-      >{{
-        initials
-      }}</span>
-    </DropdownMenuTrigger>
-
-    <DropdownMenuPortal>
-      <DropdownMenuContent
-        class="border-border-default bg-bg-secondary z-50 min-w-[200px] rounded-lg border p-1 shadow-lg"
-        :side-offset="8"
-        align="end"
-      >
-        <DropdownMenuLabel class="px-2 py-1.5">
-          <p class="text-fg-primary text-sm font-medium">
-            {{ user.name }}
-          </p>
-          <p class="text-fg-muted text-xs">
-            {{ user.email }}
-          </p>
-        </DropdownMenuLabel>
-
-        <DropdownMenuSeparator class="bg-border-default my-1 h-px" />
-
-        <DropdownMenuItem
-          as="a"
-          href="/settings/profile"
-          class="text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary flex cursor-pointer items-center rounded-md px-2 py-1.5 text-sm transition-colors outline-none"
+        <img
+          v-if="user.image"
+          :src="user.image"
+          :alt="user.name"
+          class="size-full object-cover"
         >
-          Profile
-        </DropdownMenuItem>
+        <span
+          v-else
+          class="text-fg-secondary text-xs font-medium"
+        >{{
+          initials
+        }}</span>
+      </DropdownMenuTrigger>
 
-        <DropdownMenuItem
-          as="a"
-          href="/settings/security"
-          class="text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary flex cursor-pointer items-center rounded-md px-2 py-1.5 text-sm transition-colors outline-none"
+      <DropdownMenuPortal>
+        <DropdownMenuContent
+          class="border-border-default bg-bg-secondary z-50 min-w-[200px] rounded-lg border p-1 shadow-lg"
+          :side-offset="8"
+          align="end"
         >
-          Settings
-        </DropdownMenuItem>
+          <DropdownMenuLabel class="px-2 py-1.5">
+            <p class="text-fg-primary text-sm font-medium">
+              {{ user.name }}
+            </p>
+            <p class="text-fg-muted text-xs">
+              {{ user.email }}
+            </p>
+          </DropdownMenuLabel>
 
-        <DropdownMenuSeparator class="bg-border-default my-1 h-px" />
+          <DropdownMenuSeparator class="bg-border-default my-1 h-px" />
 
-        <DropdownMenuItem
-          class="text-accent-red hover:bg-accent-red/10 flex cursor-pointer items-center rounded-md px-2 py-1.5 text-sm transition-colors outline-none"
-          :disabled="signingOut"
-          @click="signOut"
-        >
-          {{ signingOut ? "Signing out..." : "Sign out" }}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenuPortal>
-  </DropdownMenuRoot>
+          <DropdownMenuItem
+            as="a"
+            href="/settings/profile"
+            class="text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary flex cursor-pointer items-center rounded-md px-2 py-1.5 text-sm transition-colors outline-none"
+          >
+            Profile
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            as="a"
+            href="/settings/security"
+            class="text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary flex cursor-pointer items-center rounded-md px-2 py-1.5 text-sm transition-colors outline-none"
+          >
+            Settings
+          </DropdownMenuItem>
+
+          <DropdownMenuSeparator class="bg-border-default my-1 h-px" />
+
+          <DropdownMenuItem
+            class="text-accent-red hover:bg-accent-red/10 flex cursor-pointer items-center rounded-md px-2 py-1.5 text-sm transition-colors outline-none"
+            :disabled="signingOut"
+            @click="signOut"
+          >
+            {{ signingOut ? "Signing out..." : "Sign out" }}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
+    </DropdownMenuRoot>
+  </div>
 </template>

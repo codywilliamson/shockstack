@@ -23,6 +23,7 @@ function navigate(href: string) {
       <button
         class="text-fg-secondary hover:text-fg-primary hover:bg-bg-tertiary rounded-md p-2 transition-colors outline-none md:hidden"
         aria-label="Open menu"
+        @click="open = true"
       >
         <svg
           width="20"

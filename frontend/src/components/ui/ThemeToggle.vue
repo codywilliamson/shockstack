@@ -18,9 +18,49 @@ const selectedTheme = computed(
     THEME_OPTIONS[0],
 );
 
-function applyTheme(nextTheme: ThemeName) {
-  document.documentElement.setAttribute("data-theme", nextTheme);
-  localStorage.setItem("theme", nextTheme);
+function applyTheme(nextTheme: ThemeName, event?: MouseEvent) {
+  if (
+    !document.startViewTransition ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    document.documentElement.setAttribute("data-theme", nextTheme);
+    localStorage.setItem("theme", nextTheme);
+    return;
+  }
+
+  const x = event?.clientX ?? window.innerWidth / 2;
+  const y = event?.clientY ?? window.innerHeight / 2;
+  const endRadius = Math.hypot(
+    Math.max(x, window.innerWidth - x),
+    Math.max(y, window.innerHeight - y),
+  );
+
+  document.documentElement.classList.add("theme-transition");
+
+  const transition = document.startViewTransition(() => {
+    document.documentElement.setAttribute("data-theme", nextTheme);
+    localStorage.setItem("theme", nextTheme);
+  });
+
+  transition.ready.then(() => {
+    document.documentElement.animate(
+      {
+        clipPath: [
+          `circle(0px at ${x}px ${y}px)`,
+          `circle(${endRadius}px at ${x}px ${y}px)`,
+        ],
+      },
+      {
+        duration: 500,
+        easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+        pseudoElement: "::view-transition-new(root)",
+      },
+    );
+  });
+
+  transition.finished.finally(() => {
+    document.documentElement.classList.remove("theme-transition");
+  });
 }
 
 function closeDropdown() {
@@ -31,9 +71,9 @@ function toggleDropdown() {
   isOpen.value = !isOpen.value;
 }
 
-function selectTheme(nextTheme: ThemeName) {
+function selectTheme(nextTheme: ThemeName, event?: MouseEvent) {
   theme.value = nextTheme;
-  applyTheme(nextTheme);
+  applyTheme(nextTheme, event);
   closeDropdown();
   triggerRef.value?.focus();
 }
@@ -171,7 +211,7 @@ onUnmounted(() => {
                 : 'text-fg-secondary'
             "
             :aria-selected="option.value === theme ? 'true' : 'false'"
-            @click="selectTheme(option.value)"
+            @click="selectTheme(option.value, $event)"
           >
             <span class="inline-flex items-center gap-2">
               <svg

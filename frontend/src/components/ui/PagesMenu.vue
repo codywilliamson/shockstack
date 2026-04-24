@@ -38,92 +38,94 @@ function navigate(href: string) {
 </script>
 
 <template>
-  <div
-    v-if="mobile"
-    class="pages-menu-mobile"
-  >
-    <button
-      type="button"
-      class="mobile-pages-trigger"
-      :aria-expanded="mobileOpen ? 'true' : 'false'"
-      @click="mobileOpen = !mobileOpen"
-    >
-      <span>Pages</span>
-      <svg
-        class="pages-menu-chevron"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <path d="m6 9 6 6 6-6" />
-      </svg>
-    </button>
-
+  <div class="contents">
     <div
-      class="mobile-pages-panel"
-      :data-open="mobileOpen ? 'true' : 'false'"
+      v-if="mobile"
+      class="pages-menu-mobile"
     >
-      <div class="mobile-pages-panel-inner">
-        <button
-          v-for="link in pageNavLinks"
-          :key="link.href"
-          type="button"
-          class="mobile-pages-link"
-          @click="navigate(link.href)"
+      <button
+        type="button"
+        class="mobile-pages-trigger"
+        :aria-expanded="mobileOpen ? 'true' : 'false'"
+        @click="mobileOpen = !mobileOpen"
+      >
+        <span>Pages</span>
+        <svg
+          class="pages-menu-chevron"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
         >
-          {{ link.label }}
-        </button>
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </button>
+
+      <div
+        class="mobile-pages-panel"
+        :data-open="mobileOpen ? 'true' : 'false'"
+      >
+        <div class="mobile-pages-panel-inner">
+          <button
+            v-for="link in pageNavLinks"
+            :key="link.href"
+            type="button"
+            class="mobile-pages-link"
+            @click="navigate(link.href)"
+          >
+            {{ link.label }}
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <DropdownMenuRoot v-else>
-    <DropdownMenuTrigger
-      type="button"
-      class="desktop-pages-trigger"
-      aria-label="Open pages menu"
-    >
-      <span>Pages</span>
-      <svg
-        class="pages-menu-chevron"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
+    <DropdownMenuRoot v-else>
+      <DropdownMenuTrigger
+        type="button"
+        class="desktop-pages-trigger"
+        aria-label="Open pages menu"
       >
-        <path d="m6 9 6 6 6-6" />
-      </svg>
-    </DropdownMenuTrigger>
-
-    <DropdownMenuPortal>
-      <DropdownMenuContent
-        class="desktop-pages-content"
-        :side-offset="10"
-        align="end"
-      >
-        <DropdownMenuItem
-          v-for="link in pageNavLinks"
-          :key="link.href"
-          as="a"
-          :href="link.href"
-          class="desktop-pages-link"
+        <span>Pages</span>
+        <svg
+          class="pages-menu-chevron"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
         >
-          {{ link.label }}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenuPortal>
-  </DropdownMenuRoot>
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuPortal>
+        <DropdownMenuContent
+          class="desktop-pages-content"
+          :side-offset="10"
+          align="end"
+        >
+          <DropdownMenuItem
+            v-for="link in pageNavLinks"
+            :key="link.href"
+            as="a"
+            :href="link.href"
+            class="desktop-pages-link"
+          >
+            {{ link.label }}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
+    </DropdownMenuRoot>
+  </div>
 </template>
 
 <style scoped>

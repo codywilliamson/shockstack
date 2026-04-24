@@ -21,9 +21,7 @@ const open = defineModel<boolean>("open", { default: false });
 
 <template>
   <DialogRoot v-model:open="open">
-    <DialogTrigger as-child>
-      <slot name="trigger" />
-    </DialogTrigger>
+    <slot name="trigger" />
 
     <DialogPortal>
       <DialogOverlay class="sheet-overlay" />
