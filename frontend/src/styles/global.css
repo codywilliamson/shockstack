@@ -71,6 +71,13 @@ body {
   padding: 0.15em 0.4em;
   border-radius: var(--radius-sm);
   font-size: 0.875em;
+  font-weight: inherit;
+}
+
+/* strip the default tailwind typography backtick quotes around inline code */
+.prose code::before,
+.prose code::after {
+  content: none !important;
 }
 
 .prose pre {
