@@ -1,12 +1,12 @@
 # Design Tokens
 
-Design tokens are defined once and compiled into formats used by the frontend build and runtime styling.
+ShockStack uses `@google/design.md` as the single source of truth for design tokens. The tokens are extracted into the W3C DTCG format and fed into Style Dictionary, which then outputs our Tailwind 4 CSS variables.
 
-## Token Model
+## Using `DESIGN.md`
 
-- Base tokens: spacing, typography, radii, shadows, and shared primitives
-- Theme tokens: multiple built-in palettes mapped to shared semantic names
-- Custom overrides: project-specific additions layered on top
+All aesthetic values (colors, spacing, radii, typography) are defined centrally in `docs/system/DESIGN.md` in the YAML frontmatter section.
+
+By maintaining tokens in `DESIGN.md`, AI agents have persistent, structured context, guaranteeing they use the project's exact aesthetic system rather than hardcoding arbitrary HEX values into individual components.
 
 ## Build Outputs
 
@@ -16,7 +16,7 @@ Design tokens are defined once and compiled into formats used by the frontend bu
 
 ## Customization
 
-Update token source files, run `pnpm tokens:build`, and consume the regenerated outputs in the frontend.
+Update your token source file at `docs/system/DESIGN.md`, run `pnpm --filter @shockstack/tokens build`, and consume the regenerated CSS variables in the frontend!
 
 ## Theme Switching
 
