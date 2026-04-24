@@ -10,36 +10,89 @@ const { currentSlug } = Astro.props;
 const docs = (await getCollection("docs")).sort(
   (a, b) => a.data.order - b.data.order,
 );
+
+const sections: Array<{ title: string; slugs: string[] }> = [
+  {
+    title: "Get started",
+    slugs: ["getting-started", "project-structure"],
+  },
+  {
+    title: "Design system",
+    slugs: ["design-tokens", "theming", "component-library"],
+  },
+  {
+    title: "Build",
+    slugs: [
+      "frontend-guide",
+      "backend-guide",
+      "authentication",
+      "database-guide",
+    ],
+  },
+  {
+    title: "Ship",
+    slugs: ["deployment", "testing-guide", "cli-commands", "conventions"],
+  },
+];
+
+const docsBySlug = Object.fromEntries(docs.map((d) => [d.id, d]));
+const covered = new Set(sections.flatMap((s) => s.slugs));
+const extras = docs.filter((d) => !covered.has(d.id));
+
+const resolvedSections = sections
+  .map((s) => ({
+    title: s.title,
+    docs: s.slugs.map((slug) => docsBySlug[slug]).filter(Boolean),
+  }))
+  .filter((s) => s.docs.length > 0);
+
+if (extras.length > 0) {
+  resolvedSections.push({ title: "Other", docs: extras });
+}
 ---
 
 <aside class="shrink-0 lg:w-56">
-  <nav class="lg:sticky lg:top-8">
-    <h3
-      class="text-fg-muted mb-3 text-xs font-semibold tracking-wider uppercase"
+  <nav class="space-y-6 lg:sticky lg:top-8">
+    <a
+      href="/docs"
+      class="text-fg-muted hover:text-fg-primary inline-flex items-center gap-1.5 text-xs font-medium transition-colors"
     >
-      Documentation
-    </h3>
-    <ul class="space-y-1">
-      {
-        docs.map((doc) => {
-          const isActive = currentSlug === doc.id;
-          return (
-            <li>
-              <a
-                href={`/docs/${doc.id}`}
-                class:list={[
-                  "block rounded-md px-3 py-1.5 text-sm transition-colors",
-                  isActive
-                    ? "bg-accent-purple/10 text-accent-purple font-medium"
-                    : "text-fg-secondary hover:text-fg-primary hover:bg-bg-tertiary",
-                ]}
-              >
-                {doc.data.title}
-              </a>
-            </li>
-          );
-        })
-      }
-    </ul>
+      <span aria-hidden="true">←</span> All docs
+    </a>
+    {
+      resolvedSections.map((section) => (
+        <div>
+          <h3 class="text-fg-muted mb-2 text-[11px] font-semibold tracking-wider uppercase">
+            {section.title}
+          </h3>
+          <ul class="space-y-0.5">
+            {section.docs.map((doc) => {
+              const isActive = currentSlug === doc.id;
+              return (
+                <li>
+                  <a
+                    href={`/docs/${doc.id}`}
+                    class:list={[
+                      "relative block rounded-md px-3 py-1.5 text-sm transition-colors",
+                      isActive
+                        ? "bg-accent-purple/10 text-accent-purple font-medium"
+                        : "text-fg-secondary hover:text-fg-primary hover:bg-bg-tertiary",
+                    ]}
+                  >
+                    {isActive && (
+                      <span
+                        class="bg-accent-purple absolute top-1/2 left-0 h-4 w-0.5 -translate-y-1/2 rounded-full"
+                        aria-hidden="true"
+                      />
+                    )}
+                    {doc.data.title}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))
+    }
   </nav>
 </aside>

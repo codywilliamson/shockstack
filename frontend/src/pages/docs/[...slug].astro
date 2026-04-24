@@ -14,7 +14,7 @@ export async function getStaticPaths() {
 }
 
 const { doc } = Astro.props;
-const { Content } = await render(doc);
+const { Content, headings } = await render(doc);
 
 const allDocs = (await getCollection("docs")).sort(
   (a, b) => a.data.order - b.data.order,
@@ -23,43 +23,176 @@ const currentIndex = allDocs.findIndex((d) => d.id === doc.id);
 const prev = currentIndex > 0 ? allDocs[currentIndex - 1] : null;
 const next =
   currentIndex < allDocs.length - 1 ? allDocs[currentIndex + 1] : null;
+
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
 
-<BaseLayout title={doc.data.title} description={doc.data.description}>
-  <div class="flex flex-col gap-10 lg:flex-row">
-    <DocsSidebar currentSlug={doc.id} />
-    <div class="min-w-0 flex-1">
-      <article class="prose prose-lg mx-auto max-w-3xl">
-        <Content />
-      </article>
-      <nav
-        class="border-border-default mx-auto mt-12 flex max-w-3xl items-center justify-between border-t pt-6"
+<BaseLayout
+  title={`${doc.data.title} — ShockStack Docs`}
+  description={doc.data.description}
+  fullWidth
+>
+  <div class="docs-shell relative">
+    <div class="docs-gradient" aria-hidden="true"></div>
+    <div class="mx-auto w-full max-w-7xl px-4 py-10 md:py-14">
+      <div
+        class="grid gap-10 lg:grid-cols-[15rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)_13rem]"
       >
-        {
-          prev ? (
-            <a href={`/docs/${prev.id}`} class="group flex flex-col">
-              <span class="text-fg-muted text-xs uppercase">Previous</span>
-              <span class="text-accent-purple group-hover:text-accent-pink text-sm font-medium transition-colors">
-                &larr; {prev.data.title}
-              </span>
+        <DocsSidebar currentSlug={doc.id} />
+
+        <div class="min-w-0">
+          <nav
+            class="text-fg-muted mb-6 flex flex-wrap items-center gap-2 text-xs"
+            aria-label="Breadcrumb"
+          >
+            <a href="/docs" class="hover:text-accent-purple transition-colors">
+              Docs
             </a>
-          ) : (
-            <div />
+            <span aria-hidden="true">/</span>
+            <span class="text-fg-secondary">{doc.data.title}</span>
+          </nav>
+
+          <header class="reveal mb-10">
+            <h1
+              class="text-fg-primary text-3xl leading-tight font-bold tracking-tight md:text-4xl"
+            >
+              {doc.data.title}
+            </h1>
+            {
+              doc.data.description && (
+                <p class="text-fg-secondary mt-3 text-lg">
+                  {doc.data.description}
+                </p>
+              )
+            }
+          </header>
+
+          <article
+            class="prose prose-lg prose-headings:scroll-mt-24 max-w-none"
+          >
+            <Content />
+          </article>
+
+          <nav
+            class="border-border-default mt-16 grid gap-3 border-t pt-8 sm:grid-cols-2"
+            aria-label="Doc navigation"
+          >
+            {
+              prev ? (
+                <a href={`/docs/${prev.id}`} class="nav-card group">
+                  <span class="text-fg-muted text-xs tracking-wider uppercase">
+                    ← Previous
+                  </span>
+                  <span class="text-fg-primary group-hover:text-accent-purple mt-1 block text-sm font-semibold transition-colors">
+                    {prev.data.title}
+                  </span>
+                </a>
+              ) : (
+                <div />
+              )
+            }
+            {
+              next ? (
+                <a href={`/docs/${next.id}`} class="nav-card group text-right">
+                  <span class="text-fg-muted text-xs tracking-wider uppercase">
+                    Next →
+                  </span>
+                  <span class="text-fg-primary group-hover:text-accent-purple mt-1 block text-sm font-semibold transition-colors">
+                    {next.data.title}
+                  </span>
+                </a>
+              ) : (
+                <div />
+              )
+            }
+          </nav>
+
+          <div
+            class="text-fg-muted mt-10 flex flex-wrap items-center justify-between gap-3 text-xs"
+          >
+            <span>
+              Step {currentIndex + 1} of {allDocs.length}
+            </span>
+            <a
+              href={`https://github.com/codywilliamson/shockstack/edit/main/frontend/src/content/docs/${doc.id}.mdx`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:text-accent-purple inline-flex items-center gap-1.5 transition-colors"
+            >
+              Edit this page on GitHub
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+
+        {
+          tocHeadings.length > 0 && (
+            <aside class="hidden xl:block">
+              <div class="sticky top-8">
+                <h2 class="text-fg-muted mb-3 text-xs font-semibold tracking-wider uppercase">
+                  On this page
+                </h2>
+                <ul class="space-y-1 text-sm">
+                  {tocHeadings.map((h) => (
+                    <li>
+                      <a
+                        href={`#${h.slug}`}
+                        class:list={[
+                          "text-fg-secondary hover:text-accent-purple block rounded-md px-2 py-1 transition-colors",
+                          h.depth === 3 && "pl-5 text-[13px]",
+                        ]}
+                      >
+                        {h.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </aside>
           )
         }
-        {
-          next ? (
-            <a href={`/docs/${next.id}`} class="group flex flex-col items-end">
-              <span class="text-fg-muted text-xs uppercase">Next</span>
-              <span class="text-accent-purple group-hover:text-accent-pink text-sm font-medium transition-colors">
-                {next.data.title} &rarr;
-              </span>
-            </a>
-          ) : (
-            <div />
-          )
-        }
-      </nav>
+      </div>
     </div>
   </div>
 </BaseLayout>
+
+<style>
+  .docs-shell {
+    min-height: 100%;
+  }
+
+  .docs-gradient {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 22rem;
+    background: radial-gradient(
+      ellipse at 50% 0%,
+      color-mix(in srgb, var(--color-accent-purple) 6%, transparent) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .nav-card {
+    display: block;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    background: color-mix(in srgb, var(--color-bg-secondary) 50%, transparent);
+    backdrop-filter: blur(8px);
+    transition:
+      border-color 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .nav-card:hover {
+    border-color: color-mix(
+      in srgb,
+      var(--color-accent-purple) 50%,
+      transparent
+    );
+    transform: translateY(-2px);
+  }
+</style>

@@ -4,26 +4,273 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export const prerender = true;
 
+type Group = {
+  id: string;
+  title: string;
+  description: string;
+  gradient: string;
+  slugs: string[];
+};
+
+const groups: Group[] = [
+  {
+    id: "start",
+    title: "Get started",
+    description: "Install, orient, and make your first change.",
+    gradient: "from-accent-purple to-accent-pink",
+    slugs: ["getting-started", "project-structure"],
+  },
+  {
+    id: "design",
+    title: "Design system",
+    description: "Tokens, themes, and the component library.",
+    gradient: "from-accent-pink to-accent-orange",
+    slugs: ["design-tokens", "theming", "component-library"],
+  },
+  {
+    id: "build",
+    title: "Build",
+    description: "Frontend, backend, auth, and data.",
+    gradient: "from-accent-cyan to-accent-green",
+    slugs: [
+      "frontend-guide",
+      "backend-guide",
+      "authentication",
+      "database-guide",
+    ],
+  },
+  {
+    id: "ship",
+    title: "Ship & operate",
+    description: "Deployment, testing, and team conventions.",
+    gradient: "from-accent-green to-accent-cyan",
+    slugs: ["deployment", "testing-guide", "conventions", "cli-commands"],
+  },
+];
+
 const docs = (await getCollection("docs")).sort(
   (a, b) => a.data.order - b.data.order,
 );
+const docsBySlug = Object.fromEntries(docs.map((d) => [d.id, d]));
+
+const grouped = groups.map((g) => ({
+  ...g,
+  docs: g.slugs.map((s) => docsBySlug[s]).filter(Boolean),
+}));
+
+const covered = new Set(groups.flatMap((g) => g.slugs));
+const orphaned = docs.filter((d) => !covered.has(d.id));
+
+const totalDocs = docs.length;
 ---
 
-<BaseLayout title="Docs" description="ShockStack documentation.">
-  <h1 class="mb-8 text-3xl font-bold">Documentation</h1>
-  <nav class="grid gap-4">
-    {
-      docs.map((doc) => (
-        <a
-          href={`/docs/${doc.id}`}
-          class="border-border-default hover:border-accent-purple rounded-lg border p-4 transition-colors"
+<BaseLayout
+  title="Docs — ShockStack"
+  description="The ShockStack documentation. Start here to build on the stack."
+  fullWidth
+>
+  <section class="docs-hero relative overflow-hidden">
+    <div class="grid-overlay" aria-hidden="true"></div>
+    <div class="relative mx-auto max-w-6xl px-4 pt-20 pb-14 md:pt-28 md:pb-20">
+      <div class="reveal max-w-3xl">
+        <div
+          class="border-border-default bg-bg-secondary/60 text-fg-muted mb-6 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium backdrop-blur"
         >
-          <h2 class="text-fg-primary font-semibold">{doc.data.title}</h2>
-          {doc.data.description && (
-            <p class="text-fg-secondary mt-1 text-sm">{doc.data.description}</p>
-          )}
-        </a>
-      ))
-    }
-  </nav>
+          <span class="bg-accent-cyan pulse-soft h-1.5 w-1.5 rounded-full"
+          ></span>
+          {totalDocs} guides · Astro 6, Vue 3, Tailwind 4, .NET 10
+        </div>
+        <h1 class="text-4xl font-bold tracking-tight md:text-6xl">
+          <span class="gradient-text-cyan-green">Documentation</span>
+        </h1>
+        <p class="text-fg-secondary mt-5 max-w-2xl text-lg md:text-xl">
+          Everything you need to build, theme, and deploy on ShockStack.
+          Opinionated conventions, zero-config where it counts, and escape
+          hatches where it matters.
+        </p>
+        <div class="reveal mt-8 flex flex-wrap gap-3">
+          <a
+            href="/docs/getting-started"
+            class="from-accent-cyan to-accent-purple text-bg-primary inline-flex items-center gap-2 rounded-lg bg-gradient-to-r px-5 py-2.5 text-sm font-semibold shadow-lg transition-transform hover:scale-[1.02]"
+          >
+            Start here
+            <span aria-hidden="true">→</span>
+          </a>
+          <a
+            href="/docs/project-structure"
+            class="border-border-default bg-bg-secondary/60 text-fg-secondary hover:border-accent-purple hover:text-fg-primary inline-flex items-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-semibold backdrop-blur transition-colors"
+          >
+            Browse the repo
+          </a>
+        </div>
+      </div>
+
+      <div
+        class="stagger-in relative z-10 mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+      >
+        {
+          [
+            {
+              label: "Frontend",
+              value: "Astro + Vue",
+              accent: "accent-purple",
+            },
+            {
+              label: "Styling",
+              value: "Tailwind 4",
+              accent: "accent-pink",
+            },
+            {
+              label: "Auth & DB",
+              value: "Better Auth + Drizzle",
+              accent: "accent-cyan",
+            },
+            {
+              label: "Backend",
+              value: ".NET Aspire",
+              accent: "accent-green",
+            },
+          ].map((item) => (
+            <div class="glass flex flex-col gap-1 rounded-xl p-4">
+              <span class="text-fg-muted text-xs tracking-wider uppercase">
+                {item.label}
+              </span>
+              <span class={`text-${item.accent} text-base font-semibold`}>
+                {item.value}
+              </span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 pb-24">
+    <div class="flex flex-col gap-14">
+      {
+        grouped
+          .filter((g) => g.docs.length > 0)
+          .map((group) => (
+            <div id={group.id} class="reveal">
+              <div class="mb-6 flex items-end justify-between gap-4">
+                <div>
+                  <h2
+                    class={`bg-gradient-to-r ${group.gradient} bg-clip-text text-2xl font-bold tracking-tight text-transparent`}
+                  >
+                    {group.title}
+                  </h2>
+                  <p class="text-fg-muted mt-1 text-sm">{group.description}</p>
+                </div>
+                <span class="text-fg-muted hidden text-xs sm:inline">
+                  {group.docs.length} {group.docs.length === 1 ? "doc" : "docs"}
+                </span>
+              </div>
+
+              <div class="stagger-in grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {group.docs.map((doc, idx) => (
+                  <a
+                    href={`/docs/${doc.id}`}
+                    class="doc-card glass hover-lift group relative flex h-full flex-col rounded-xl p-6"
+                  >
+                    <div class="mb-4 flex items-center justify-between">
+                      <span
+                        class={`bg-gradient-to-br ${group.gradient} text-bg-primary flex h-9 w-9 items-center justify-center rounded-lg text-sm font-bold`}
+                      >
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      <span class="text-fg-muted text-[11px] tracking-wider uppercase">
+                        {group.title.split(" ")[0]}
+                      </span>
+                    </div>
+                    <h3 class="text-fg-primary group-hover:text-accent-purple text-lg leading-tight font-semibold transition-colors">
+                      {doc.data.title}
+                    </h3>
+                    {doc.data.description && (
+                      <p class="text-fg-secondary mt-2 flex-1 text-sm leading-relaxed">
+                        {doc.data.description}
+                      </p>
+                    )}
+                    <div class="text-accent-purple mt-5 inline-flex items-center gap-1.5 text-xs font-medium">
+                      Read guide
+                      <span class="transition-transform group-hover:translate-x-0.5">
+                        →
+                      </span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))
+      }
+
+      {
+        orphaned.length > 0 && (
+          <div class="reveal">
+            <h2 class="text-fg-primary text-2xl font-bold tracking-tight">
+              More guides
+            </h2>
+            <div class="stagger-in mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {orphaned.map((doc) => (
+                <a
+                  href={`/docs/${doc.id}`}
+                  class="glass hover-lift group rounded-xl p-6"
+                >
+                  <h3 class="text-fg-primary group-hover:text-accent-purple text-lg font-semibold transition-colors">
+                    {doc.data.title}
+                  </h3>
+                  {doc.data.description && (
+                    <p class="text-fg-secondary mt-2 text-sm">
+                      {doc.data.description}
+                    </p>
+                  )}
+                </a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  .docs-hero {
+    background:
+      radial-gradient(
+        ellipse at 20% 0%,
+        color-mix(in srgb, var(--color-accent-cyan) 10%, transparent) 0%,
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse at 80% 100%,
+        color-mix(in srgb, var(--color-accent-green) 8%, transparent) 0%,
+        transparent 55%
+      ),
+      var(--color-bg-primary);
+  }
+
+  .grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--color-border-default) 55%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--color-border-default) 55%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 2.5rem 2.5rem;
+    mask-image: radial-gradient(ellipse at 50% 0%, black 40%, transparent 80%);
+    -webkit-mask-image: radial-gradient(
+      ellipse at 50% 0%,
+      black 40%,
+      transparent 80%
+    );
+    pointer-events: none;
+    opacity: 0.35;
+  }
+</style>
