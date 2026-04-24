@@ -14,4 +14,5 @@ Convention-first monorepo: Astro 5 + Vue 3 + Tailwind 4, optional .NET 10 backen
 - Conventional commits
 - Tailwind 4 via `@tailwindcss/vite`
 - CSS-only animations
+- Design Tokens: Edit `docs/system/DESIGN.md` -> run `pnpm --filter @shockstack/tokens build` to extract via `@google/design.md` and export variables.
 - See `docs/system/` for detailed docs
