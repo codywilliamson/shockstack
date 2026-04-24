@@ -1,3 +1,18 @@
+# [1.20.0](https://github.com/codywilliamson/shockstack/compare/v1.19.1...v1.20.0) (2026-04-24)
+
+### Bug Fixes
+
+- **frontend:** remove default backtick pseudo-elements from prose inline code ([cf04e46](https://github.com/codywilliamson/shockstack/commit/cf04e46d377e7e7bf97993f2ba90cec4414bdfc7))
+- **tokens:** change design.md CLI invocation to node ([e50ce1e](https://github.com/codywilliamson/shockstack/commit/e50ce1ea457c70519cdba4cabced43fa57bcbdc7))
+- **ui:** resolve vue component hydration errors and astro cid mismatches ([9088265](https://github.com/codywilliamson/shockstack/commit/9088265f6b4fda876a4e0fc812f82ce0a11f1a55))
+
+### Features
+
+- **frontend:** interactive stack picker for use cases ([5147dc3](https://github.com/codywilliamson/shockstack/commit/5147dc3a759b61d1bce8c94710d0dc9decdeab59))
+- **frontend:** redesign blog archive and post pages with hero, featured card, toc ([41827fe](https://github.com/codywilliamson/shockstack/commit/41827fe46b14676881771cb6df938530b3ed0a39))
+- **frontend:** redesign docs index, detail page, and sidebar with categories and toc ([5812639](https://github.com/codywilliamson/shockstack/commit/5812639daa5ed072a1761e483e91ee30eb987961))
+- **themes:** add five built-in palettes ([919fec0](https://github.com/codywilliamson/shockstack/commit/919fec00d6d51c5d3564ead42a8f3d9aa5d38f16))
+
 ## [1.19.1](https://github.com/codywilliamson/shockstack/compare/v1.19.0...v1.19.1) (2026-04-23)
 
 ### Bug Fixes
