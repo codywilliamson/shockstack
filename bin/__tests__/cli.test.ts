@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "../..");
-const tsx = resolve(root, "node_modules/.bin/tsx");
+const tsx = resolve(root, "node_modules/tsx/dist/cli.mjs");
 const entry = resolve(root, "bin/ss.ts");
 
 function run(...args: string[]): {
@@ -12,7 +12,7 @@ function run(...args: string[]): {
   exitCode: number;
 } {
   try {
-    const stdout = execFileSync(tsx, [entry, ...args], {
+    const stdout = execFileSync(process.execPath, [tsx, entry, ...args], {
       cwd: root,
       encoding: "utf-8",
       stdio: ["pipe", "pipe", "pipe"],
