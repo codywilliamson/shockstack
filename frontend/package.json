@@ -32,7 +32,7 @@
     "@astrojs/check": "^0.9.9",
     "drizzle-kit": "^0.31.10",
     "typescript": "^6.0.2",
-    "vitest": "^4.1.7",
-    "wrangler": "^4.94.0"
+    "vitest": "^4.1.8",
+    "wrangler": "^4.98.0"
   }
 }
