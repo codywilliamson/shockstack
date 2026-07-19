@@ -9,7 +9,7 @@
     "lint:design": "node ../../node_modules/@google/design.md/dist/index.js lint ../../docs/system/DESIGN.md"
   },
   "devDependencies": {
-    "style-dictionary": "^5.4.1",
-    "tsx": "^4.22.3"
+    "style-dictionary": "^5.5.0",
+    "tsx": "^4.23.1"
   }
 }
